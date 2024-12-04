@@ -27,8 +27,9 @@
 
             <!-- <property name="jakarta.persistence.schema-generation.database.action"
                       value="drop-and-create"/> -->
+            <!-- <property name="hibernate.hbm2dll.auto" value="update"/> -->
 
-            <property name="hibernate.hbm2dll" value="update"/>
+            <property name="hibernate.hbm2dll.auto" value="drop-and-create"/>
 
             <!-- SQL statement logging -->
             <property name="hibernate.show_sql" value="true"/>
