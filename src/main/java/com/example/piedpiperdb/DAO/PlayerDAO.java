@@ -34,5 +34,13 @@ public class PlayerDAO {
         }
     }
 
+    //Read one/ Read all
+    public Player getPlayer(int id) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        Player playerToReturn = entityManager.find(Player.class, id);
+        entityManager.close();
+        return playerToReturn;
+    }
+
 
 }
