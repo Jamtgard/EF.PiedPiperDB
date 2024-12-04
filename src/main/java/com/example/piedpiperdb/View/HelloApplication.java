@@ -50,7 +50,7 @@ public class HelloApplication extends Application {
         loginButton.getStyleClass().add("standardButton");
         loginButton.setOnAction(e -> {
             window.setTitle("Start page 2");
-            //window.setScene(AbstractScene.getScene(window));
+            window.setScene(AbstractScene.getScene(window));
         });
 
 
