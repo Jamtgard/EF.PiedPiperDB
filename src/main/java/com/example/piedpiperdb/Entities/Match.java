@@ -20,15 +20,15 @@ public class Match {
 
     private String result;
 
-    // ref till spel få justera när sara pushat sin
-    /*@ManyToOne
+    // ref till spel
+    @ManyToOne
     @JoinColumn(name = "game_id", nullable = false)
-    private Game game;*/
+    private Game game;
 
-    // ref till player få justera när amanda pushat sin
-    /*@ManyToOne
+    // ref till player
+    @ManyToOne
     @JoinColumn(name = "player_id")
-    private Player player; */
+    private Player player;
 
     // ref till lag få justera när simon pushat sin
     /*@ManyToOne
