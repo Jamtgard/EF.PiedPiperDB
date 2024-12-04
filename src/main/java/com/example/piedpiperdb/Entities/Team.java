@@ -7,7 +7,7 @@ import java.util.List;
 
 // GEFP-10-SJ Commit #1
 @Entity
-@Table(name = "Teams")
+@Table(name = "teams")
 public class Team {
 
     @Id
