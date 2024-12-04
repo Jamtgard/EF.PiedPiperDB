@@ -36,15 +36,17 @@ public class Player {
     @Column(name = "email", length = 50, unique = true)
     private String email;
 
-/*
+/*    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game gameId;
+
     @ManyToOne
     @JoinColumn(name = "team_id")
-    private Team team;
+    private Team teamId;
 
     @ManyToOne
     @JoinColumn(name = "match_id")
-    private Match match;
-*/
+    private Match matchId;*/
 
     //-----------------------------------------------------
     //Constructors
@@ -70,20 +72,21 @@ public class Player {
         this.email = email;
     }
 
-/*    public Player(Match match, Team team, String email, String country, String city, String zipCode, String streetAddress, String nickname, String lastName, String firstName) {
-        this.match = match;
-        this.team = team;
-        this.email = email;
-        this.country = country;
-        this.city = city;
-        this.zipCode = zipCode;
-        this.streetAddress = streetAddress;
-        this.nickname = nickname;
-        this.lastName = lastName;
+/*    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country, String email, Game gameId, Team teamId, Match matchId) {
         this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.country = country;
+        this.email = email;
+        this.gameId = gameId;
+        this.teamId = teamId;
+        this.matchId = matchId;
     }*/
 
-    //------------------------------------------------------
+//------------------------------------------------------
     //Getters & Setters
 
     public int getId() {
@@ -158,19 +161,27 @@ public class Player {
         this.email = email;
     }
 
-/*    public Team getTeam() {
-        return team;
+/*    public Game getGameId() {
+        return gameId;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setGameId(Game gameId) {
+        this.gameId = gameId;
     }
 
-    public Match getMatch() {
-        return match;
+    public Team getTeamId() {
+        return teamId;
     }
 
-    public void setMatch(Match match) {
-        this.match = match;
+    public void setTeamId(Team teamId) {
+        this.teamId = teamId;
+    }
+
+    public Match getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(Match matchId) {
+        this.matchId = matchId;
     }*/
 }
