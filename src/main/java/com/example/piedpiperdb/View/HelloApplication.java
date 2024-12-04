@@ -19,8 +19,8 @@ public class HelloApplication extends Application {
 
     private Button loginButton;
 
-    private final int height = 600;
-    private final int width = 700;
+    final static int height = 600;
+    final static int width = 700;
 
     private final Label programTitel = new Label("Hello World");
 
@@ -48,12 +48,15 @@ public class HelloApplication extends Application {
         programTitel.getStyleClass().add("titel");
         loginButton = new Button("Login");
         loginButton.getStyleClass().add("standardButton");
+        loginButton.setOnAction(e -> {
+            window.setTitle("Start page 2");
+            //window.setScene(AbstractScene.getScene(window));
+        });
 
 
         VBox vBox = new VBox();
         vBox.setSpacing(10);
         vBox.setAlignment(Pos.CENTER);
-        //vBox.getStyleClass().add("backgroundOlivine");
 
         vBox.getChildren().addAll(programTitel, loginButton);
 
