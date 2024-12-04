@@ -1,4 +1,4 @@
-package com.example.piedpiperdb;
+package com.example.piedpiperdb.View;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

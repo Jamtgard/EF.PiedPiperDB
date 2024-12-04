@@ -3,4 +3,5 @@ module com.example.piedpiperdb {
 
 
     exports com.example.piedpiperdb;
+    exports com.example.piedpiperdb.View;
 }
