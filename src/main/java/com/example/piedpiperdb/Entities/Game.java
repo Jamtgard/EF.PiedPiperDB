@@ -13,29 +13,22 @@ public class Game {
     @Column(name = "game_id")
     private int game_id;
 
-    @Column(name = "game_name",length = 40,nullable = false)
+    @Column(name = "game_name",length = 50,nullable = false)
     private String game_name;
 
+    /*
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "match_id")
-    private Match match_id;
+    private Match match_id;*/
 
-    @OneToMany(mappedBy = "player", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "gameId", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     @JoinColumn
     private List<Player> players = new ArrayList<>();
 
-    @OneToMany(mappedBy = "team", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
-    @JoinColumn
-    private List<Team> teams = new ArrayList<>();
-
     /*
-    @OneToMany(mappedBy = "", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "teamId", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     @JoinColumn
-    private List<Match> matches = new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "team_id")
-    private Team team_id;*/
+    private List<Team> teams = new ArrayList<>();*/
 
     public Game() {
 
@@ -45,17 +38,17 @@ public class Game {
         this.game_name = game_name;
     }
 
-    public Match getMatch_id() {return match_id;}
+    /*public Match getMatch_id() {return match_id;}
 
-    public void setMatch_id(Match match_id) {this.match_id = match_id;}
+    public void setMatch_id(Match match_id) {this.match_id = match_id;}*/
 
     public List<Player> getPlayers() {return players;}
 
     public void setPlayers(List<Player> players) {this.players = players;}
 
-    public List<Team> getTeams() {return teams;}
+    /*public List<Team> getTeams() {return teams;}
 
-    public void setTeams(List<Team> teams) {this.teams = teams;}
+    public void setTeams(List<Team> teams) {this.teams = teams;}*/
 
     public String getGame_name() {return game_name;}
 
