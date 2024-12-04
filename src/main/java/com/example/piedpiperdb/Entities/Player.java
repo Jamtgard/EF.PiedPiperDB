@@ -36,13 +36,15 @@ public class Player {
     @Column(name = "email", length = 50, unique = true)
     private String email;
 
-/*    @ManyToOne
+/*
+    @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
 
     @ManyToOne
     @JoinColumn(name = "match_id")
-    private Match match;*/
+    private Match match;
+*/
 
     //-----------------------------------------------------
     //Constructors
@@ -56,6 +58,30 @@ public class Player {
         this.lastName = lastName;
         this.nickname = nickname;
     }
+
+    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.country = country;
+        this.email = email;
+    }
+
+/*    public Player(Match match, Team team, String email, String country, String city, String zipCode, String streetAddress, String nickname, String lastName, String firstName) {
+        this.match = match;
+        this.team = team;
+        this.email = email;
+        this.country = country;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.streetAddress = streetAddress;
+        this.nickname = nickname;
+        this.lastName = lastName;
+        this.firstName = firstName;
+    }*/
 
     //------------------------------------------------------
     //Getters & Setters
