@@ -6,6 +6,7 @@ import com.example.piedpiperdb.Entities.Game;
 import java.util.ArrayList;
 import java.util.List;
 
+//GEFP-6-SA
 public class GameDAO {
 
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("myconfig");
@@ -59,7 +60,6 @@ public class GameDAO {
 
     //Update
     public void updateGame(Game gameToUpdate){
-        //carToUpdate kommer in
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
         try {
@@ -71,10 +71,10 @@ public class GameDAO {
 
             } else {
                 System.out.println("Finns inte i poolen");
-                Game revivedGame = entityManager.merge(gameToUpdate);//merge = hämtar från poolen
-                System.out.println(revivedGame.getId() + " is alive");
+                Game revivedGame = entityManager.merge(gameToUpdate);
+                System.out.println(revivedGame.getGame_id() + " is alive");
             }
-            entityManager.merge(gameToUpdate);//För att uppdatera en bil som redan ska finnas i db
+            entityManager.merge(gameToUpdate);
             transaction.commit();
         } catch (Exception e){
             System.out.println(e.getMessage());

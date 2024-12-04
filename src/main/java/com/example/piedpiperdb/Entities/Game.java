@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//GEFP-7-SA
 @Entity
 @Table(name = "games")
 public class Game {
@@ -16,10 +17,10 @@ public class Game {
     @Column(name = "game_name",length = 50,nullable = false)
     private String game_name;
 
-    /*
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "match_id")
-    private Match match_id;*/
+    private Match match_id;
 
     @OneToMany(mappedBy = "gameId", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     @JoinColumn
@@ -38,9 +39,9 @@ public class Game {
         this.game_name = game_name;
     }
 
-    /*public Match getMatch_id() {return match_id;}
+    public Match getMatch_id() {return match_id;}
 
-    public void setMatch_id(Match match_id) {this.match_id = match_id;}*/
+    public void setMatch_id(Match match_id) {this.match_id = match_id;}
 
     public List<Player> getPlayers() {return players;}
 
