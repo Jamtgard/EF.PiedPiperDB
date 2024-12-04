@@ -36,10 +36,10 @@ public class Player {
     @Column(name = "email", length = 50, unique = true)
     private String email;
 
-/*    @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "game_id")
     private Game gameId;
-
+/*
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team teamId;
@@ -161,14 +161,14 @@ public class Player {
         this.email = email;
     }
 
-/*    public Game getGameId() {
+    public Game getGameId() {
         return gameId;
     }
 
     public void setGameId(Game gameId) {
         this.gameId = gameId;
     }
-
+/*
     public Team getTeamId() {
         return teamId;
     }
