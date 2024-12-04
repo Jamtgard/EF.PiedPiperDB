@@ -32,14 +32,18 @@ public class HelloApplication extends Application {
         window.setResizable(false);
         //AnchorPane anchorPane = new AnchorPane();
         StackPane stackPane = new StackPane();
+        stackPane.getStyleClass().add("backgroundTeaGreen");
 
         stage.setTitle("Start page");
 
 
         Rectangle greenBackground = new Rectangle(width, height);
-        greenBackground.setHeight(400);
-        greenBackground.setWidth(500);
-        greenBackground.setFill(Paint.valueOf("#D0E3C4"));
+        greenBackground.setHeight(500);
+        greenBackground.setWidth(600);
+        greenBackground.setFill(Paint.valueOf("#FFFFFF"));
+        greenBackground.setOpacity(0.5);
+        greenBackground.setY(height/2);
+        greenBackground.setX(width/2);
 
         programTitel.getStyleClass().add("titel");
         loginButton = new Button("Login");
@@ -49,12 +53,12 @@ public class HelloApplication extends Application {
         VBox vBox = new VBox();
         vBox.setSpacing(10);
         vBox.setAlignment(Pos.CENTER);
-        vBox.getStyleClass().add("backgroundOlivine");
+        //vBox.getStyleClass().add("backgroundOlivine");
 
         vBox.getChildren().addAll(programTitel, loginButton);
 
 
-        stackPane.getChildren().addAll(greenBackground, vBox);
+        stackPane.getChildren().addAll(greenBackground,vBox);
 
 
 
