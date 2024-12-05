@@ -41,6 +41,7 @@ public class Team {
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
 
+
     /*
     public int getGame_id() {return game_id;}
     public void setGame_id(int game_id) {this.game_id = game_id;}
