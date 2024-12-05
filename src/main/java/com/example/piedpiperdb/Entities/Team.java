@@ -20,8 +20,8 @@ public class Team {
 
 
   /*  @OneToMany(mappedBy = "playerId", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @JoinColumn (name = "players", nullable = false)
-    private List<Player> listOfPlayersInTeam = new ArrayList<>();*/
+    @JoinColumn (name = "p
+    private List<Player> layers", nullable = false)listOfPlayersInTeam = new ArrayList<>();*/
 
     // Constructors
 
