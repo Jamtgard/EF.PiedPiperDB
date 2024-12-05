@@ -48,7 +48,7 @@ public class TeamDAO {
     public List<Team> getAllTeams(){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         List<Team> listToReturn = new ArrayList<>();
-        TypedQuery<Team> result = entityManager.createQuery("FROM teams", Team.class);
+        TypedQuery<Team> result = entityManager.createQuery("FROM Team", Team.class);
         listToReturn.addAll(result.getResultList());
         return listToReturn;
     }
