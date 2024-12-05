@@ -1,8 +1,10 @@
 package com.example.piedpiperdb.View;
 
+import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.MatchDAO;
-import com.example.piedpiperdb.Entities.Match;
-import com.example.piedpiperdb.Entities.MatchType;
+import com.example.piedpiperdb.DAO.PlayerDAO;
+import com.example.piedpiperdb.DAO.TeamDAO;
+import com.example.piedpiperdb.Entities.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -34,11 +36,23 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        // GEFP-9-AWS små testat
+        //GEFP-18-SA testar
+        PlayerDAO playerDAO = new PlayerDAO();
+        MatchDAO matchDAO = new MatchDAO();
+        GameDAO gameDAO = new GameDAO();
+        TeamDAO teamDAO = new TeamDAO();
 
+        Player player = new Player();
+        Match match = new Match();
+        Game game = new Game();
+        Team team = new Team();
+
+
+        // GEFP-9-AWS små testat
+/*
         MatchDAO dao = new MatchDAO();
         Match match = new Match(MatchType.PLAYER_VS_PLAYER);
-        dao.saveMatch(match);
+        dao.saveMatch(match);*/
 
         //GEFP-5-SA
         window = stage;

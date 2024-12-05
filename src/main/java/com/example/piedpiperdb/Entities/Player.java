@@ -12,28 +12,29 @@ public class Player {
     @Column(name = "player_id")
     private int id;
 
+                                //GEFP-18-SA, satta längd på alla
     @Column(name = "first_name", length = 40, nullable = false)
     private String firstName;
 
     @Column(name = "last_name",length = 50, nullable = false)
     private String lastName;
 
-    @Column(name = "nickname", length = 20, nullable = false, unique = true)
+    @Column(name = "nickname", length = 50, nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "street_address")
+    @Column(name = "street_address",length = 70, nullable = false)
     private String streetAddress;
 
-    @Column(name = "zip_code")
+    @Column(name = "zip_code",length = 20, nullable = false)
     private String zipCode; //String för det brukar vara ett mellanrum i postnummer
 
-    @Column(name = "city")
+    @Column(name = "city",length = 40, nullable = false)
     private String city;
 
-    @Column(name = "country")
+    @Column(name = "country",length = 40, nullable = false)
     private String country;
 
-    @Column(name = "email", length = 50, unique = true)
+    @Column(name = "email", length = 70, unique = true)
     private String email;
 
 
