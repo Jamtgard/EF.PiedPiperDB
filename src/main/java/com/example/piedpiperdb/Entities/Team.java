@@ -18,10 +18,12 @@ public class Team {
     @Column(name = "team_name", length = 20, nullable = false, unique = true)
     private String teamName;
 
+//GEFP-15-SJ - Start:
 
-  /*  @OneToMany(mappedBy = "playerId", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @JoinColumn (name = "p
-    private List<Player> layers", nullable = false)listOfPlayersInTeam = new ArrayList<>();*/
+    @OneToMany(mappedBy = "player_id", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
+    private List<Player> listOfPlayersInTeam = new ArrayList<>();
+
+//GEFP-15-SJ - Slut.
 
     // Constructors
 
@@ -39,8 +41,16 @@ public class Team {
     public String getTeamName() {return teamName;}
     public void setTeamName(String teamName) {this.teamName = teamName;}
 
-   /* public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
-    public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}*/
+    public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
+    public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
+
+    /*
+    public int getGame_id() {return game_id;}
+    public void setGame_id(int game_id) {this.game_id = game_id;}
+
+    public Match getMatch_id() {return match_id;}
+    public void setMatch_id(Match match_id) {this.match_id = match_id;}
+     */
 
 }
 
