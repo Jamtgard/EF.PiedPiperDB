@@ -127,6 +127,7 @@ public abstract class AbstractScene {
         back.setMinSize(160, 30);
         back.setLayoutY(535.0);
         back.setLayoutX(30.0);
+
         back.setOnAction(e->{
             try {
                 helloApp.start(window);
