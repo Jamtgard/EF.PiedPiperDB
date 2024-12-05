@@ -36,17 +36,20 @@ public class Player {
     @Column(name = "email", length = 50, unique = true)
     private String email;
 
+
     @ManyToOne
     @JoinColumn(name = "game_id")
     private Game gameId;
-/*
+
+    //GEFP-12-AA
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team teamId;
 
+    //GEFP-12-AA
     @ManyToOne
     @JoinColumn(name = "match_id")
-    private Match matchId;*/
+    private Match matchId;
 
     //-----------------------------------------------------
     //Constructors
@@ -72,7 +75,8 @@ public class Player {
         this.email = email;
     }
 
-/*    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country, String email, Game gameId, Team teamId, Match matchId) {
+    //GEFP-12-AA
+    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country, String email, Game gameId, Team teamId, Match matchId) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nickname = nickname;
@@ -84,7 +88,7 @@ public class Player {
         this.gameId = gameId;
         this.teamId = teamId;
         this.matchId = matchId;
-    }*/
+    }
 
 //------------------------------------------------------
     //Getters & Setters
@@ -168,7 +172,6 @@ public class Player {
     public void setGameId(Game gameId) {
         this.gameId = gameId;
     }
-/*
     public Team getTeamId() {
         return teamId;
     }
@@ -183,5 +186,5 @@ public class Player {
 
     public void setMatchId(Match matchId) {
         this.matchId = matchId;
-    }*/
+    }
 }
