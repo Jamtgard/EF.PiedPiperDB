@@ -19,8 +19,7 @@ public class Team {
     private String teamName;
 
 
-    @OneToMany(mappedBy = "playerId", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @JoinColumn (name = "players", nullable = false)
+    @OneToMany(mappedBy = "team_id", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Player> listOfPlayersInTeam = new ArrayList<>();
 
     // Constructors
@@ -41,6 +40,14 @@ public class Team {
 
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
+
+    /*
+    public int getGame_id() {return game_id;}
+    public void setGame_id(int game_id) {this.game_id = game_id;}
+
+    public Match getMatch_id() {return match_id;}
+    public void setMatch_id(Match match_id) {this.match_id = match_id;}
+     */
 
 }
 
