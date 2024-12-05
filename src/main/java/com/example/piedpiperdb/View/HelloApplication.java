@@ -4,10 +4,12 @@ import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.MatchType;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -25,13 +27,14 @@ public class HelloApplication extends Application {
     final static int height = 600;
     final static int width = 700;
 
-    private final Label programTitel = new Label("Hello World");
+    private final Label programTitel = new Label("Piper Games");
 
 
     @Override
     public void start(Stage stage) throws IOException {
 
         // GEFP-9-AWS små testat
+
         MatchDAO dao = new MatchDAO();
         Match match = new Match(MatchType.PLAYER_VS_PLAYER);
         dao.saveMatch(match);
@@ -58,15 +61,42 @@ public class HelloApplication extends Application {
         loginButton.getStyleClass().add("standardButton");
         loginButton.setOnAction(e -> {
             window.setTitle("Start page 2");
-            window.setScene(AbstractScene.getScene(window));
+            window.setScene(StartPage.getScene(window));
         });
 
+        Label userName = new Label("Username");
+        userName.getStyleClass().add("standardLabel");
+
+        TextField userNameField = new TextField();
+        userNameField.getStyleClass().add("textFieldOne");
+        userNameField.setPromptText("Username");
+
+        Label password = new Label("Password");
+        password.getStyleClass().add("standardLabel");
+
+        TextField passwordField = new TextField();
+        passwordField.getStyleClass().add("textFieldOne");
+        passwordField.setPromptText("Password");
+
+        HBox hBox1 = new HBox();
+        hBox1.setSpacing(10);
+        hBox1.setPadding(new Insets(10, 10, 10, 10));
+        hBox1.setAlignment(Pos.CENTER);
+
+        hBox1.getChildren().addAll(userName, userNameField);
+
+        HBox hBox2 = new HBox();
+        hBox2.setSpacing(10);
+        hBox2.setPadding(new Insets(10, 10, 10, 10));
+        hBox2.setAlignment(Pos.CENTER);
+
+        hBox2.getChildren().addAll(password, passwordField);
 
         VBox vBox = new VBox();
         vBox.setSpacing(10);
         vBox.setAlignment(Pos.CENTER);
 
-        vBox.getChildren().addAll(programTitel, loginButton);
+        vBox.getChildren().addAll(programTitel,hBox1,hBox2, loginButton);
 
 
         stackPane.getChildren().addAll(greenBackground,vBox);

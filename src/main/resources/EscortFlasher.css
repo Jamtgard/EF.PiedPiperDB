@@ -26,3 +26,25 @@
     -fx-text-fill: #1A1F16;
     -fx-background-color: #B0E3C9;
 }
+.darkerButton{
+    -fx-font-size: 14;
+    -fx-font-family: "Bell MT";
+    -fx-text-fill: #1a1f16;
+    -fx-background-color: #adc698;
+}
+.textFieldOne{
+    -fx-font-size: 14;
+    -fx-font-family: "Bell MT";
+    -fx-text-fill: #1A1F16;
+}
+.standardLabel{
+    -fx-font-size: 14;
+    -fx-font-family: "Bell MT";
+    -fx-text-fill: #1A1F16;
+    -fx-border-radius: 2;
+    -fx-border-color: #1A1F16;
+}
+.columnV{
+    -fx-border-radius: 2;
+    -fx-border-color: #1A1F16;
+}
