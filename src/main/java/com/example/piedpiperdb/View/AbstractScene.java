@@ -23,9 +23,13 @@ public abstract class AbstractScene {
 
         HelloApplication helloApp = new HelloApplication();
 
+        //-----------------------------------------------------------
+
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPadding(new Insets(10));
         anchorPane.getStyleClass().add("backgroundTeaGreen");
+
+        //-----------------------------------------------------------
 
         VBox titelBox = new VBox();
         titelBox.setSpacing(5);
@@ -124,7 +128,6 @@ public abstract class AbstractScene {
         back.setLayoutY(535.0);
         back.setLayoutX(30.0);
         back.setOnAction(e->{
-            //HelloApplication.main(null);//Vet inte om detta fungerar
             try {
                 helloApp.start(window);
             } catch (IOException ex) {
@@ -132,6 +135,7 @@ public abstract class AbstractScene {
             }
         });
 
+        //-----------------------------------------------------------
 
         anchorPane.getChildren().addAll(titelBox,rectangle, vbox, userButton,searchField,rectangle2,hBox, column1VBox,back);
 
