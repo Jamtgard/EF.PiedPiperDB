@@ -39,11 +39,11 @@ public class Player {
     @ManyToOne
     @JoinColumn(name = "game_id")
     private Game gameId;
-/*
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team teamId;
-
+/*
     @ManyToOne
     @JoinColumn(name = "match_id")
     private Match matchId;*/
