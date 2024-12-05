@@ -10,17 +10,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
+//GEFP-4-SA
 public abstract class AbstractScene {
 
     static Scene scene;
 
     static Scene getScene(Stage window) {
-
-        /*
-        StackPane stackPane = new StackPane();
-        stackPane.setPadding(new Insets(10));
-        stackPane.getStyleClass().add("backgroundTeaGreen");*/
 
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPadding(new Insets(10));
@@ -123,12 +118,11 @@ public abstract class AbstractScene {
         back.setLayoutY(535.0);
         back.setLayoutX(30.0);
         back.setOnAction(e->{
-            HelloApplication.main(null);//Vet inte om detta fungerar
+            //HelloApplication.main(null);//Vet inte om detta fungerar
+            //HelloApplication.start(window);
         });
 
 
-
-        //stackPane.getChildren().addAll(rectangle, vbox);
         anchorPane.getChildren().addAll(titelBox,rectangle, vbox, userButton,searchField,rectangle2,hBox, column1VBox,back);
 
         scene = new Scene(anchorPane, HelloApplication.width, HelloApplication.height);

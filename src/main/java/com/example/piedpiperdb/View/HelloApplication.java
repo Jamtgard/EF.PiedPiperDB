@@ -19,6 +19,7 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
 
+    //GEFP-5-SA
     Stage window;
     Scene startScene;
 
@@ -39,9 +40,9 @@ public class HelloApplication extends Application {
         Match match = new Match(MatchType.PLAYER_VS_PLAYER);
         dao.saveMatch(match);
 
+        //GEFP-5-SA
         window = stage;
         window.setResizable(false);
-        //AnchorPane anchorPane = new AnchorPane();
         StackPane stackPane = new StackPane();
         stackPane.getStyleClass().add("backgroundTeaGreen");
 
@@ -59,6 +60,8 @@ public class HelloApplication extends Application {
         programTitel.getStyleClass().add("titel");
         loginButton = new Button("Login");
         loginButton.getStyleClass().add("standardButton");
+
+        //GEFP-4-SA
         loginButton.setOnAction(e -> {
             window.setTitle("Start page 2");
             window.setScene(StartPage.getScene(window));
@@ -92,16 +95,14 @@ public class HelloApplication extends Application {
 
         hBox2.getChildren().addAll(password, passwordField);
 
+        //GEFP-5-SA
         VBox vBox = new VBox();
         vBox.setSpacing(10);
         vBox.setAlignment(Pos.CENTER);
 
         vBox.getChildren().addAll(programTitel,hBox1,hBox2, loginButton);
 
-
         stackPane.getChildren().addAll(greenBackground,vBox);
-
-
 
         startScene = new Scene(stackPane, width, height);
         startScene.getStylesheets().add("EscortFlasher.css");
