@@ -1,5 +1,8 @@
 package com.example.piedpiperdb.View;
 
+import com.example.piedpiperdb.DAO.MatchDAO;
+import com.example.piedpiperdb.Entities.Match;
+import com.example.piedpiperdb.Entities.MatchType;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,6 +30,11 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
+        // GEFP-9-AWS små testat
+        MatchDAO dao = new MatchDAO();
+        Match match = new Match(MatchType.PLAYER_VS_PLAYER);
+        dao.saveMatch(match);
 
         window = stage;
         window.setResizable(false);

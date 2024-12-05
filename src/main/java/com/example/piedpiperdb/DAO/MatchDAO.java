@@ -33,6 +33,7 @@ public class MatchDAO {
                 entityManager.close();
             }
         }
+    //AWS GEFP-13
             // hämta en match       Read One/All
         public Match getMatchById(int id) {
             EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
@@ -48,7 +49,7 @@ public class MatchDAO {
             listToReturn.addAll(result.getResultList());
             return listToReturn;
         }
-
+    //AWS GEFP-13
     // Update
         public void updateMatch(Match matchToUpdate) {
             EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
@@ -72,7 +73,7 @@ public class MatchDAO {
                 entityManager.close();
             }
         }
-
+    //AWS GEFP-13
     // Delete
         public void deleteMatch(Match matchToDelete) {
             EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
