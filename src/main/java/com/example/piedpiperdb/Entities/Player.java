@@ -47,9 +47,10 @@ public class Player {
     private Team teamId;
 
     //GEFP-12-AA
+/*
     @ManyToOne
     @JoinColumn(name = "match_id")
-    private Match matchId;
+    private Match matchId;*/
 
     //-----------------------------------------------------
     //Constructors
@@ -87,7 +88,7 @@ public class Player {
         this.email = email;
         this.gameId = gameId;
         this.teamId = teamId;
-        this.matchId = matchId;
+        /*this.matchId = matchId;*/
     }
 
 //------------------------------------------------------
@@ -180,11 +181,11 @@ public class Player {
         this.teamId = teamId;
     }
 
-    public Match getMatchId() {
+    /*public Match getMatchId() {
         return matchId;
     }
 
     public void setMatchId(Match matchId) {
         this.matchId = matchId;
-    }
+    }*/
 }

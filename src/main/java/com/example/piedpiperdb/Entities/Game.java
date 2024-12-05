@@ -23,7 +23,7 @@ public class Game {
     private Match match_id;
 
     @OneToMany(mappedBy = "gameId", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
-    @JoinColumn
+    /*@JoinColumn*/
     private List<Player> players = new ArrayList<>();
 
     /*
