@@ -29,7 +29,9 @@
                       value="drop-and-create"/>
             <!-- <property name="hibernate.hbm2dll.auto" value="update"/> -->
 
+            <!--
             <property name="hibernate.hbm2ddl.auto" value="drop-and-create"/>
+            -->
 
             <!-- SQL statement logging -->
             <property name="hibernate.show_sql" value="true"/>
