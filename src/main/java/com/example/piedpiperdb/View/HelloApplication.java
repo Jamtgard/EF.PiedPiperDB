@@ -15,9 +15,9 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
 
         // GEFP-9-AWS små testat
-        MatchDAO dao = new MatchDAO();
+/*        MatchDAO dao = new MatchDAO();
         Match match = new Match(MatchType.PLAYER_VS_PLAYER);
-        dao.saveMatch(match);
+        dao.saveMatch(match);*/
 
        /* kommenterar ut denna för tillfället, bara jobbig popup när man testar XD
         AnchorPane anchorPane = new AnchorPane();

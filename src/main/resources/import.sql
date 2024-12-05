@@ -29,7 +29,7 @@ VALUES
 ('Oskar', 'Lindgren', 'LuckyOskar', 'Torggatan 9', '55112', 'Umeå', 'Sweden', 'oskar.lindgren@example.se', 3, 4),
 ('Emma', 'Larsson', 'EliteEmma', 'Kullerstensvägen 6', '44123', 'Sundsvall', 'Sweden', 'emma.larsson@example.se', 4, 5);
 
-INSERT INTO matches (match_name, date, game_id)
+INSERT INTO matches (match_name, date/*, game_id*/)
 VALUES
 ('Ctrl Alt Defeat vs Sassy Sasquatches', '2024-12-01', 1),
 ('Game of Throws vs Fast but Last', '2024-12-02', 2),
