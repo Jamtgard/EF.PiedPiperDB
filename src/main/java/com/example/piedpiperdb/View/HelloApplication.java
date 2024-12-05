@@ -36,9 +36,10 @@ public class HelloApplication extends Application {
 
         // GEFP-9-AWS små testat
 
+        /*
         MatchDAO dao = new MatchDAO();
         Match match = new Match(MatchType.PLAYER_VS_PLAYER);
-        dao.saveMatch(match);
+        dao.saveMatch(match);*/
 
         //GEFP-5-SA
         window = stage;
