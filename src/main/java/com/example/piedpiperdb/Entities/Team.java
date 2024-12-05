@@ -19,9 +19,9 @@ public class Team {
     private String teamName;
 
 
-    @OneToMany(mappedBy = "playerId", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+  /*  @OneToMany(mappedBy = "playerId", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JoinColumn (name = "players", nullable = false)
-    private List<Player> listOfPlayersInTeam = new ArrayList<>();
+    private List<Player> listOfPlayersInTeam = new ArrayList<>();*/
 
     // Constructors
 
@@ -39,8 +39,8 @@ public class Team {
     public String getTeamName() {return teamName;}
     public void setTeamName(String teamName) {this.teamName = teamName;}
 
-    public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
-    public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
+   /* public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
+    public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}*/
 
 }
 
