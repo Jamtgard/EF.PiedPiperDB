@@ -19,7 +19,7 @@ public class Team {
     private String teamName;
 
 
-    @OneToMany(mappedBy = "team_id", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "team_id", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Player> listOfPlayersInTeam = new ArrayList<>();
 
     // Constructors
