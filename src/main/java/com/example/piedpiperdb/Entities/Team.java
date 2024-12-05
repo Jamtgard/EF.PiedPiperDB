@@ -19,11 +19,10 @@ public class Team {
     private String teamName;
 
 
-    @OneToMany(mappedBy = "playerId", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @JoinColumn (name = "players", nullable = false)
+    @OneToMany(mappedBy = "teamId", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Player> listOfPlayersInTeam = new ArrayList<>();
 
-    // Constructors
+    // -- Constructors --
 
     public Team (){}
 
@@ -31,7 +30,9 @@ public class Team {
         this.teamName = teamName;
     }
 
-    // Getters & Setters
+    // -- Getters & Setters --
+
+    //Local
 
     public int getId() {return teamId;}
     public void setId(int id) {this.teamId = teamId;}
@@ -42,5 +43,14 @@ public class Team {
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
 
+    // Class wide
+
+    /*
+    public Game getGameId() {return gameId;}
+    public void setGameId(Game gameId) {this.gameId = gameId;}
+
+    public Match getMatchId() {return matchId;}
+    public void setMatchId(Match matchId) {this.matchId = matchId;}
+     */
 }
 
