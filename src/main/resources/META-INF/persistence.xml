@@ -18,10 +18,10 @@
             <!-- Credentials -->
                 <!-- Användarnamn: value=" här "/> -->
             <property name="jakarta.persistence.jdbc.user"
-                      value=""/>
+                      value="skollab"/>
                 <!-- Lösenord: value=" här "/> -->
             <property name="jakarta.persistence.jdbc.password"
-                      value=""/>
+                      value="password"/>
 
             <!-- Automatic schema export -->
 
