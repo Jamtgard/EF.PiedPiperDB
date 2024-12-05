@@ -5,10 +5,10 @@
 
     <persistence-unit name="myconfig">
 
-        <!--<class>org.hibernate.example.Book</class>
-        <class>org.hibernate.example.Author</class>-->
-
-
+        <class>com.example.piedpiperdb.Entities.Player</class>
+        <class>com.example.piedpiperdb.Entities.Game</class>
+        <class>com.example.piedpiperdb.Entities.Team</class>
+        <class>com.example.piedpiperdb.Entities.Match</class>
 
         <properties>
             <!-- MySQL -->
@@ -18,18 +18,18 @@
             <!-- Credentials -->
                 <!-- Användarnamn: value=" här "/> -->
             <property name="jakarta.persistence.jdbc.user"
-                      value=""/>
+                      value="skollab"/>
                 <!-- Lösenord: value=" här "/> -->
             <property name="jakarta.persistence.jdbc.password"
-                      value=""/>
+                      value="password"/>
 
             <!-- Automatic schema export -->
 
-            <!-- <property name="jakarta.persistence.schema-generation.database.action"
-                      value="drop-and-create"/> -->
+             <property name="jakarta.persistence.schema-generation.database.action"
+                      value="drop-and-create"/>
             <!-- <property name="hibernate.hbm2dll.auto" value="update"/> -->
 
-            <property name="hibernate.hbm2dll.auto" value="drop-and-create"/>
+            <property name="hibernate.hbm2ddl.auto" value="drop-and-create"/>
 
             <!-- SQL statement logging -->
             <property name="hibernate.show_sql" value="true"/>
