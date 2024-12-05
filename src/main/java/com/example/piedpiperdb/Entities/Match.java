@@ -13,7 +13,8 @@ public class Match {
     private int id;
 
     @Column (nullable = false)
-    private String matchType;       //player vs player, team vs team
+    @Enumerated(EnumType.STRING) //Enum som sträng i db
+    private MatchType matchType;       //player vs player, team vs team
 
     @Column (nullable = false)
     private LocalDate matchDate;
@@ -27,16 +28,20 @@ public class Match {
 
     // ref till player
     @ManyToOne
-    @JoinColumn(name = "player_id")
+    @JoinColumn(name = "player_id", nullable = true)
     private Player player;
 
-    // ref till lag få justera när simon pushat sin
-    /*@ManyToOne
-    @JoinColumn(name = "team_id")
-    private Team team;*/
+    // ref till lag
+    @ManyToOne
+    @JoinColumn(name = "team_id", nullable = true)
+    private Team team;
 
+    public Match() {
+    }
 
-
+    public Match(MatchType matchType) {
+        this.matchType = matchType;
+    }
 
     //AWS GEFP-3
     public int getId() {
@@ -45,12 +50,15 @@ public class Match {
     public void setId(int id) {
         this.id = id;
     }
-    public String getMatchType() {
+
+    public MatchType getMatchType() {
         return matchType;
     }
-    public void setMatchType(String matchType) {
+
+    public void setMatchType(MatchType matchType) {
         this.matchType = matchType;
     }
+
     public LocalDate getMatchDate() {
         return matchDate;
     }
