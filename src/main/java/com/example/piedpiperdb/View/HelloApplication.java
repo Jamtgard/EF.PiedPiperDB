@@ -23,7 +23,7 @@ import java.io.IOException;
 public class HelloApplication extends Application {
 
     //GEFP-5-SA
-    Stage window;
+    public static Stage window;
     Scene startScene;
 
     private Button loginButton;
@@ -47,6 +47,8 @@ public class HelloApplication extends Application {
         Match match = new Match();
         Game game = new Game();
         Team team = new Team();
+
+
 
         /*
         System.out.println("Antal players är: "+playerDAO.getAllPlayers().size());

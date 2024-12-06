@@ -1,5 +1,6 @@
 package com.example.piedpiperdb.View;
 
+import com.example.piedpiperdb.DAO.JavaFXActions;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -19,17 +20,12 @@ public class StartPage extends AbstractScene{
         AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
-        HelloApplication helloApp = new HelloApplication();
         AbstractScene.back.setOnAction(e->{
-            try {
-                helloApp.start(window);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            JavaFXActions.backToLogin(window);
         });
 
-        addCustomComponents(anchorPane);
-        addCustomComponents(vBox);
+        addCustomComponents(anchorPane,window);
+        addCustomComponents(vBox,window);
 
 
         return baseScene;
@@ -37,7 +33,7 @@ public class StartPage extends AbstractScene{
 
 
     //GEFP-20-SA
-    protected static void addCustomComponents(AnchorPane anchorPane){
+    protected static void addCustomComponents(AnchorPane anchorPane,Stage window){
 
         Button button = new Button("Start1");
         button.setLayoutX(10);
@@ -57,13 +53,22 @@ public class StartPage extends AbstractScene{
     }
 
     //GEFP-20-SA
-    protected static void addCustomComponents(VBox vBox){
+    protected static void addCustomComponents(VBox vBox,Stage window){
         System.out.println("I StartPage addCustomComponents");
 
         Button button = new Button("Start3");
         button.getStyleClass().add("standardButton");
         button.setMinSize(160, 30);
-        vBox.getChildren().add(button);
+
+        Button gameViewButton = new Button("Games");
+        gameViewButton.getStyleClass().add("standardButton");
+        gameViewButton.setMinSize(160, 30);
+
+        gameViewButton.setOnAction(e->{
+            JavaFXActions.toGameView(window);
+        });
+
+        vBox.getChildren().addAll(button,gameViewButton);
     }
 
 

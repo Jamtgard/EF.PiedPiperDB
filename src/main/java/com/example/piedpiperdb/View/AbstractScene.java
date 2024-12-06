@@ -20,10 +20,10 @@ public abstract class AbstractScene {
     static Scene scene;
 
     //GEFP-20-SA
-    static VBox leftVbox;
-    static Button back;
+    public static VBox leftVbox;
+    public static Button back;
     //private static HBox columnNames;
-    static AnchorPane anchorPane;
+    public static AnchorPane anchorPane;
 
     static Scene getScene(Stage window) {
 
