@@ -1,5 +1,10 @@
 package com.example.piedpiperdb.View;
 
+import com.example.piedpiperdb.DAO.GameDAO;
+import com.example.piedpiperdb.DAO.MatchDAO;
+import com.example.piedpiperdb.DAO.PlayerDAO;
+import com.example.piedpiperdb.DAO.TeamDAO;
+import com.example.piedpiperdb.Entities.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -32,9 +37,26 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        // GEFP-9-AWS små testat
+        //GEFP-18-SA testar
+        PlayerDAO playerDAO = new PlayerDAO();
+        MatchDAO matchDAO = new MatchDAO();
+        GameDAO gameDAO = new GameDAO();
+        TeamDAO teamDAO = new TeamDAO();
 
-        /*
+        Player player = new Player();
+        Match match = new Match();
+        Game game = new Game();
+        Team team = new Team();
+
+        System.out.println("Antal players är: "+playerDAO.getAllPlayers().size());
+        System.out.println("Antal matcher är: "+matchDAO.getAllMatches().size());
+        System.out.println("Antal spel är: "+gameDAO.getAllGames().size());
+        System.out.println("Antal lag är: "+teamDAO.getAllTeams().size());
+
+
+
+        // GEFP-9-AWS små testat
+/*
         MatchDAO dao = new MatchDAO();
         Match match = new Match(MatchType.PLAYER_VS_PLAYER);
         dao.saveMatch(match);*/
