@@ -1,5 +1,6 @@
 package com.example.piedpiperdb.View;
 
+import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,6 +11,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+
 //GEFP-4-SA
 public abstract class AbstractScene {
 
@@ -17,9 +21,15 @@ public abstract class AbstractScene {
 
     static Scene getScene(Stage window) {
 
+        HelloApplication helloApp = new HelloApplication();
+
+        //-----------------------------------------------------------
+
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.setPadding(new Insets(10));
         anchorPane.getStyleClass().add("backgroundTeaGreen");
+
+        //-----------------------------------------------------------
 
         VBox titelBox = new VBox();
         titelBox.setSpacing(5);
@@ -117,11 +127,16 @@ public abstract class AbstractScene {
         back.setMinSize(160, 30);
         back.setLayoutY(535.0);
         back.setLayoutX(30.0);
+
         back.setOnAction(e->{
-            //HelloApplication.main(null);//Vet inte om detta fungerar
-            //HelloApplication.start(window);
+            try {
+                helloApp.start(window);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
+        //-----------------------------------------------------------
 
         anchorPane.getChildren().addAll(titelBox,rectangle, vbox, userButton,searchField,rectangle2,hBox, column1VBox,back);
 
