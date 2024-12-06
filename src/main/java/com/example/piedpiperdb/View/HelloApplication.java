@@ -63,7 +63,8 @@ public class HelloApplication extends Application {
         //GEFP-4-SA
         loginButton.setOnAction(e -> {
             window.setTitle("Start page 2");
-            window.setScene(StartPage.getScene(window));
+            // window.setScene(StartPage.getScene(window));
+            window.setScene(PlayerView.getScene(window)); //Ändrat till PlayerView för testning
         });
 
         Label userName = new Label("Username");

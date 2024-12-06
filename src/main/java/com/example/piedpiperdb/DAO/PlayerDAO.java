@@ -10,7 +10,7 @@ import java.util.List;
 public class PlayerDAO {
     //CRUD-opperationer (Create - Read - Update - Delete)
 
-    private final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("myconfig");
+    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("myconfig");
 
     //Create
     public boolean savePlayer(Player player) {
@@ -52,6 +52,30 @@ public class PlayerDAO {
         List<Player> listToReturn = new ArrayList<>();
         TypedQuery<Player> query = entityManager.createQuery("FROM Player", Player.class);
         listToReturn.addAll(query.getResultList());
+        return listToReturn;
+    }
+
+    public List<Player> getAllPlayersFromSelectedGame(List<Integer> gameIds) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        List<Player> listToReturn = new ArrayList<>();
+
+        transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+            TypedQuery<Player> query = entityManager.createQuery(
+                    "SELECT p FROM Player p WHERE p.gameId.game_id IN :gameIds", Player.class);
+            query.setParameter("gameIds", gameIds);
+            listToReturn.addAll(query.getResultList());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (entityManager != null && transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+        } finally {
+            entityManager.close();
+        }
         return listToReturn;
     }
 
