@@ -10,6 +10,7 @@ public class Match {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "match_id")//GEFP-18-SA
     private int id;
 
     @Column (nullable = false)

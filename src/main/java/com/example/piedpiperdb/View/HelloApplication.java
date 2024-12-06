@@ -48,6 +48,12 @@ public class HelloApplication extends Application {
         Game game = new Game();
         Team team = new Team();
 
+        System.out.println("Antal players är: "+playerDAO.getAllPlayers().size());
+        System.out.println("Antal matcher är: "+matchDAO.getAllMatches().size());
+        System.out.println("Antal spel är: "+gameDAO.getAllGames().size());
+        System.out.println("Antal lag är: "+teamDAO.getAllTeams().size());
+
+
 
         // GEFP-9-AWS små testat
 /*
