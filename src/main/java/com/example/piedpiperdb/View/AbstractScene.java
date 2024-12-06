@@ -1,8 +1,8 @@
 package com.example.piedpiperdb.View;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,18 +19,78 @@ public abstract class AbstractScene {
 
     static Scene scene;
 
+    //GEFP-20-SA
+    static VBox leftVbox;
+    static Button back;
+    //private static HBox columnNames;
+    static AnchorPane anchorPane;
+
     static Scene getScene(Stage window) {
 
-        HelloApplication helloApp = new HelloApplication();
-
-        //-----------------------------------------------------------
-
-        AnchorPane anchorPane = new AnchorPane();
+        //GEFP-4-SA
+        anchorPane = new AnchorPane();
         anchorPane.setPadding(new Insets(10));
         anchorPane.getStyleClass().add("backgroundTeaGreen");
 
-        //-----------------------------------------------------------
+        //GEFP-20-SA
+        anchorPane.getChildren().addAll(
+                createTitleBox(),
+                createPlaceForButtons(),
+                createRectagleForActions(),
+                createBackButton(window),
+                createSearchField(),
+                createUserButton(),
+                leftVbox
+        );
 
+        addCustomComponents(anchorPane);
+
+        //GEFP-4-SA
+        scene = new Scene(anchorPane, HelloApplication.width, HelloApplication.height);
+        scene.getStylesheets().add("EscortFlasher.css");
+
+        return scene;
+
+
+        //-----------------------------------------------------------
+        /*
+        //GEFP-4-SA
+        Button button1 = new Button("Knapp 1");
+        button1.getStyleClass().add("standardButton");
+        button1.setMinSize(160, 30);
+
+        columnNames = new HBox();
+        columnNames.setSpacing(10);
+        columnNames.setPadding(new Insets(15, 10, 10, 10));
+        columnNames.setMaxSize(60,170);
+        columnNames.setLayoutY(135.0);
+        columnNames.setLayoutX(210.0);
+
+        Label LabelCulumn1H = new Label("Column 1");
+        LabelCulumn1H.getStyleClass().add("standardLabel");
+        LabelCulumn1H.setMinSize(100, 30);
+        LabelCulumn1H.setAlignment(Pos.CENTER);
+
+        columnNames.getChildren().addAll(LabelCulumn1H);
+
+        VBox column1VBox = new VBox();
+        column1VBox.setSpacing(10);
+        column1VBox.setPadding(new Insets(15, 10, 10, 10));
+        column1VBox.setMinSize(100,390);
+        column1VBox.setLayoutY(180.0);
+        column1VBox.setLayoutX(220.0);
+        column1VBox.getStyleClass().add("columnV");*/
+
+    }
+
+    //GEFP-20-SA
+    protected static void addCustomComponents(AnchorPane anchorPane){
+        //Lägg in tex egna knappar
+    }
+
+    //GEFP-20-SA
+    private static Node createTitleBox(){
+        //GEFP-4-SA
         VBox titelBox = new VBox();
         titelBox.setSpacing(5);
         titelBox.setPadding(new Insets(10, 10, 10, 10));
@@ -46,41 +106,58 @@ public abstract class AbstractScene {
         titel2.setAlignment(Pos.CENTER);
 
         titelBox.getChildren().addAll(titel, titel2);
+        return titelBox;
+    }
+    //GEFP-20-SA
+    private static Node createPlaceForButtons(){
+        //GEFP-4-SA
+        Rectangle rectangleBGButtons = new Rectangle();
+        rectangleBGButtons.setHeight(440);
+        rectangleBGButtons.setWidth(180);
+        rectangleBGButtons.setFill(Paint.valueOf("#FFFFFF"));
+        rectangleBGButtons.setOpacity(0.5);
+        rectangleBGButtons.setY(140);
+        rectangleBGButtons.setX(20);
 
-        //-----------------------------------------------------------
+        leftVbox = new VBox();
+        leftVbox.setSpacing(10);
+        leftVbox.setPadding(new Insets(15, 10, 10, 10));
+        leftVbox.setMinSize(160,20);
+        leftVbox.setMaxSize(170, 30);
+        leftVbox.setLayoutY(140.0);
+        leftVbox.setLayoutX(20.0);
 
-        Rectangle rectangle = new Rectangle();
-        rectangle.setHeight(440);
-        rectangle.setWidth(180);
-        rectangle.setFill(Paint.valueOf("#FFFFFF"));
-        rectangle.setOpacity(0.5);
-        rectangle.setY(140);
-        rectangle.setX(20);
+        return rectangleBGButtons;
 
-        Button button1 = new Button("Knapp 1");
-        button1.getStyleClass().add("standardButton");
-        button1.setMinSize(160, 30);
+    }
+    //GEFP-20-SA
+    private static Node createRectagleForActions(){
+        //GEFP-4-SA
+        Rectangle rectangleBGForAction = new Rectangle();
+        rectangleBGForAction.setHeight(440);
+        rectangleBGForAction.setWidth(465);
+        rectangleBGForAction.setFill(Paint.valueOf("#FFFFFF"));
+        rectangleBGForAction.setOpacity(0.5);
+        rectangleBGForAction.setY(140);
+        rectangleBGForAction.setX(210);
 
-        Button button2 = new Button("Knapp 2");
-        button2.getStyleClass().add("standardButton");
-        button2.setMinSize(160, 30);
+        return rectangleBGForAction;
+    }
+    //GEFP-20-SA
+    private static Node createBackButton(Stage window){
+        //GEFP-4-SA
+        HelloApplication helloApp = new HelloApplication();
+        back = new Button("Back");
+        back.getStyleClass().add("darkerButton");
+        back.setMinSize(160, 30);
+        back.setLayoutY(535.0);
+        back.setLayoutX(30.0);
 
-        VBox vbox = new VBox();
-        vbox.setSpacing(10);
-        vbox.setPadding(new Insets(15, 10, 10, 10));
-        vbox.setMaxSize(170, 30);
-        vbox.setLayoutY(140.0);
-        vbox.setLayoutX(20.0);
-        vbox.getChildren().addAll(button1, button2);
-
-        //-----------------------------------------------------------
-
-        Button userButton = new Button("UserName");
-        userButton.getStyleClass().add("darkerButton");
-        userButton.setMinSize(140, 30);
-        userButton.setLayoutY(20.0);
-        userButton.setLayoutX(533.0);
-
+        return back;
+    }
+    //GEFP-20-SA
+    private static Node createSearchField(){
+        //GEFP-4-SA
         TextField searchField = new TextField();
         searchField.getStyleClass().add("textFieldOne");
         searchField.setPromptText("Search: ");
@@ -88,62 +165,17 @@ public abstract class AbstractScene {
         searchField.setLayoutY(100.0);
         searchField.setLayoutX(485.0);
 
-        //-----------------------------------------------------------
+        return searchField;
+    }
+    //GEFP-20-SA
+    private static Node createUserButton(){
+        //GEFP-4-SA
+        Button userButton = new Button("UserName");
+        userButton.getStyleClass().add("darkerButton");
+        userButton.setMinSize(140, 30);
+        userButton.setLayoutY(20.0);
+        userButton.setLayoutX(533.0);
 
-        Rectangle rectangle2 = new Rectangle();
-        rectangle2.setHeight(440);
-        rectangle2.setWidth(465);
-        rectangle2.setFill(Paint.valueOf("#FFFFFF"));
-        rectangle2.setOpacity(0.5);
-        rectangle2.setY(140);
-        rectangle2.setX(210);
-
-        HBox hBox = new HBox();
-        hBox.setSpacing(10);
-        hBox.setPadding(new Insets(15, 10, 10, 10));
-        hBox.setMaxSize(60,170);
-        hBox.setLayoutY(135.0);
-        hBox.setLayoutX(210.0);
-
-        Label LabelCulumn1H = new Label("Column 1");
-        LabelCulumn1H.getStyleClass().add("standardLabel");
-        LabelCulumn1H.setMinSize(100, 30);
-        LabelCulumn1H.setAlignment(Pos.CENTER);
-
-        hBox.getChildren().addAll(LabelCulumn1H);
-
-        VBox column1VBox = new VBox();
-        column1VBox.setSpacing(10);
-        column1VBox.setPadding(new Insets(15, 10, 10, 10));
-        column1VBox.setMinSize(100,390);
-        column1VBox.setLayoutY(180.0);
-        column1VBox.setLayoutX(220.0);
-        column1VBox.getStyleClass().add("columnV");
-
-        //-----------------------------------------------------------
-
-        Button back = new Button("Back");
-        back.getStyleClass().add("darkerButton");
-        back.setMinSize(160, 30);
-        back.setLayoutY(535.0);
-        back.setLayoutX(30.0);
-
-        back.setOnAction(e->{
-            try {
-                helloApp.start(window);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-
-        //-----------------------------------------------------------
-
-        anchorPane.getChildren().addAll(titelBox,rectangle, vbox, userButton,searchField,rectangle2,hBox, column1VBox,back);
-
-        scene = new Scene(anchorPane, HelloApplication.width, HelloApplication.height);
-        scene.getStylesheets().add("EscortFlasher.css");
-
-        return scene;
-
+        return userButton;
     }
 }

@@ -10,13 +10,20 @@ public class Match {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "match_id")//GEFP-18-SA
     private int id;
 
     @Column (nullable = false)
     @Enumerated(EnumType.STRING) //Enum som sträng i db
     private MatchType matchType;       //player vs player, team vs team
 
-    @Column (nullable = false)
+    //GEFP-18-SA
+    @Column(name = "match_name",length = 70, nullable = false)
+    private String matchName;
+
+    //AWS GEFP-3
+
+    @Column (name = "date", nullable = false)
     private LocalDate matchDate;
 
     private String result;
