@@ -31,7 +31,8 @@ public class PlayerView extends AbstractScene{
 
         for (Game game : games) {
            String name = game.getGame_name();
-           CheckBox checkBox  = new CheckBox(name);
+           int gameId = game.getGame_id();
+           CheckBox checkBox  = new CheckBox(name + ", GameID: " + gameId );
            checkBoxes.add(checkBox);
         }
 
@@ -52,9 +53,19 @@ public class PlayerView extends AbstractScene{
             if (allGames.isSelected()) {
                 List<Player> players = playerDAO.getAllPlayers();
                 ObservableList<Player> observablePlayers = FXCollections.observableArrayList(players);
-                tableView.setItems(observablePlayers); // Behöver skapa en anslutning till tableView eller likanande i den abstrakta scenen
+                //tableView.setItems(observablePlayers); // Behöver skapa en anslutning till tableView eller likanande i den abstrakta scenen
             } else {
-                List<Player> players = playerDAO.
+                List<Integer> ids = new ArrayList<>();
+                for (CheckBox checkBox : checkBoxes) {
+                    if (checkBox.isSelected()) {
+                        String text = checkBox.getText();
+                        int lastSpaceIndex = text.lastIndexOf(" ");
+                        String stringId = text.substring(lastSpaceIndex + 1);
+                        int id = Integer.parseInt(stringId);
+                        ids.add(id);
+                    }
+                }
+                List<Player> players = playerDAO.getAllPlayersFromSelectedGame(ids);
             }
 
 
@@ -83,7 +94,7 @@ public class PlayerView extends AbstractScene{
 
 
         AnchorPane rootPane = (AnchorPane) baseScene.getRoot();
-        rootPane.getChildren.addAll(allGames,checkBoxes,addNewPlayerButton, updatePlayerByIdButton, deletePlayerByIdButton);
+       //rootPane.getChildren.addAll(allGames,checkBoxes,addNewPlayerButton, updatePlayerByIdButton, deletePlayerByIdButton);
 
 
         return baseScene;

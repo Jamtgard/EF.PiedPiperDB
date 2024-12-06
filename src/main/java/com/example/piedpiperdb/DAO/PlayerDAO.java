@@ -55,6 +55,7 @@ public class PlayerDAO {
         return listToReturn;
     }
 
+    //GEFP-19-AA
     public List<Player> getAllPlayersFromSelectedGame(List<Integer> gameIds) {
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;

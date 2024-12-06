@@ -64,7 +64,7 @@ public class HelloApplication extends Application {
         loginButton.setOnAction(e -> {
             window.setTitle("Start page 2");
             // window.setScene(StartPage.getScene(window));
-            window.setScene(PlayerView.getScene(window)); //Ändrat till PlayerView för testning
+            window.setScene(PlayerView.playerScene(window)); //Ändrat till PlayerView för testning
         });
 
         Label userName = new Label("Username");
