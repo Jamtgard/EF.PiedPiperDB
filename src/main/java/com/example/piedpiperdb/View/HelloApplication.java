@@ -48,10 +48,11 @@ public class HelloApplication extends Application {
         Game game = new Game();
         Team team = new Team();
 
+        /*
         System.out.println("Antal players är: "+playerDAO.getAllPlayers().size());
         System.out.println("Antal matcher är: "+matchDAO.getAllMatches().size());
         System.out.println("Antal spel är: "+gameDAO.getAllGames().size());
-        System.out.println("Antal lag är: "+teamDAO.getAllTeams().size());
+        System.out.println("Antal lag är: "+teamDAO.getAllTeams().size());*/
 
 
 
@@ -67,7 +68,7 @@ public class HelloApplication extends Application {
         StackPane stackPane = new StackPane();
         stackPane.getStyleClass().add("backgroundTeaGreen");
 
-        stage.setTitle("Start page");
+        window.setTitle("Start page");
 
 
         Rectangle greenBackground = new Rectangle(width, height);
@@ -85,7 +86,7 @@ public class HelloApplication extends Application {
         //GEFP-4-SA
         loginButton.setOnAction(e -> {
             window.setTitle("Start page 2");
-            window.setScene(StartPage.getScene(window));
+            window.setScene(StartPage.startScene(window));
         });
 
         Label userName = new Label("Username");
@@ -136,7 +137,7 @@ public class HelloApplication extends Application {
         });
 
         //SA
-        stage.show();
+        window.show();
     }
 
     //GEFP-16-AA
