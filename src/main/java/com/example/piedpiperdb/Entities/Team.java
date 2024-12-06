@@ -20,7 +20,7 @@ public class Team {
 
 //GEFP-15-SJ - Start:
 
-    @OneToMany(mappedBy = "player_id", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @OneToMany(mappedBy = "teamId", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Player> listOfPlayersInTeam = new ArrayList<>();
 
 //GEFP-15-SJ - Slut.
