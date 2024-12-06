@@ -1,9 +1,7 @@
 package com.example.piedpiperdb.View;
 
-import com.example.piedpiperdb.DAO.MatchDAO;
-import com.example.piedpiperdb.Entities.Match;
-import com.example.piedpiperdb.Entities.MatchType;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -108,8 +106,31 @@ public class HelloApplication extends Application {
         startScene = new Scene(stackPane, width, height);
         startScene.getStylesheets().add("EscortFlasher.css");
         stage.setScene(startScene);
+
+        //GEFP-16-AA
+        window.setOnCloseRequest(e -> {
+            e.consume();
+            closeProgram();
+        });
+
+        //SA
         stage.show();
     }
+
+    //GEFP-16-AA
+    private void closeProgram() {
+        boolean answer = ConfrimBox.display("Exit", "Are you sure you want to exit?");
+
+        if (answer) {
+            System.out.println("Exit program");
+            Platform.exit();
+        } else {
+            System.out.println("Program continues");
+        }
+
+    }
+
+
 
     public static void main(String[] args) {
         launch();
