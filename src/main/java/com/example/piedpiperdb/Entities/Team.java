@@ -15,12 +15,12 @@ public class Team {
     @Column(name = "team_id")
     private int teamId;
 
-    @Column(name = "team_name", length = 20, nullable = false, unique = true)
+    @Column(name = "team_name", length = 70, nullable = false, unique = true)
     private String teamName;
 
 //GEFP-15-SJ - Start:
-
-    @OneToMany(mappedBy = "player_id", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
+                    //GEFPP-18-SA: ändrade player_id till teamId
+    @OneToMany(mappedBy = "teamId", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Player> listOfPlayersInTeam = new ArrayList<>();
 
 //GEFP-15-SJ - Slut.
