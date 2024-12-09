@@ -49,10 +49,10 @@ public class Player {
 
     //GEFP-12-AA
 
-    @ManyToOne
+   /* @ManyToOne
     @JoinColumn(name = "match_id")
     private Match matchId;
-
+*/
     //-----------------------------------------------------
     //Constructors
 
