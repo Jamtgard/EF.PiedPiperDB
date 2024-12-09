@@ -40,6 +40,7 @@ public class PlayerDAO {
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         Player playerToReturn = entityManager.find(Player.class, id);
         entityManager.close();
+        System.out.println(playerToReturn);
         return playerToReturn;
     }
 
@@ -88,6 +89,8 @@ public class PlayerDAO {
         try{
             transaction = entityManager.getTransaction();
             transaction.begin();
+
+
 
             if(entityManager.contains(playerToUpdate)) {
                 System.out.println("Player to update found in DB");

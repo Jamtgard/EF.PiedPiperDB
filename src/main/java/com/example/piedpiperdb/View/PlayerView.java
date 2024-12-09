@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import static org.hibernate.internal.util.ExceptionHelper.getRootCause;
 
@@ -110,9 +111,9 @@ public class PlayerView extends AbstractScene{
             Button updatePlayerByIdButton = new Button("Update player by ID");
             updatePlayerByIdButton.getStyleClass().add("standardButton");
             updatePlayerByIdButton.setMinSize(160, 30);
-/*            updatePlayerByIdButton.setOnAction(e -> {
-
-            });*/
+            updatePlayerByIdButton.setOnAction(e -> {
+                showUpdatePlayerForm(anchorPane);
+            });
 
             Button deletePlayerByIdButton = new Button("Delete player by ID");
             deletePlayerByIdButton.getStyleClass().add("standardButton");
@@ -269,7 +270,7 @@ public class PlayerView extends AbstractScene{
             } else {
                 //Hitta annan lösning!
                 try {
-                    player = new Player(fistNamefield.getText(), lastNameField.getText(), nicknameField.getText());
+                    player = new Player(fistNamefield.getText(), lastNameField.getText(), nicknameField.getText(), streetAddressField.getText(), zipCodeField.getText(), cityField.getText(), countryField.getText(), emailField.getText());
                     Label labelSaved = new Label(" Player saved to database! ");
                     labelSaved.getStyleClass().add("standardLabel");
                     formContainer.getChildren().add(labelSaved);
@@ -291,6 +292,139 @@ public class PlayerView extends AbstractScene{
 
         anchorPane.getChildren().add(formContainer);
 
+    }
+
+    private static void showUpdatePlayerForm(AnchorPane anchorPane){
+        VBox getIdBox = new VBox();
+        getIdBox.setPadding(new Insets(20));
+        getIdBox.setSpacing(10);
+        getIdBox.getStyleClass().add("backgroundTeaGreen");
+        AnchorPane.setTopAnchor(getIdBox, 150.0);
+        AnchorPane.setLeftAnchor(getIdBox, 220.0);
+        AnchorPane.setRightAnchor(getIdBox, 30.0);
+        AnchorPane.setBottomAnchor(getIdBox, 30.0);
+
+        HBox playerIdBox = new HBox(5);
+        Label playerId = new Label("Enter Player ID: ");
+        playerId.getStyleClass().add("standardLabel");
+        TextField playerInfield = new TextField();
+        playerInfield.getStyleClass().add("textFieldOne");
+        playerInfield.setPromptText("Player ID");
+        playerIdBox.getChildren().addAll(playerId, playerInfield);
+
+        VBox formContainer = new VBox(5);
+        formContainer.setPadding(new Insets(20));
+        formContainer.getStyleClass().add("backgroundTeaGreen");
+        AnchorPane.setTopAnchor(formContainer, 250.0);
+        AnchorPane.setLeftAnchor(formContainer, 220.0);
+        AnchorPane.setRightAnchor(formContainer, 30.0);
+        AnchorPane.setBottomAnchor(formContainer, 30.0);
+
+        Label labelNoPlayerId = new Label(" No player found! Enter a different ID (only numbers allowed). ");
+        labelNoPlayerId.getStyleClass().add("standardLabel");
+
+        Button getButton = new Button("Get Player from database");
+        getButton.getStyleClass().add("standardButton");
+        getButton.setOnAction(event -> {
+            try {
+            Player playerToUpdate = playerDAO.getPlayer(Integer.parseInt(playerInfield.getText()));
+
+                if (playerToUpdate == null) {
+                    formContainer.getChildren().add(labelNoPlayerId);
+                    return;
+                } else {
+                    if (!formContainer.getChildren().isEmpty()) {
+                        formContainer.getChildren().clear();
+                    }
+                    System.out.println(playerToUpdate.toString());
+                    HBox fistNameBox = new HBox(5);
+                    Label fistName = new Label(" First Name* ");
+                    fistName.getStyleClass().add("standardLabel");
+                    TextField fistNamefield = new TextField();
+                    fistNamefield.getStyleClass().add("textFieldOne");
+                    fistNamefield.setText(playerToUpdate.getFirstName());
+                    fistNameBox.getChildren().addAll(fistName, fistNamefield);
+
+                    HBox lastNameBox = new HBox(5);
+                    Label lastName = new Label(" Last Name* ");
+                    lastName.getStyleClass().add("standardLabel");
+                    TextField lastNameField = new TextField();
+                    lastNameField.getStyleClass().add("textFieldOne");
+                    lastNameField.setText(playerToUpdate.getLastName());
+                    lastNameBox.getChildren().addAll(lastName, lastNameField);
+
+                    HBox nicknameBox = new HBox(5);
+                    Label nickname = new Label(" Nickname* ");
+                    nickname.getStyleClass().add("standardLabel");
+                    TextField nicknameField = new TextField();
+                    nicknameField.getStyleClass().add("textFieldOne");
+                    nicknameField.setText(playerToUpdate.getNickname());
+                    nicknameBox.getChildren().addAll(nickname, nicknameField);
+
+                    HBox addressBox = new HBox(5);
+                    Label streetAddress = new Label(" Street Address ");
+                    streetAddress.getStyleClass().add("standardLabel");
+                    TextField streetAddressField = new TextField();
+                    streetAddressField.getStyleClass().add("textFieldOne");
+                    streetAddressField.setText(playerToUpdate.getStreetAddress());
+                    addressBox.getChildren().addAll(streetAddress, streetAddressField);
+
+                    HBox zipBox = new HBox(5);
+                    Label zipCode = new Label(" Zip Code ");
+                    zipCode.getStyleClass().add("standardLabel");
+                    TextField zipCodeField = new TextField();
+                    zipCodeField.getStyleClass().add("textFieldOne");
+                    zipCodeField.setText(playerToUpdate.getZipCode());
+                    zipBox.getChildren().addAll(zipCode, zipCodeField);
+
+                    HBox cityBox = new HBox(5);
+                    Label city = new Label(" City ");
+                    city.getStyleClass().add("standardLabel");
+                    TextField cityField = new TextField();
+                    cityField.getStyleClass().add("textFieldOne");
+                    cityField.setText(playerToUpdate.getCity());
+                    cityBox.getChildren().addAll(city, cityField);
+
+
+                    HBox countryBox = new HBox(5);
+                    Label country = new Label(" Country ");
+                    country.getStyleClass().add("standardLabel");
+                    TextField countryField = new TextField();
+                    countryField.getStyleClass().add("textFieldOne");
+                    countryField.setText(playerToUpdate.getCountry());
+                    countryBox.getChildren().addAll(country, countryField);
+
+                    HBox emailBox = new HBox(5);
+                    Label email = new Label(" E-mail ");
+                    email.getStyleClass().add("standardLabel");
+                    TextField emailField = new TextField();
+                    emailField.getStyleClass().add("textFieldOne");
+                    emailField.setText(playerToUpdate.getEmail());
+                    emailBox.getChildren().addAll(email, emailField);
+
+                    Button updateButton = new Button("Update Player");
+                    updateButton.getStyleClass().add("standardButton");
+                    updateButton.setOnAction(e -> {
+                        Player updatePlayer = new Player(fistNamefield.getText(), lastNameField.getText(), nicknameField.getText(), streetAddressField.getText(), zipCodeField.getText(), cityField.getText(), countryField.getText(), emailField.getText());
+                        playerDAO.updatePlayer(updatePlayer);
+                        Label labelSaved = new Label(" Player saved and updated in the database! ");
+                        labelSaved.getStyleClass().add("standardLabel");
+                        formContainer.getChildren().add(labelSaved);
+                    });
+
+
+                    formContainer.getChildren().addAll(fistNameBox, lastNameBox, nicknameBox, addressBox, cityBox, countryBox, emailBox, updateButton);
+
+                }
+            } catch (Exception e){
+                formContainer.getChildren().add(labelNoPlayerId);
+            }
+        });
+
+
+        getIdBox.getChildren().addAll(playerIdBox, getButton);
+
+        anchorPane.getChildren().addAll(getIdBox, formContainer);
     }
 
     protected static void addCustomComponents(AnchorPane anchorPane, List<Player> players){
