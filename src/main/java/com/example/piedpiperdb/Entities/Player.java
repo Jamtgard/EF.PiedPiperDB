@@ -119,6 +119,11 @@ public class Player {
         this.lastName = lastName;
     }
 
+    //GEFP-19-AA
+    public String getFullName(){
+        return firstName + " " + lastName;
+    }
+
     public String getNickname() {
         return nickname;
     }
@@ -151,6 +156,11 @@ public class Player {
         this.city = city;
     }
 
+    //GEFP-19-AA
+    public String getFullAddress(){
+        return streetAddress + "\n" + zipCode + "\n" + city;
+    }
+
     public String getCountry() {
         return country;
     }
@@ -171,11 +181,20 @@ public class Player {
         return gameId;
     }
 
+    public String getGameName(){
+        return gameId !=null ? gameId.getGame_name() : "No game registered";
+    }
+
     public void setGameId(Game gameId) {
         this.gameId = gameId;
     }
+
     public Team getTeamId() {
         return teamId;
+    }
+
+    public String getTeamName(){
+        return teamId !=null ? teamId.getTeamName() : "No team registered";
     }
 
     public void setTeamId(Team teamId) {
@@ -184,6 +203,10 @@ public class Player {
 
     /*public Match getMatchId() {
         return matchId;
+    }
+
+    public String getMatchName(){
+        return matchId !=null ? matchId.getMatchName() : "No match registered";
     }
 
     public void setMatchId(Match matchId) {

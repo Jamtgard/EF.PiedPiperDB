@@ -3,11 +3,16 @@ package com.example.piedpiperdb.View;
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.Entities.Game;
+import com.example.piedpiperdb.Entities.Player;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +61,14 @@ public class PlayerView extends AbstractScene{
                 checkBoxes.add(checkBox);
             }
 
-            Button getAllPlayers = new Button("Show selected players");
+            Button getAllPlayers = new Button("Show all players");
             getAllPlayers.getStyleClass().add("standardButton");
             getAllPlayers.setMinSize(160, 30);
+            getAllPlayers.setOnAction(event -> {
+                List<Player> players = playerDAO.getAllPlayers();
+                System.out.println(players.size());
+                showTable(anchorPane, players );
+            });
 
 
             Button selectedPlayers = new Button("Show players from \nselected game or games");
@@ -96,7 +106,52 @@ public class PlayerView extends AbstractScene{
 
     }
 
-    protected static void addCustomComponents(AnchorPane anchorPane){
+    public static void showTable(AnchorPane anchorPane, List<Player> players){
+        TableView<Player> table = createPlayerTable(players); //Skapa tableView
+
+        AnchorPane.setTopAnchor(table, 150.0);
+        AnchorPane.setLeftAnchor(table, 220.0);
+        AnchorPane.setRightAnchor(table, 30.0);
+        AnchorPane.setBottomAnchor(table, 30.0);
+        anchorPane.getStyleClass().add("backgroundTeaGreen");
+        anchorPane.getStyleClass().add("standardLabel");
+
+        anchorPane.getStyleClass().add("columnV");
+        anchorPane.getChildren().addAll(table);
+
+    }
+
+    private static TableView<Player> createPlayerTable(List<Player> players){
+        ObservableList<Player> observableList = FXCollections.observableList(players);
+
+        TableView<Player> table = new TableView<>();
+
+        TableColumn<Player, Integer> player_id = new TableColumn<>("Player ID");
+        player_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<Player, String> nickname = new TableColumn<>("Nickname");
+        nickname.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+        TableColumn<Player, String> fullName = new TableColumn<>("Name");
+        fullName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        TableColumn<Player, String> address = new TableColumn<>("Address");
+        address.setCellValueFactory(new PropertyValueFactory<>("fullAddress"));
+        TableColumn<Player, String> country = new TableColumn<>("Country");
+        country.setCellValueFactory(new PropertyValueFactory<>("country"));
+        TableColumn<Player, String> email = new TableColumn<>("E-mail");
+        email.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+
+        //Hur gör jag med dessa??
+        // TableColumn<Player, String> address = new TableColumn<>("Address");
+        /*TableColumn<Player, String> game_name = new TableColumn<>("Game");
+        TableColumn<Player, String> team_name = new TableColumn<>("Team");*/
+
+        table.getColumns().addAll(player_id, nickname, fullName, address, country, email);
+        table.setItems(observableList);
+        return table;
+    }
+
+    protected static void addCustomComponents(AnchorPane anchorPane, List<Player> players){
+        showTable(anchorPane, players );
 
     }
 }

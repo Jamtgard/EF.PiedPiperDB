@@ -1,5 +1,6 @@
 package com.example.piedpiperdb.View;
 
+import com.example.piedpiperdb.Entities.Player;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -7,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -111,5 +113,4 @@ public class ConfrimBox {
         return selectedOptions;
 
     }
-
 }

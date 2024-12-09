@@ -4,7 +4,8 @@ module com.example.piedpiperdb {
     requires org.hibernate.orm.core;
     requires java.desktop;
 
-    opens com.example.piedpiperdb.Entities to org.hibernate.orm.core;
+    //GEFP-19-AA (la till javafx.base
+    opens com.example.piedpiperdb.Entities to org.hibernate.orm.core, javafx.base;
 //    exports com.example.piedpiperdb;
     exports com.example.piedpiperdb.View;
 }
