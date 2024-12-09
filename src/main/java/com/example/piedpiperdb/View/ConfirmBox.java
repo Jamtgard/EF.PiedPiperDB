@@ -1,14 +1,10 @@
 package com.example.piedpiperdb.View;
 
-import com.example.piedpiperdb.Entities.Player;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -18,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //GEFP-16-AA
-public class ConfrimBox {
+public class ConfirmBox {
     private static boolean answer;
 
     public static boolean display(String title, String message){
@@ -89,6 +85,7 @@ public class ConfrimBox {
         Button confirm = new Button("Confirm options");
         confirm.getStyleClass().add("standardButton");
         confirm.setOnAction(e -> {
+            checkBoxes.forEach(checkBox -> checkBox.setSelected(false));
             window.close();
         });
 

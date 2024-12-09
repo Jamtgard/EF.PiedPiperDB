@@ -22,16 +22,16 @@ public class Player {
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "street_address",nullable = false)
+    @Column(name = "street_address")
     private String streetAddress;
 
-    @Column(name = "zip_code", nullable = false)
+    @Column(name = "zip_code")
     private String zipCode; //String för det brukar vara ett mellanrum i postnummer
 
-    @Column(name = "city",nullable = false)
+    @Column(name = "city")
     private String city;
 
-    @Column(name = "country",nullable = false)
+    @Column(name = "country")
     private String country;
 
     @Column(name = "email", unique = true)
@@ -56,15 +56,52 @@ public class Player {
     //-----------------------------------------------------
     //Constructors
 
-    public Player() {
-
-    }
+    public Player() {}
 
     public Player(String firstName, String lastName, String nickname) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nickname = nickname;
     }
+
+    //GEFP-19-AA
+
+
+    public Player(String firstName, String lastName, String nickname, String streetAddress) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+    }
+
+    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+        this.zipCode = zipCode;
+    }
+
+    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+        this.zipCode = zipCode;
+        this.city = city;
+    }
+
+    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.country = country;
+    }
+
+
 
     public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country, String email) {
         this.firstName = firstName;
@@ -212,4 +249,21 @@ public class Player {
     public void setMatchId(Match matchId) {
         this.matchId = matchId;
     }*/
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", streetAddress='" + streetAddress + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", email='" + email + '\'' +
+                ", gameId=" + gameId +
+                ", teamId=" + teamId +
+                '}';
+    }
 }

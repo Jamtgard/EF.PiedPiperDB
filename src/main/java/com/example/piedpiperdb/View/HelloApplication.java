@@ -143,7 +143,7 @@ public class HelloApplication extends Application {
 
     //GEFP-16-AA
     private void closeProgram() {
-        boolean answer = ConfrimBox.display("Exit", "Are you sure you want to exit?");
+        boolean answer = ConfirmBox.display("Exit", "Are you sure you want to exit?");
 
         if (answer) {
             System.out.println("Exit program");
