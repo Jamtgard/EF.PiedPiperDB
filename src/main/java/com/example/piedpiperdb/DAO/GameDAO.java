@@ -58,8 +58,9 @@ public class GameDAO {
         return listToReturn;
     }
 
+    //GEFP-22-SA, ändra inparameter så String är med
     //Update
-    public void updateGame(Game gameToUpdate){
+    public void updateGame(Game gameToUpdate,String newName){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
         try {
@@ -67,12 +68,13 @@ public class GameDAO {
             transaction.begin();
             if(entityManager.contains(gameToUpdate)){
                 System.out.println("Spelet finns i poolen");
+                gameToUpdate.setGameName(newName);
                 entityManager.persist(gameToUpdate);//Helt nya saker som ska sparas
 
             } else {
                 System.out.println("Finns inte i poolen");
                 Game revivedGame = entityManager.merge(gameToUpdate);
-                System.out.println(revivedGame.getGame_id() + " is alive");
+                System.out.println(revivedGame.getGameId() + " is alive");
             }
             entityManager.merge(gameToUpdate);
             transaction.commit();
@@ -86,15 +88,62 @@ public class GameDAO {
         }
     }
 
+    //GEFP-22-SA
+    public void updatePlayersTeamIdBeforeDelete(int id){
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        System.out.println("updatePlayersTeamIdBeforeDelete id: " + id);
+
+        try{
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            String updateQuery = "UPDATE Player p SET p.teamId = NULL WHERE p.gameId.gameId = :id";
+
+            Query query = entityManager.createQuery(updateQuery);
+
+            query.setParameter("id", id);
+            int updatedCount = query.executeUpdate();
+
+            System.out.println("Updated " + updatedCount + " player(s) to disassociate from game " + id);
+            transaction.commit();
+
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            if(entityManager != null && transaction != null && transaction.isActive()){
+                transaction.rollback();
+            }
+        }finally {
+            entityManager.close();
+        }
+
+    }
+
     //Delete
+    //GEFP-22-SA, ändra mellan begin och commit, det gamla ligger inom /**/
     public boolean deleteGameById(int id){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
+        System.out.println("deleteGameById id: " + id);
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
+
+
+            String deleteQuery = "DELETE FROM Game g WHERE g.gameId = :gameId";
+            Query query = entityManager.createQuery(deleteQuery);
+            query.setParameter("gameId", id);
+
+            int deletedCount = query.executeUpdate();
+            System.out.println("Deleted " + deletedCount + " game(s) with id " + id);
+
+
+            /*
             Game gameToDelete = entityManager.find(Game.class, id);
-            entityManager.remove(entityManager.contains(gameToDelete) ? gameToDelete : entityManager.merge(gameToDelete));
+            entityManager.remove(entityManager.contains(gameToDelete) ? gameToDelete : entityManager.merge(gameToDelete));*/
+
+
             transaction.commit();
             return true;
         }catch (Exception e){

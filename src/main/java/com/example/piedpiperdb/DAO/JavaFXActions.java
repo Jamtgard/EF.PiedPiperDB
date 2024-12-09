@@ -5,33 +5,33 @@ import com.example.piedpiperdb.View.AbstractScene;
 import com.example.piedpiperdb.View.GameView;
 import com.example.piedpiperdb.View.HelloApplication;
 import com.example.piedpiperdb.View.StartPage;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 //GEFP-22-SA
 public class JavaFXActions {
 
+    private static ListView gameListViewAction;
+
     //GEFP-22-SA
-    public static void backToLogin(Stage window) {
-        HelloApplication helloApp = new HelloApplication();
+    public static void toLoginPage(Stage window) {
+        Scene start = HelloApplication.getStartScene();
         window.setTitle("Login");
-        try {
-            helloApp.start(window);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        window.setScene(start);
     }
 
     //GEFP-22-SA
-    public static void backToStart(Stage window){
+    public static void toStartPage(Stage window){
         window.setTitle("Start page");
         window.setScene(StartPage.startScene(window));
     }
@@ -43,26 +43,28 @@ public class JavaFXActions {
     }
 
     //GEFP-22-SA
-    public static ObservableList<String> getGames(){
+    public static ObservableList<Game> getGames(){
         GameDAO gameDAO = new GameDAO();
         ObservableList<Game> games = FXCollections.observableArrayList(gameDAO.getAllGames());
+        return games;
+    }
+    //GEFP-22-SA
+    public static ObservableList<String> getGamesString(){
+        ObservableList<Game> games = getGames();
 
         ObservableList<String> gameName = FXCollections.observableArrayList();
         for(Game game : games){
-            gameName.add(game.getGame_name());
+            gameName.add(game.getGameName());
         }
 
         return gameName;
     }
 
-    //GEFP-22-SA
-    public static ListView gameListView(Button submit){
-        ListView gameListView = new ListView();
-        gameListView.getItems().addAll(getGames());
-        gameListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        gameListView.setMinSize(445,420);
 
-        submitClick(submit, gameListView);
+    //GEFP-22-SA
+    public static ListView gameListView(ListView gameListView){
+        gameListView.getItems().addAll(getGamesString());
+        gameListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         return gameListView;
     }
@@ -88,6 +90,67 @@ public class JavaFXActions {
         AbstractScene.back.setOnAction(event -> {
             toGameView(HelloApplication.window);
         });
+    }
+    //GEFP-22-SA
+    public static Set<Integer> stringToId(ListView gameListView){
+        ObservableList<Game> games = getGames();
+        ObservableList<String> gameNames;
+        gameNames = gameListView.getSelectionModel().getSelectedItems();
+        Set<Integer> gameById = new HashSet<>();
+
+        for(String name : gameNames){
+            for(Game game : games){
+                if(game.getGameName().equals(name)){
+                    gameById.add(game.getGameId());
+                }
+            }
+
+        }
+        return gameById;
+    }
+
+    //GEFP-22-SA
+    public static void deleteGame(ListView gameListView) {
+        GameDAO gameDAO = new GameDAO();
+        Set<Integer>gameById = stringToId(gameListView);
+
+        for(Integer gameId : gameById){
+            System.out.println(gameId);
+        }
+
+
+        for(Integer gameId : gameById){
+            System.out.println("Deleting game with id " + gameId);
+            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            gameDAO.updatePlayersTeamIdBeforeDelete(gameId);
+            gameDAO.deleteGameById(gameId);
+        }
+
+
+    }
+    //GEFP-22-SA
+    public static void addGame(TextField textField) {
+        GameDAO gameDAO = new GameDAO();
+        String gameName = textField.getText();
+        Game newGame = new Game(gameName);
+        gameDAO.saveGame(newGame);
+
+    }
+    //GEFP-22-SA
+    public static void updateGame(TextField textField,ListView gameListView) {
+        GameDAO gameDAO = new GameDAO();
+
+        String gameName = textField.getText();
+
+        Game newGame = new Game(gameName);
+
+        ObservableList<Game> game = gameListView.getSelectionModel().getSelectedItems();
+
+        for(Game g : game){
+            gameDAO.updateGame(g,gameName);
+        }
+
+
     }
 
 }

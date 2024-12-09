@@ -21,7 +21,7 @@ public class StartPage extends AbstractScene{
         VBox vBox = AbstractScene.leftVbox;
 
         AbstractScene.back.setOnAction(e->{
-            JavaFXActions.backToLogin(window);
+            JavaFXActions.toLoginPage(window);//Ändra efter metodnamn i JavaFXAction
         });
 
         addCustomComponents(anchorPane,window);

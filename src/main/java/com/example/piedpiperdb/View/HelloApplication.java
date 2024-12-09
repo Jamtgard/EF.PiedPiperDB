@@ -1,9 +1,6 @@
 package com.example.piedpiperdb.View;
 
-import com.example.piedpiperdb.DAO.GameDAO;
-import com.example.piedpiperdb.DAO.MatchDAO;
-import com.example.piedpiperdb.DAO.PlayerDAO;
-import com.example.piedpiperdb.DAO.TeamDAO;
+import com.example.piedpiperdb.DAO.*;
 import com.example.piedpiperdb.Entities.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -24,7 +21,7 @@ public class HelloApplication extends Application {
 
     //GEFP-5-SA
     public static Stage window;
-    Scene startScene;
+    public static Scene startScene;
 
     private Button loginButton;
 
@@ -87,8 +84,7 @@ public class HelloApplication extends Application {
 
         //GEFP-4-SA
         loginButton.setOnAction(e -> {
-            window.setTitle("Start page 2");
-            window.setScene(StartPage.startScene(window));
+            JavaFXActions.toStartPage(window);
         });
 
         Label userName = new Label("Username");
@@ -160,4 +156,7 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
+
+    public static Scene getStartScene() {return startScene;}
+
 }

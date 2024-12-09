@@ -12,11 +12,11 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "game_id")
-    private int game_id;
+    private int gameId;//GEFP-22-SA, bytte namn på variablerna till gameId och gameName
 
     //GEFP-18-SA, satte längre längd på namnet
     @Column(name = "game_name",length = 70,nullable = false)
-    private String game_name;
+    private String gameName;
 
 
     //GEFP-18-SA, ändrade från ManyToOne till OneToMany
@@ -34,8 +34,8 @@ public class Game {
 
     }
 
-    public Game(String game_name) {
-        this.game_name = game_name;
+    public Game(String gameName) {
+        this.gameName = gameName;
     }
 
     public List<Match> getMatches() {return matches;}
@@ -50,11 +50,11 @@ public class Game {
 
     public void setTeams(List<Team> teams) {this.teams = teams;}
 
-    public String getGame_name() {return game_name;}
+    public String getGameName() {return gameName;}
 
-    public void setGame_name(String game_name) {this.game_name = game_name;}
+    public void setGameName(String game_name) {this.gameName = game_name;}
 
-    public int getGame_id() {return game_id;}
+    public int getGameId() {return gameId;}
 
-    public void setGame_id(int game_id) {this.game_id = game_id;}
+    public void setGameId(int game_id) {this.gameId = game_id;}
 }
