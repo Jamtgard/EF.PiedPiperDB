@@ -158,6 +158,5 @@ public class TeamDAO {
             entityManager.close();
         }
     }
-
 }
 

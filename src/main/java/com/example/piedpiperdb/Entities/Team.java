@@ -60,6 +60,8 @@ public class Team {
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
 
+    // To String
+
     @Override
     public String toString() {
         return "Team{" +

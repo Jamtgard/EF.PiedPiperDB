@@ -38,18 +38,6 @@ public class TeamView extends AbstractScene{
 
         return baseScene;
 
-        /*
-        AnchorPane anchorPane = AbstractScene.anchorPane;
-        VBox leftVbox = AbstractScene.leftVbox;
-
-        //addCustomComponents(anchorPane);
-
-
-        AnchorPane teamRoot = (AnchorPane) firstScene.getRoot();
-
-        return firstScene;
-         */
-
     }
 
     private static void addCustomComponents(VBox vbox) {
