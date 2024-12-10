@@ -23,7 +23,7 @@ public class Game {
     @OneToMany(mappedBy = "id", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<Match> matches = new ArrayList<>();
 
-    @OneToMany(mappedBy = "gameId", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "gameId"/*, orphanRemoval = true*/,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<Player> players = new ArrayList<>();
 
 

@@ -7,6 +7,7 @@ import com.example.piedpiperdb.Entities.Player;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,14 +35,14 @@ public class PlayerView extends AbstractScene{
         VBox vBox = AbstractScene.leftVbox;
 
 
-/*        HelloApplication helloApp = new HelloApplication();
+        HelloApplication helloApp = new HelloApplication();
         AbstractScene.back.setOnAction(e->{
             try {
                 helloApp.start(window);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-        });*/
+        });
 
         //addCustomComponents(anchorPane);
         addCustomComponents(vBox);
@@ -116,9 +118,9 @@ public class PlayerView extends AbstractScene{
             Button deletePlayerByIdButton = new Button("Delete player by ID");
             deletePlayerByIdButton.getStyleClass().add("standardButton");
             deletePlayerByIdButton.setMinSize(160, 30);
- /*           deletePlayerByIdButton.setOnAction(e -> {
-
-            });*/
+            deletePlayerByIdButton.setOnAction(e -> {
+                showDeletePlayerForm(anchorPane);
+            });
 
             vBox.getChildren().addAll(getAllPlayers, selectedPlayers, addNewPlayerButton, updatePlayerByIdButton, deletePlayerByIdButton );
 
@@ -170,10 +172,10 @@ public class PlayerView extends AbstractScene{
         TableColumn<Player, String> team_name = new TableColumn<>("Team");
         team_name.setCellValueFactory(new PropertyValueFactory<>("teamName"));
 
-        TableColumn<Player, String> match = new TableColumn<>("Match");
-        match.setCellValueFactory(new PropertyValueFactory<>("matchInfo"));
+        /*TableColumn<Player, String> match = new TableColumn<>("Match");
+        match.setCellValueFactory(new PropertyValueFactory<>("matchInfo"));*/
 
-        table.getColumns().addAll(player_id, nickname, fullName, address, country, email, game_name, team_name, match);
+        table.getColumns().addAll(player_id, nickname, fullName, address, country, email, game_name, team_name/*, match*/);
         table.setItems(observableList);
         return table;
     }
@@ -414,6 +416,8 @@ public class PlayerView extends AbstractScene{
                         playerToUpdate.setCountry(countryField.getText());
                         playerToUpdate.setEmail(emailField.getText());
 
+                        //Skapa fält för game, team, match
+
                         playerDAO.updatePlayer(playerToUpdate);
                         Label labelSaved = new Label(" Player saved and updated in the database! ");
                         labelSaved.getStyleClass().add("standardLabel");
@@ -434,6 +438,93 @@ public class PlayerView extends AbstractScene{
         getIdBox.getChildren().addAll(playerIdBox, getButton);
 
         anchorPane.getChildren().addAll(getIdBox, formContainer);
+    }
+
+    private static void showDeletePlayerForm(AnchorPane anchorPane) {
+        VBox getIdBox = new VBox();
+        getIdBox.setPadding(new Insets(20));
+        getIdBox.setSpacing(10);
+        getIdBox.getStyleClass().add("backgroundTeaGreen");
+        AnchorPane.setTopAnchor(getIdBox, 150.0);
+        AnchorPane.setLeftAnchor(getIdBox, 220.0);
+        AnchorPane.setRightAnchor(getIdBox, 30.0);
+        AnchorPane.setBottomAnchor(getIdBox, 30.0);
+
+        HBox playerIdBox = new HBox(5);
+        Label playerId = new Label("Enter Player ID: ");
+        playerId.getStyleClass().add("standardLabel");
+        TextField playerInfield = new TextField();
+        playerInfield.getStyleClass().add("textFieldOne");
+        playerInfield.setPromptText("Player ID");
+        playerIdBox.getChildren().addAll(playerId, playerInfield);
+
+        VBox formContainer = new VBox(5);
+        formContainer.setPadding(new Insets(20));
+        formContainer.getStyleClass().add("backgroundTeaGreen");
+        AnchorPane.setTopAnchor(formContainer, 250.0);
+        AnchorPane.setLeftAnchor(formContainer, 220.0);
+        AnchorPane.setRightAnchor(formContainer, 30.0);
+        AnchorPane.setBottomAnchor(formContainer, 30.0);
+
+        Label labelNoPlayerId = new Label(" No player found! Enter a different ID (only numbers allowed). ");
+        labelNoPlayerId.getStyleClass().add("standardLabel");
+
+        Button getButton = new Button("Get Player from database");
+        getButton.getStyleClass().add("standardButton");
+        getButton.setOnAction(event -> {
+            try {
+                Player playerToDelete = playerDAO.getPlayer(Integer.parseInt(playerInfield.getText()));
+
+                if (playerToDelete == null) {
+                    formContainer.getChildren().add(labelNoPlayerId);
+                    return;
+                } else {
+                    if (!formContainer.getChildren().isEmpty()) {
+                        formContainer.getChildren().clear();
+                    }
+
+                    Label player = new Label();
+                    player.setText(
+                            "Namn: " + playerToDelete.getFullName() + "\n" +
+                            "Nickname: " + playerToDelete.getNickname() + "\n" +
+                            "Address: " + playerToDelete.getFullAddress() + "\n" +
+                            "Country: " + playerToDelete.getCountry() + "\n" +
+                            "E-mail: " + playerToDelete.getEmail() + "\n" +
+                            "Game: " + playerToDelete.getGameName() + "\n" +
+                            "Team: " + playerToDelete.getTeamName() + "\n" +
+                            "Match: bortkommenterat just nu"  //playerToDelete.getMatchInfo()
+                    );
+                    player.getStyleClass().add("standardLabel");
+                    formContainer.getChildren().add(player);
+
+                    Button deleteButton = new Button("Delete Player");
+                    deleteButton.getStyleClass().add("standardButton");
+                    deleteButton.setOnAction(e -> {
+                        boolean deletePlayer = ConfirmBox.display("Delete Player", "Are you sure you want to delete this player from the database?");
+                        if (deletePlayer) {
+                          boolean deleted = playerDAO.deletePlayerById(playerToDelete.getId());
+                          if (deleted) {
+                              Label labelDeleted = new Label(" Player deleted. Database up to date! ");
+                              labelDeleted.getStyleClass().add("standardLabel");
+                              formContainer.getChildren().add(labelDeleted);
+                          }
+
+                        } else {
+                            Label labelNotDeleted = new Label("Player NOT deleted");
+                            formContainer.getChildren().add(labelNotDeleted);
+                        }
+                    });
+                    formContainer.getChildren().add(deleteButton);
+
+                }
+            } catch (Exception e){
+            e.printStackTrace();
+            }
+        } );
+
+        getIdBox.getChildren().addAll(playerIdBox, getButton);
+        anchorPane.getChildren().addAll(getIdBox, formContainer);
+
     }
 
     protected static void addCustomComponents(AnchorPane anchorPane, List<Player> players){
