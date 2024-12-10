@@ -25,6 +25,6 @@ INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,cit
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Oskar', 'Lindgren', 'LuckyOskar', 'Torggatan 9', '55112', 'Umeå', 'Sweden', 'oskar.lindgren@example.se', 3, 4);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Emma', 'Larsson', 'EliteEmma', 'Kullerstensvägen 6', '44123', 'Sundsvall', 'Sweden', 'emma.larsson@example.se', 4, 5);
 
-INSERT INTO matches (match_name, date, game_id) VALUES ('Ctrl Alt Defeat vs Sassy Sasquatches', '2024-12-01', 1);
+INSERT INTO matches (match_name, date, game_id,player_id) VALUES ('Ctrl Alt Defeat vs Sassy Sasquatches', '2024-12-01', 1,1);-- GEFP-22-SA, satte in en player_id här
 INSERT INTO matches (match_name, date, game_id) VALUES ('Game of Throws vs Fast but Last', '2024-12-02', 2);
 INSERT INTO matches (match_name, date, game_id) VALUES ('404: Team Name Not Found vs Unicorn Apocalypse', '2024-12-03', 3);

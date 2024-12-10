@@ -119,7 +119,7 @@ public class JavaFXActions {
         for(Integer gameId : gameById){
             System.out.println("Deleting game with id " + gameId);
             System.out.println("a-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            //gameDAO.updatePlayersTeamIdBeforeDelete(gameId);
+            gameDAO.updatePlayersBeforeDelete(gameId);
             gameDAO.deleteGameById(gameId);
         }
 

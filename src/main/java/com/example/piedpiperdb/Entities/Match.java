@@ -2,6 +2,8 @@ package com.example.piedpiperdb.Entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 //AWS GEFP-3
 @Entity
@@ -11,7 +13,7 @@ public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_id")//GEFP-18-SA
-    private int id;
+    private int matchId;
 
     @Column (nullable = false)
     @Enumerated(EnumType.STRING) //Enum som sträng i db
@@ -39,9 +41,16 @@ public class Match {
     private Player player;
 
     // ref till lag
+    /* //GEFP-22-SA, kommentera ut och la till ManyToOne istället
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = true)
-    private Team team;
+    private Team team;*/
+
+    //GEFP-22-SA
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OrderColumn
+    private List<Team> teams = new ArrayList<>();
+
 
     public Match() {
     }
@@ -51,11 +60,11 @@ public class Match {
     }
 
     //AWS GEFP-3
-    public int getId() {
-        return id;
+    public int getMatchId() {
+        return matchId;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setMatchId(int id) {
+        this.matchId = id;
     }
 
     public MatchType getMatchType() {
@@ -78,22 +87,33 @@ public class Match {
     public void setResult(String result) {
         this.result = result;
     }
-/*    public Game getGame() {
+    public Game getGame() {
         return game;
     }
     public void setGame(Game game) {
         this.game = game;
     }
+    //GEFP-22-SA, var utkommenterat
     public Player getPlayer() {
         return player;
     }
     public void setPlayer(Player player) {
         this.player = player;
     }
+    /*
     public Team getTeam() {
         return team;
     }
     public void setTeam(Team team) {
         this.team = team;
     }*/
+
+    //GEFP-22-SA, var utkommenterat
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
 }

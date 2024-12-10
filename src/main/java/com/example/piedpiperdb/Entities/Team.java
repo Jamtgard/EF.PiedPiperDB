@@ -25,6 +25,16 @@ public class Team {
 
 //GEFP-15-SJ - Slut.
 
+    //GEFP-22-SA
+    @ManyToOne
+    @JoinColumn(name = "gameId")
+    private Game game;
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<Match>matchesInTeam = new ArrayList<>();
+
+
+    //GEFP-10-SJ
     // Constructors
 
     public Team (){}
@@ -44,6 +54,22 @@ public class Team {
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
 
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public int getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(int teamId) {
+        this.teamId = teamId;
+    }
+
     /*
     public int getGame_id() {return game_id;}
     public void setGame_id(int game_id) {this.game_id = game_id;}
@@ -52,5 +78,12 @@ public class Team {
     public void setMatch_id(Match match_id) {this.match_id = match_id;}
      */
 
+    public List<Match> getMatchesInTeam() {
+        return matchesInTeam;
+    }
+
+    public void setMatchesInTeam(List<Match> matchesInTeam) {
+        this.matchesInTeam = matchesInTeam;
+    }
 }
 
