@@ -78,6 +78,11 @@ public class Match {
     public void setResult(String result) {
         this.result = result;
     }
+
+    //GEFP-19-AA la till getter för gameName för testning
+    public String getMatchName() {
+        return matchName;
+    }
 /*    public Game getGame() {
         return game;
     }

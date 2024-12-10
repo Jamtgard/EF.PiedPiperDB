@@ -18,9 +18,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import static org.hibernate.internal.util.ExceptionHelper.getRootCause;
 
 //GEFP-19-AA
 public class PlayerView extends AbstractScene{
@@ -172,9 +170,10 @@ public class PlayerView extends AbstractScene{
         TableColumn<Player, String> team_name = new TableColumn<>("Team");
         team_name.setCellValueFactory(new PropertyValueFactory<>("teamName"));
 
-        //TO DO
+        TableColumn<Player, String> match = new TableColumn<>("Match");
+        match.setCellValueFactory(new PropertyValueFactory<>("matchInfo"));
 
-        table.getColumns().addAll(player_id, nickname, fullName, address, country, email, game_name, team_name);
+        table.getColumns().addAll(player_id, nickname, fullName, address, country, email, game_name, team_name, match);
         table.setItems(observableList);
         return table;
     }
