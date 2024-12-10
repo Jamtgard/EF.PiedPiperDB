@@ -90,8 +90,6 @@ public class PlayerDAO {
             transaction = entityManager.getTransaction();
             transaction.begin();
 
-
-
             if(entityManager.contains(playerToUpdate)) {
                 System.out.println("Player to update found in DB");
                 entityManager.persist(playerToUpdate);

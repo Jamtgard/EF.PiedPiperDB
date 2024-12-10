@@ -405,11 +405,21 @@ public class PlayerView extends AbstractScene{
                     Button updateButton = new Button("Update Player");
                     updateButton.getStyleClass().add("standardButton");
                     updateButton.setOnAction(e -> {
-                        Player updatePlayer = new Player(fistNamefield.getText(), lastNameField.getText(), nicknameField.getText(), streetAddressField.getText(), zipCodeField.getText(), cityField.getText(), countryField.getText(), emailField.getText());
-                        playerDAO.updatePlayer(updatePlayer);
+
+                        playerToUpdate.setFirstName(fistNamefield.getText());
+                        playerToUpdate.setLastName(lastNameField.getText());
+                        playerToUpdate.setNickname(nicknameField.getText());
+                        playerToUpdate.setStreetAddress(streetAddressField.getText());
+                        playerToUpdate.setZipCode(zipCodeField.getText());
+                        playerToUpdate.setCity(cityField.getText());
+                        playerToUpdate.setCountry(countryField.getText());
+                        playerToUpdate.setEmail(emailField.getText());
+
+                        playerDAO.updatePlayer(playerToUpdate);
                         Label labelSaved = new Label(" Player saved and updated in the database! ");
                         labelSaved.getStyleClass().add("standardLabel");
                         formContainer.getChildren().add(labelSaved);
+
                     });
 
 
