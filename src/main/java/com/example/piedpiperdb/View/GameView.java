@@ -4,10 +4,7 @@ import com.example.piedpiperdb.DAO.JavaFXActions;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -87,27 +84,31 @@ public class GameView extends AbstractScene{
         addGameBox.setPadding(new Insets(10,10,10,10));
         addGameBox.setAlignment(Pos.CENTER);
 
-        TextField textField = new TextField();
-        textField.setPromptText("Game Name");
-        textField.getStyleClass().add("textFieldOne");
-        textField.setMinSize(150, 30);
+        Label addGameLabel = new Label("Add a new game");
+        addGameLabel.getStyleClass().add("titel");
 
-        submit = new Button("Submit");
-        submit.getStyleClass().add("standardButton");
-        submit.setMinSize(160, 30);
+        TextField newGameInput = new TextField();
+        newGameInput.setPromptText("Game Name");
+        newGameInput.getStyleClass().add("textFieldOne");
+        newGameInput.setMinSize(150, 30);
 
-        addGameBox.getChildren().addAll(textField,submit);
+        Button submitAdd = new Button("Submit");
+        submitAdd.getStyleClass().add("standardButton");
+        submitAdd.setMinSize(160, 30);
+
+        addGameBox.getChildren().addAll(addGameLabel,newGameInput,submitAdd);
 
 
         Button addGame = new Button("Add game");
         addGame.getStyleClass().add("standardButton");
         addGame.setMinSize(160, 30);
+
         addGame.setOnAction(e->{
             clearAnchorpane(addGameBox);
             AbstractScene.back.setOnAction(event-> JavaFXActions.toGameView(stage));
 
-            submit.setOnAction(ev->{
-                JavaFXActions.addGame(textField);
+            submitAdd.setOnAction(ev->{
+                JavaFXActions.addGame(newGameInput);
                 JavaFXActions.toGameView(stage);
             });
         });
@@ -122,6 +123,9 @@ public class GameView extends AbstractScene{
             JavaFXActions.toGameView(stage);
         });
 
+
+//------------------------------------------------------------------
+
         VBox updateGameBox = new VBox();
         updateGameBox.setSpacing(10);
         updateGameBox.setPadding(new Insets(10,10,10,10));
@@ -129,23 +133,34 @@ public class GameView extends AbstractScene{
 
         TextField updateGameInput = new TextField();
         updateGameInput.setPromptText("New name");
+        updateGameInput.getStyleClass().add("textFieldOne");
 
         Button updateGame = new Button("Update game");
         updateGame.getStyleClass().add("standardButton");
         updateGame.setMinSize(160, 30);
-        updateGame.getStyleClass().add("textFieldOne");
 
-        Button submit2 = new Button("Submit");
-        submit2.getStyleClass().add("standardButton");
-        submit2.setMinSize(160, 30);
 
-        updateGameBox.getChildren().addAll(updateGameInput,submit2);
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        choiceBox.getItems().addAll(JavaFXActions.getGamesString());
+        choiceBox.setValue(choiceBox.getItems().get(0));
+        choiceBox.setMinSize(150, 30);
+        choiceBox.getStyleClass().add("standardButton");
+
+        Label chooseToUpdate = new Label("Choose game to update");
+        chooseToUpdate.getStyleClass().add("titel");
+
+        Button submitUpdate = new Button("Submit");
+        submitUpdate.getStyleClass().add("standardButton");
+        submitUpdate.setMinSize(160, 30);
+
+        updateGameBox.getChildren().addAll(chooseToUpdate,choiceBox,updateGameInput,submitUpdate);
 
         updateGame.setOnAction(e->{
             clearAnchorpane(updateGameBox);
 
-            submit2.setOnAction(ev->{
-                JavaFXActions.updateGame(updateGameInput,gameListView);
+            submitUpdate.setOnAction(ev->{
+                JavaFXActions.updateGame(updateGameInput,choiceBox);
+                JavaFXActions.gameListView(gameListView);
                 JavaFXActions.toGameView(stage);
             });
 

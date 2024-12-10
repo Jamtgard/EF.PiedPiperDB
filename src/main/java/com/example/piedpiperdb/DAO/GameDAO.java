@@ -63,22 +63,31 @@ public class GameDAO {
     public void updateGame(Game gameToUpdate,String newName){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
+        System.out.println("c-------------------------------------------------------------------");
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
+
             if(entityManager.contains(gameToUpdate)){
                 System.out.println("Spelet finns i poolen");
-                gameToUpdate.setGameName(newName);
-                entityManager.persist(gameToUpdate);//Helt nya saker som ska sparas
+                //gameToUpdate.setGameName(newName);
+                entityManager.merge(gameToUpdate);//Helt nya saker som ska sparas
+
 
             } else {
                 System.out.println("Finns inte i poolen");
+                gameToUpdate.setGameName(newName);
                 Game revivedGame = entityManager.merge(gameToUpdate);
                 System.out.println(revivedGame.getGameId() + " is alive");
+
+                System.out.println(revivedGame.getGameName() + " is alive");
+                System.out.println("g---------------------------------------------------------------------------------------------------------------");
+
             }
             entityManager.merge(gameToUpdate);
             transaction.commit();
         } catch (Exception e){
+            System.out.println("d----------------------------------------------------------------------------------------------------");
             System.out.println(e.getMessage());
             if(entityManager != null && transaction != null && transaction.isActive()){
                 transaction.rollback();
@@ -130,24 +139,25 @@ public class GameDAO {
             transaction = entityManager.getTransaction();
             transaction.begin();
 
-
+/*
             String deleteQuery = "DELETE FROM Game g WHERE g.gameId = :gameId";
             Query query = entityManager.createQuery(deleteQuery);
             query.setParameter("gameId", id);
 
             int deletedCount = query.executeUpdate();
-            System.out.println("Deleted " + deletedCount + " game(s) with id " + id);
+            System.out.println("Deleted " + deletedCount + " game(s) with id " + id);*/
 
 
-            /*
+
             Game gameToDelete = entityManager.find(Game.class, id);
-            entityManager.remove(entityManager.contains(gameToDelete) ? gameToDelete : entityManager.merge(gameToDelete));*/
+            entityManager.remove(entityManager.contains(gameToDelete) ? gameToDelete : entityManager.merge(gameToDelete));
 
 
             transaction.commit();
             return true;
         }catch (Exception e){
             System.out.println(e.getMessage());
+            System.out.println("b-----------------------------------------------------------------------------------------------------------------------");
             if(entityManager != null && transaction != null && transaction.isActive()){
                 transaction.rollback();
             }

@@ -8,10 +8,7 @@ import com.example.piedpiperdb.View.StartPage;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -22,6 +19,7 @@ import java.util.Set;
 public class JavaFXActions {
 
     private static ListView gameListViewAction;
+    private static GameDAO gameDAO = new GameDAO();
 
     //GEFP-22-SA
     public static void toLoginPage(Stage window) {
@@ -44,10 +42,10 @@ public class JavaFXActions {
 
     //GEFP-22-SA
     public static ObservableList<Game> getGames(){
-        GameDAO gameDAO = new GameDAO();
         ObservableList<Game> games = FXCollections.observableArrayList(gameDAO.getAllGames());
         return games;
     }
+
     //GEFP-22-SA
     public static ObservableList<String> getGamesString(){
         ObservableList<Game> games = getGames();
@@ -111,7 +109,6 @@ public class JavaFXActions {
 
     //GEFP-22-SA
     public static void deleteGame(ListView gameListView) {
-        GameDAO gameDAO = new GameDAO();
         Set<Integer>gameById = stringToId(gameListView);
 
         for(Integer gameId : gameById){
@@ -121,8 +118,8 @@ public class JavaFXActions {
 
         for(Integer gameId : gameById){
             System.out.println("Deleting game with id " + gameId);
-            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-            gameDAO.updatePlayersTeamIdBeforeDelete(gameId);
+            System.out.println("a-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+            //gameDAO.updatePlayersTeamIdBeforeDelete(gameId);
             gameDAO.deleteGameById(gameId);
         }
 
@@ -130,27 +127,43 @@ public class JavaFXActions {
     }
     //GEFP-22-SA
     public static void addGame(TextField textField) {
-        GameDAO gameDAO = new GameDAO();
         String gameName = textField.getText();
         Game newGame = new Game(gameName);
         gameDAO.saveGame(newGame);
 
     }
     //GEFP-22-SA
-    public static void updateGame(TextField textField,ListView gameListView) {
-        GameDAO gameDAO = new GameDAO();
+    public static void updateGame(TextField textField,ChoiceBox<String> choiceBox) {
 
-        String gameName = textField.getText();
+        String selectedGame = choiceBox.getValue();
+        System.out.println(selectedGame);
+        System.out.println("j------------------------------------------------------------------------------------------------");
 
-        Game newGame = new Game(gameName);
+        String newGameName = textField.getText();
+        System.out.println(newGameName);
+        System.out.println("l----------------------------------------------------------------------------------------------------------------------");
 
-        ObservableList<Game> game = gameListView.getSelectionModel().getSelectedItems();
+        ObservableList<Game> game = getGames();
 
-        for(Game g : game){
-            gameDAO.updateGame(g,gameName);
+        for (int i = 0; i < game.size(); i++) {
+            if(game.get(i).getGameName().equals(selectedGame)){
+                Game oldGame = game.get(i);
+                System.out.println(oldGame.getGameName());
+                System.out.println("k-----------------------------------------------------------------------------------------------------------------");
+                gameDAO.updateGame(oldGame, newGameName);
+            }
         }
 
 
+        /*
+        Game oldGame = gameDAO.getGameById(5);
+        System.out.println("e---------------------------------------------------------------------------------------------------------------");
+
+        gameDAO.updateGame(oldGame, newGameName);*/
+
+
+
     }
+
 
 }

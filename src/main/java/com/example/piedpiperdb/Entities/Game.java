@@ -20,14 +20,14 @@ public class Game {
 
 
     //GEFP-18-SA, ändrade från ManyToOne till OneToMany
-    @OneToMany(mappedBy = "id", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "id", orphanRemoval = false,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<Match> matches = new ArrayList<>();
 
-    @OneToMany(mappedBy = "gameId", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "gameId", orphanRemoval = false,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<Player> players = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "teamId", orphanRemoval = true,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "teamId", orphanRemoval = false,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<Team> teams = new ArrayList<>();
 
     public Game() {
