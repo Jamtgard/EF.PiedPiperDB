@@ -253,6 +253,10 @@ public class Player {
         this.matchId = matchId;
     }
 
+    public String getMatchName(){
+        return matchId !=null ? matchId.getMatchName() : "No match registered";
+    }
+
     @Override
     public String toString() {
         return "Player{" +

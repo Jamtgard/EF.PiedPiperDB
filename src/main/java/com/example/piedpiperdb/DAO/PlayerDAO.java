@@ -70,7 +70,7 @@ public class PlayerDAO {
 
         try {
             TypedQuery<Player> query = entityManager.createQuery(
-                    "SELECT p FROM Player p WHERE p.gameId.game_id IN :gameIds", Player.class);
+                    "SELECT p FROM Player p WHERE p.gameId.gameId IN : gameIds", Player.class);
             query.setParameter("gameIds", gameIds);
             listToReturn.addAll(query.getResultList());
         } catch (Exception e) {
