@@ -104,7 +104,7 @@ public class MatchView extends AbstractScene {
         deleteMatch.setOnAction(actionEvent -> {
             Match selectedMatch = (Match) matchListView.getSelectionModel().getSelectedItem();
             if(selectedMatch != null){
-                boolean success = matchDAO.deleteMatchById(selectedMatch.getId());
+                boolean success = matchDAO.deleteMatchById(selectedMatch.getMatchId());
                 if(success){
                     System.out.println("Match deleted successfully");
                     updateMatchList();

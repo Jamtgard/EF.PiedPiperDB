@@ -64,17 +64,6 @@ public class StartPage extends AbstractScene{
         button.setMinSize(160, 30);
         vBox.getChildren().add(button);
 
-        Button matchViewButton = new Button("Matches");
-        matchViewButton.getStyleClass().add("matchViewButton");
-        matchViewButton.setMinSize(160, 30);
-
-     /*   matchViewButton.setOnAction(e->{
-            JavaFXActions.toMatchView(window);
-        });*/
-
-        vBox.getChildren().add(matchViewButton);
-
-
         Button gameViewButton = new Button("Games");
         gameViewButton.getStyleClass().add("standardButton");
         gameViewButton.setMinSize(160, 30);
@@ -85,6 +74,13 @@ public class StartPage extends AbstractScene{
 
         vBox.getChildren().addAll(button,gameViewButton);
     }
+   /* Button matchViewButton = new Button("Matches");
+        matchViewButton.getStyleClass().add("matchViewButton");
+        matchViewButton.setMinSize(160, 30);
+          *//*   matchViewButton.setOnAction(e->{
+            JavaFXActions.toMatchView(window);
+        });*//*
+     vBox.getChildren().add(matchViewButton);*/
 
 
 }
