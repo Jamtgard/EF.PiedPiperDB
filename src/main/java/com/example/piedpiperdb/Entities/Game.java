@@ -15,7 +15,7 @@ public class Game {
     private int gameId;//GEFP-22-SA, bytte namn på variablerna till gameId och gameName
 
     //GEFP-18-SA, satte längre längd på namnet
-    @Column(name = "game_name",length = 70,nullable = false)
+    @Column(name = "game_name",length = 70,nullable = false,unique = true)//GEFP-25-SA, la till unique så inte samma spelnamn längs in två gånger
     private String gameName;
 
 
