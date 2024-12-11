@@ -1,9 +1,8 @@
 package com.example.piedpiperdb.View;
 
-import com.example.piedpiperdb.DAO.GameDAO;
-import com.example.piedpiperdb.DAO.MatchDAO;
-import com.example.piedpiperdb.DAO.PlayerDAO;
-import com.example.piedpiperdb.DAO.TeamDAO;
+import com.example.piedpiperdb.DAO.*;
+import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import com.example.piedpiperdb.Entities.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -23,13 +22,13 @@ import java.io.IOException;
 public class HelloApplication extends Application {
 
     //GEFP-5-SA
-    Stage window;
-    Scene startScene;
+    public static Stage window;
+    public static Scene startScene;
 
     private Button loginButton;
 
-    final static int height = 800;
-    final static int width = 1500;
+    final static int height = 600;
+    final static int width = 700;
 
     private final Label programTitel = new Label("Piper Games");
 
@@ -48,6 +47,8 @@ public class HelloApplication extends Application {
         Game game = new Game();
         Team team = new Team();
 
+
+
         /*
         System.out.println("Antal players är: "+playerDAO.getAllPlayers().size());
         System.out.println("Antal matcher är: "+matchDAO.getAllMatches().size());
@@ -64,7 +65,7 @@ public class HelloApplication extends Application {
 
         //GEFP-5-SA
         window = stage;
-        window.setResizable(true);
+        window.setResizable(false);
         StackPane stackPane = new StackPane();
         stackPane.getStyleClass().add("backgroundTeaGreen");
 
@@ -72,8 +73,8 @@ public class HelloApplication extends Application {
 
 
         Rectangle greenBackground = new Rectangle(width, height);
-        greenBackground.setHeight(1000);
-        greenBackground.setWidth(1000);
+        greenBackground.setHeight(500);
+        greenBackground.setWidth(600);
         greenBackground.setFill(Paint.valueOf("#FFFFFF"));
         greenBackground.setOpacity(0.5);
         greenBackground.setY(height/2);
@@ -85,6 +86,7 @@ public class HelloApplication extends Application {
 
         //GEFP-4-SA
         loginButton.setOnAction(e -> {
+            ChangeSceneAction.toStartPage(window);//GEFP-22-SA
             window.setTitle("Start page 2");
             //window.setScene(StartPage.startScene(window));
             window.setScene(PlayerView.playerScene(window));
@@ -159,4 +161,7 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
+
+    public static Scene getStartScene() {return startScene;}
+
 }

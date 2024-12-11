@@ -46,17 +46,19 @@ public class Player {
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team teamId;
-//    private Match matchId;
-//
+
     //GEFP-12-AA
 
     @ManyToOne
     @JoinColumn(name = "match_id")
     private Match matchId;
+
     //-----------------------------------------------------
     //Constructors
 
-    public Player() {}
+    public Player() {
+
+    }
 
     public Player(String firstName, String lastName, String nickname) {
         this.firstName = firstName;
@@ -219,13 +221,12 @@ public class Player {
     }
 
     public String getGameName(){
-        return gameId !=null ? gameId.getGame_name() : "No game registered";
+        return gameId !=null ? gameId.getGameName() : "No game registered";
     }
 
     public void setGameId(Game gameId) {
         this.gameId = gameId;
     }
-
     public Team getTeamId() {
         return teamId;
     }
@@ -238,6 +239,7 @@ public class Player {
         this.teamId = teamId;
     }
 
+    //GEFP-22-SA, var utkommenterat
     public Match getMatchId() {
         return matchId;
     }
@@ -266,5 +268,6 @@ public class Player {
                 ", gameId=" + gameId +
                 ", teamId=" + teamId +
                 '}';
-    }
+        }
+
 }
