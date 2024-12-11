@@ -32,8 +32,8 @@ public class Match {
 
     // ref till spel
     @ManyToOne
-    @JoinColumn(name = "game_id", nullable = false)
-    private Game game;
+    @JoinColumn(name = "game_id")
+    private Game gameId;//GEFP-22-SA, bytte namn från "game" till "gameId"
 
     // ref till player
     @ManyToOne
@@ -87,11 +87,11 @@ public class Match {
     public void setResult(String result) {
         this.result = result;
     }
-    public Game getGame() {
-        return game;
+    public Game getGameId() {
+        return gameId;
     }
-    public void setGame(Game game) {
-        this.game = game;
+    public void setGameId(Game game) {
+        this.gameId = game;
     }
     //GEFP-22-SA, var utkommenterat
     public Player getPlayer() {
@@ -115,5 +115,14 @@ public class Match {
 
     public void setTeams(List<Team> teams) {
         this.teams = teams;
+    }
+
+    //GEFP-22-SA, la till getter och setter för MatchName
+    public String getMatchName() {
+        return matchName;
+    }
+
+    public void setMatchName(String matchName) {
+        this.matchName = matchName;
     }
 }
