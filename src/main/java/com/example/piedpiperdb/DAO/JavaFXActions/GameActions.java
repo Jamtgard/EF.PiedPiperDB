@@ -1,5 +1,6 @@
-package com.example.piedpiperdb.DAO;
+package com.example.piedpiperdb.DAO.JavaFXActions;
 
+import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.View.AbstractScene;
 import com.example.piedpiperdb.View.GameView;
@@ -16,29 +17,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 //GEFP-22-SA
-public class JavaFXActions {
+public class GameActions {
 
-    private static ListView gameListViewAction;
+    //GEFP-22-SA
     private static GameDAO gameDAO = new GameDAO();
-
-    //GEFP-22-SA
-    public static void toLoginPage(Stage window) {
-        Scene start = HelloApplication.getStartScene();
-        window.setTitle("Login");
-        window.setScene(start);
-    }
-
-    //GEFP-22-SA
-    public static void toStartPage(Stage window){
-        window.setTitle("Start page");
-        window.setScene(StartPage.startScene(window));
-    }
-
-    //GEFP-22-SA
-    public static void toGameView(Stage window){
-        window.setTitle("Games");
-        window.setScene(GameView.startSceneGame(window));
-    }
 
     //GEFP-22-SA
     public static ObservableList<Game> getGames(){
@@ -67,28 +49,6 @@ public class JavaFXActions {
         return gameListView;
     }
 
-    //GEFP-22-SA
-    public static void submitClick(Button submit, ListView gameListView){
-        VBox vBox = AbstractScene.leftVbox;
-
-        vBox.getChildren().clear();
-        vBox.getChildren().addAll(submit);
-
-        submit.setOnAction(event -> {
-            String message ="";
-            ObservableList<String> games;
-            games = gameListView.getSelectionModel().getSelectedItems();
-
-            for(String g : games){
-                message += g + "\n";
-            }
-            System.out.println(message);
-        });
-
-        AbstractScene.back.setOnAction(event -> {
-            toGameView(HelloApplication.window);
-        });
-    }
     //GEFP-22-SA
     public static Set<Integer> stringToId(ListView gameListView){
         ObservableList<Game> games = getGames();
@@ -120,6 +80,8 @@ public class JavaFXActions {
             System.out.println("Deleting game with id " + gameId);
             System.out.println("a-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
             gameDAO.updatePlayersBeforeDelete(gameId);
+            gameDAO.updateMatchesBeforeDelete(gameId);
+            gameDAO.updateTeamsBeforeDelete(gameId);
             gameDAO.deleteGameById(gameId);
         }
 

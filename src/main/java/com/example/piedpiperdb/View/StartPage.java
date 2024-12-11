@@ -1,14 +1,13 @@
 package com.example.piedpiperdb.View;
 
-import com.example.piedpiperdb.DAO.JavaFXActions;
+import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 //GEFP-4-SA
 public class StartPage extends AbstractScene{
@@ -21,7 +20,7 @@ public class StartPage extends AbstractScene{
         VBox vBox = AbstractScene.leftVbox;
 
         AbstractScene.back.setOnAction(e->{
-            JavaFXActions.toLoginPage(window);//Ändra efter metodnamn i JavaFXAction
+            ChangeSceneAction.toLoginPage(window);//GEFP-22-SA
         });
 
         addCustomComponents(anchorPane,window);
@@ -65,7 +64,7 @@ public class StartPage extends AbstractScene{
         gameViewButton.setMinSize(160, 30);
 
         gameViewButton.setOnAction(e->{
-            JavaFXActions.toGameView(window);
+            ChangeSceneAction.toGameView(window);//GEFP-22-SA
         });
 
         vBox.getChildren().addAll(button,gameViewButton);

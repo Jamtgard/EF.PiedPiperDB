@@ -27,8 +27,8 @@ public class Team {
 
     //GEFP-22-SA
     @ManyToOne
-    @JoinColumn(name = "gameId")
-    private Game game;
+    @JoinColumn(name = "game_id",nullable = true)//GEFP-22-SA, ändra från gameId till game_id
+    private Game gameId;//GEFP-22-SA, ändra från game till gameId
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Match>matchesInTeam = new ArrayList<>();
@@ -54,12 +54,12 @@ public class Team {
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
 
-    public Game getGame() {
-        return game;
+    public Game getGameId() {
+        return gameId;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public void setGameId(Game game) {
+        this.gameId = game;
     }
 
     public int getTeamId() {
