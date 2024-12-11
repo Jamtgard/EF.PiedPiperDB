@@ -268,6 +268,6 @@ public class Player {
                 ", gameId=" + gameId +
                 ", teamId=" + teamId +
                 '}';
-        }
+    }
 
 }
