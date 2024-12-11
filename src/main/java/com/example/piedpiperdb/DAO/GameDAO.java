@@ -2,12 +2,11 @@ package com.example.piedpiperdb.DAO;
 
 import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.Player;
+import com.example.piedpiperdb.Entities.Team;
 import jakarta.persistence.*;
 import com.example.piedpiperdb.Entities.Game;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 //GEFP-6-SA
@@ -116,31 +115,15 @@ public class GameDAO {
             System.out.println(gameToDelete.getGameId() + " is alive");
             System.out.println(gameToDelete.getGameName() + " is alive");
             System.out.println(gameToDelete.getPlayers().size() + " antal spelare för spelet");
-            System.out.println(gameToDelete.getPlayers().get(0).getFirstName() + " en spelares FN");
-            //System.out.println(gameToDelete.getPlayers().get(1).getFirstName() + " andra spelares FN");
 
-            //------------------------------------------------------------------
-/*
-            Player playerToRemove = entityManager.find(Player.class,7);
-            System.out.println(playerToRemove.getFirstName() + " is alive");*/
-
-
-            //List<Player>playersToRemove = Collections.singletonList(entityManager.find(Player.class, gameToDelete.getPlayers()));
             List<Player>playersToRemove2 = new ArrayList<>();
-
 
             for (int i = 0; i < gameToDelete.getPlayers().size(); i++) {
                 System.out.println(gameToDelete.getPlayers().get(i).getFirstName() + " in for-loop");
                 System.out.println(gameToDelete.getPlayers().get(i).getId() + " in for-loop");
                 playersToRemove2.add(entityManager.find(Player.class, gameToDelete.getPlayers().get(i).getId()));
             }
-            System.out.println("--------------------------------------------------------");
-            for(Player p : playersToRemove2){
-                System.out.println(p.getFirstName());
-            }
-            System.out.println("--------------------------------------------------------");
 
-            //-------------------------------------------------------------------------
             for(Player player : playersToRemove2){
                 System.out.println(player.getFirstName());
                 gameToDelete.getPlayers().remove(player);
@@ -149,26 +132,8 @@ public class GameDAO {
             }
 
 
-
-/*
-            gameToDelete.getPlayers().remove(playerToRemove);
-            System.out.println("Efter tagit bort players");
-
-            playerToRemove.setGameId(null);*/
-
-            //-------------------------------------------------------------------------
-
             entityManager.merge(gameToDelete);
-            //-------------------------------------------------------------------------
-            //entityManager.merge(playerToRemove);
-            /*for(Player player : playersToRemove2){
-                entityManager.merge(player);
-            }*/
-            //entityManager.merge(playersToRemove2);
-
             System.out.println("Efter merges");
-
-
 
             transaction.commit();
 
@@ -189,20 +154,29 @@ public class GameDAO {
         EntityTransaction transaction = null;
 
         System.out.println("updateMatchesBeforeDelete id: " + id);
+
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
+
             Game gameToDelete = entityManager.find(Game.class, id);
+
             List<Match> matchesToRemove = new ArrayList<>();
 
             for (int i = 0; i < gameToDelete.getMatches().size(); i++) {
+                System.out.println(gameToDelete.getMatches().get(i).getMatchId() + " in for-loop");
+                System.out.println(gameToDelete.getMatches().get(i).getMatchName() + " in for-loop");
                 matchesToRemove.add(entityManager.find(Match.class, gameToDelete.getMatches().get(i).getMatchId()));
             }
-            for(Match m : matchesToRemove){
-                gameToDelete.getMatches().remove(m);
-                m.setGame(null);
-                entityManager.merge(m);
+
+
+            for(Match match : matchesToRemove){
+                gameToDelete.getMatches().remove(match);
+                match.setGameId(null);
+                entityManager.merge(match);
             }
+
+
             entityManager.merge(gameToDelete);
             transaction.commit();
         }catch (Exception e){
@@ -215,6 +189,48 @@ public class GameDAO {
         }
 
     }
+    public void updateTeamsBeforeDelete(int id){
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+
+        System.out.println("updateTeamsBeforeDelete id: " + id);
+
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            Game gameToDelete = entityManager.find(Game.class, id);
+
+            List<Team> teamsToRemove = new ArrayList<>();
+
+            for (int i = 0; i < gameToDelete.getTeams().size(); i++) {
+                System.out.println(gameToDelete.getTeams().get(i).getTeamId() + " in for-loop");
+                System.out.println(gameToDelete.getTeams().get(i).getTeamName() + " in for-loop");
+                teamsToRemove.add(entityManager.find(Team.class, gameToDelete.getTeams().get(i).getTeamId()));
+            }
+
+
+            for(Team team : teamsToRemove){
+                gameToDelete.getMatches().remove(team);
+                team.setGameId(null);
+                entityManager.merge(team);
+            }
+
+
+            entityManager.merge(gameToDelete);
+            transaction.commit();
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            if(entityManager != null && transaction != null && transaction.isActive()){
+                transaction.rollback();
+            }
+        }finally {
+            entityManager.close();
+        }
+
+    }
+
 
     //Delete
     //GEFP-22-SA, ändra mellan begin och commit, det gamla ligger inom /**/
@@ -226,45 +242,9 @@ public class GameDAO {
             transaction = entityManager.getTransaction();
             transaction.begin();
 
-/*
-            String deleteQuery = "DELETE FROM Game g WHERE g.gameId = :gameId";
-            Query query = entityManager.createQuery(deleteQuery);
-            query.setParameter("gameId", id);
-
-            int deletedCount = query.executeUpdate();
-            System.out.println("Deleted " + deletedCount + " game(s) with id " + id);*/
-
-
-
             Game gameToDelete = entityManager.find(Game.class, id);
 
-            /*
-            System.out.println(gameToDelete.getGameId() + " is alive");
-            System.out.println(gameToDelete.getGameName() + " is alive");
-
-            Player playersToRemove = entityManager.find(Player.class,7);
-            System.out.println(playersToRemove.getFirstName() + " is alive");
-
-            /*
-            List<Player>playersToRemove = Collections.singletonList(entityManager.find(Player.class, gameToDelete.getPlayers()));
-            for(Player player : playersToRemove){
-                System.out.println(player.getGameId() + " is alive");
-                System.out.println(player.getFirstName());
-            }*/
-            /*
-            gameToDelete.getPlayers().remove(playersToRemove);
-            System.out.println("Efter tagit bort players");
-            entityManager.merge(gameToDelete);
-            entityManager.merge(playersToRemove);
-            System.out.println("Efter merges");*/
-
-            /*
-            Player player = entityManager.find(Player.class, 7);
-            gameToDelete.getPlayers().clear();
-            entityManager.remove(player);*/
-
             entityManager.remove(entityManager.contains(gameToDelete) ? gameToDelete : entityManager.merge(gameToDelete));
-            System.out.println("Tagit bort spelet");
 
 
             transaction.commit();

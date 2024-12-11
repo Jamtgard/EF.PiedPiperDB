@@ -1,6 +1,8 @@
 package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.*;
+import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import com.example.piedpiperdb.Entities.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -84,7 +86,7 @@ public class HelloApplication extends Application {
 
         //GEFP-4-SA
         loginButton.setOnAction(e -> {
-            JavaFXActions.toStartPage(window);
+            ChangeSceneAction.toStartPage(window);//GEFP-22-SA
         });
 
         Label userName = new Label("Username");

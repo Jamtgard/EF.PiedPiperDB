@@ -8,7 +8,7 @@ INSERT INTO games (game_name) VALUES ('Battleship');
 INSERT INTO games (game_name) VALUES ('Counter-Strike');
 INSERT INTO games (game_name) VALUES ('Path of Exile');
 
-INSERT INTO teams (team_name) VALUES ('Ctrl Alt Defeat');
+INSERT INTO teams (team_name,game_id) VALUES ('Ctrl Alt Defeat',1);-- GEFP-22-SA, la in game_id för testning
 INSERT INTO teams (team_name) VALUES ('Sassy Sasquatches');
 INSERT INTO teams (team_name) VALUES ('Game of Throws');
 INSERT INTO teams (team_name) VALUES ('Fast but Last');

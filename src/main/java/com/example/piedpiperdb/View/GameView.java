@@ -1,6 +1,7 @@
 package com.example.piedpiperdb.View;
 
-import com.example.piedpiperdb.DAO.JavaFXActions;
+import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,11 +24,12 @@ public class GameView extends AbstractScene{
         Scene baseScene = AbstractScene.getScene(window);
         stage = window;
 
+
         AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
         AbstractScene.back.setOnAction(e->{
-            JavaFXActions.toStartPage(window);
+            ChangeSceneAction.toStartPage(window);
         });
 
         addCustomComponents(vBox);
@@ -54,7 +56,7 @@ public class GameView extends AbstractScene{
         buttonLabel.setAlignment(Pos.CENTER);
 
         gameListView = new ListView();
-        gameListView = JavaFXActions.gameListView(gameListView);
+        gameListView = GameActions.gameListView(gameListView);
         gameListView.setMinSize(445,300);
         gameListView.getStyleClass().add("standardButton");
 
@@ -105,11 +107,11 @@ public class GameView extends AbstractScene{
 
         addGame.setOnAction(e->{
             clearAnchorpane(addGameBox);
-            AbstractScene.back.setOnAction(event-> JavaFXActions.toGameView(stage));
+            AbstractScene.back.setOnAction(event-> ChangeSceneAction.toGameView(stage));
 
             submitAdd.setOnAction(ev->{
-                JavaFXActions.addGame(newGameInput);
-                JavaFXActions.toGameView(stage);
+                GameActions.addGame(newGameInput);
+                ChangeSceneAction.toGameView(stage);
             });
         });
 
@@ -119,8 +121,8 @@ public class GameView extends AbstractScene{
         deleteGame.getStyleClass().add("standardButton");
         deleteGame.setMinSize(160, 30);
         deleteGame.setOnAction(e->{
-            JavaFXActions.deleteGame(gameListView);
-            JavaFXActions.toGameView(stage);
+            GameActions.deleteGame(gameListView);
+            ChangeSceneAction.toGameView(stage);
         });
 
 
@@ -141,7 +143,7 @@ public class GameView extends AbstractScene{
 
 
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        choiceBox.getItems().addAll(JavaFXActions.getGamesString());
+        choiceBox.getItems().addAll(GameActions.getGamesString());
         choiceBox.setValue(choiceBox.getItems().get(0));
         choiceBox.setMinSize(150, 30);
         choiceBox.getStyleClass().add("standardButton");
@@ -159,9 +161,9 @@ public class GameView extends AbstractScene{
             clearAnchorpane(updateGameBox);
 
             submitUpdate.setOnAction(ev->{
-                JavaFXActions.updateGame(updateGameInput,choiceBox);
-                JavaFXActions.gameListView(gameListView);
-                JavaFXActions.toGameView(stage);
+                GameActions.updateGame(updateGameInput,choiceBox);
+                GameActions.gameListView(gameListView);
+                ChangeSceneAction.toGameView(stage);
             });
 
         });

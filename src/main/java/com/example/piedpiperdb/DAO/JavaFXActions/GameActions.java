@@ -22,8 +22,6 @@ public class GameActions {
     //GEFP-22-SA
     private static GameDAO gameDAO = new GameDAO();
 
-
-
     //GEFP-22-SA
     public static ObservableList<Game> getGames(){
         ObservableList<Game> games = FXCollections.observableArrayList(gameDAO.getAllGames());
