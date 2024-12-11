@@ -34,11 +34,9 @@ public class Match {
     private Game game;
 
     // ref till player
-/*
     @ManyToOne
     @JoinColumn(name = "player_id", nullable = true)
     private Player player;
-*/
 
     // ref till lag
     @ManyToOne

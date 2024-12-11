@@ -1,9 +1,13 @@
 package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
+import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
+import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
+import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.Player;
+import com.example.piedpiperdb.Entities.Team;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -27,6 +31,8 @@ public class PlayerView extends AbstractScene{
 
     private static PlayerDAO playerDAO = new PlayerDAO();
     private static GameDAO gameDAO = new GameDAO();
+    private static TeamDAO teamDAO = new TeamDAO();
+    private static MatchDAO matchDAO = new MatchDAO();
 
     public static Scene playerScene(Stage window){
         Scene baseScene = AbstractScene.getScene(window); // Skapar en sen från mallen i abstract Scene
@@ -172,10 +178,10 @@ public class PlayerView extends AbstractScene{
         TableColumn<Player, String> team_name = new TableColumn<>("Team");
         team_name.setCellValueFactory(new PropertyValueFactory<>("teamName"));
 
-        /*TableColumn<Player, String> match = new TableColumn<>("Match");
-        match.setCellValueFactory(new PropertyValueFactory<>("matchInfo"));*/
+        TableColumn<Player, String> match = new TableColumn<>("Match");
+        match.setCellValueFactory(new PropertyValueFactory<>("matchInfo"));
 
-        table.getColumns().addAll(player_id, nickname, fullName, address, country, email, game_name, team_name/*, match*/);
+        table.getColumns().addAll(player_id, nickname, fullName, address, country, email, game_name, team_name, match);
         table.setItems(observableList);
         return table;
     }
@@ -256,7 +262,43 @@ public class PlayerView extends AbstractScene{
         emailField.setPromptText("E-mail");
         emailBox.getChildren().addAll(email, emailField);
 
-        formContainer.getChildren().addAll(fistNameBox, lastNameBox, nicknameBox, addressBox,zipBox,cityBox, countryBox, emailBox);
+        HBox gameBox = new HBox(5);
+        Label game = new Label(" Game ");
+        game.getStyleClass().add("standardLabel");
+        ComboBox<String> gameField = new ComboBox<>();
+        gameField.getStyleClass().add("textFieldOne");
+        gameField.setPromptText("Select game");
+        List<Game> games = gameDAO.getAllGames();
+        for (Game g: games){
+            gameField.getItems().add(g.getGame_id() + ", " + g.getGame_name());
+        }
+        gameBox.getChildren().addAll(game, gameField);
+
+        HBox teamBox = new HBox(5);
+        Label team = new Label(" Team ");
+        team.getStyleClass().add("standardLabel");
+        ComboBox<String> teamField = new ComboBox<>();
+        teamField.getStyleClass().add("textFieldOne");
+        teamField.setPromptText("Select team");
+        List<Team> teams = teamDAO.getAllTeams();
+        for (Team t: teams){
+            teamField.getItems().add(t.getId() + ", " + t.getTeamName());
+        }
+        teamBox.getChildren().addAll(team, teamField);
+
+        HBox matchBox = new HBox(5);
+        Label match = new Label(" Match ");
+        match.getStyleClass().add("standardLabel");
+        ComboBox<String> matchField = new ComboBox<>();
+        matchField.getStyleClass().add("textFieldOne");
+        matchField.setPromptText("Select match");
+        List<Match> matches = matchDAO.getAllMatches();
+        for (Match m: matches){
+            matchField.getItems().add(m.getId() + ", " + m.getMatchName());
+        }
+        matchBox.getChildren().addAll(match, matchField);
+
+        formContainer.getChildren().addAll(fistNameBox, lastNameBox, nicknameBox, addressBox,zipBox,cityBox, countryBox, emailBox, gameBox, teamBox, matchBox);
 
         Button saveButton = new Button("Save Player");
         saveButton.getStyleClass().add("standardButton");

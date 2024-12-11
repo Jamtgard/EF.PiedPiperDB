@@ -46,12 +46,13 @@ public class Player {
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team teamId;
-
+//    private Match matchId;
+//
     //GEFP-12-AA
 
-/*    @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "match_id")
-    private Match matchId;*/
+    private Match matchId;
     //-----------------------------------------------------
     //Constructors
 
@@ -237,7 +238,7 @@ public class Player {
         this.teamId = teamId;
     }
 
-/*    public Match getMatchId() {
+    public Match getMatchId() {
         return matchId;
     }
 
@@ -248,7 +249,7 @@ public class Player {
 
     public void setMatchId(Match matchId) {
         this.matchId = matchId;
-    }*/
+    }
 
     @Override
     public String toString() {

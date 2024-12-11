@@ -28,8 +28,8 @@ public class HelloApplication extends Application {
 
     private Button loginButton;
 
-    final static int height = 600;
-    final static int width = 700;
+    final static int height = 800;
+    final static int width = 1500;
 
     private final Label programTitel = new Label("Piper Games");
 
@@ -64,7 +64,7 @@ public class HelloApplication extends Application {
 
         //GEFP-5-SA
         window = stage;
-        window.setResizable(false);
+        window.setResizable(true);
         StackPane stackPane = new StackPane();
         stackPane.getStyleClass().add("backgroundTeaGreen");
 
@@ -72,8 +72,8 @@ public class HelloApplication extends Application {
 
 
         Rectangle greenBackground = new Rectangle(width, height);
-        greenBackground.setHeight(500);
-        greenBackground.setWidth(600);
+        greenBackground.setHeight(1000);
+        greenBackground.setWidth(1000);
         greenBackground.setFill(Paint.valueOf("#FFFFFF"));
         greenBackground.setOpacity(0.5);
         greenBackground.setY(height/2);
