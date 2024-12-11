@@ -89,7 +89,7 @@ public class Player {
         this.email = email;
         this.gameId = gameId;
         this.teamId = teamId;
-        /*this.matchId = matchId;*/
+        this.matchId = matchId;//GEFP-22-SA, var utkommenterat
     }
 
 //------------------------------------------------------
@@ -182,11 +182,12 @@ public class Player {
         this.teamId = teamId;
     }
 
-    /*public Match getMatchId() {
+    //GEFP-22-SA, var utkommenterat
+    public Match getMatchId() {
         return matchId;
     }
 
     public void setMatchId(Match matchId) {
         this.matchId = matchId;
-    }*/
+    }
 }
