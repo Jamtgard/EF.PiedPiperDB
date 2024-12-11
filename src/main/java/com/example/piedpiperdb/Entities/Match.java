@@ -78,7 +78,7 @@ public class Match {
     public void setResult(String result) {
         this.result = result;
     }
-/*    public Game getGame() {
+    public Game getGame() {
         return game;
     }
     public void setGame(Game game) {
@@ -95,5 +95,13 @@ public class Match {
     }
     public void setTeam(Team team) {
         this.team = team;
-    }*/
+    }
+
+    public String getMatchName() {
+        return matchName;
+    }
+
+    public void setMatchName(String matchName) {
+        this.matchName = matchName;
+    }
 }
