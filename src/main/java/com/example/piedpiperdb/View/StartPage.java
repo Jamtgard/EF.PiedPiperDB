@@ -12,9 +12,11 @@ import java.io.IOException;
 //GEFP-4-SA
 public class StartPage extends AbstractScene{
 
+
     //GEFP-20-SA
     public static Scene startScene(Stage window){//Denna metod är den som kallas när man klickar på Login button i HelloApplication
         Scene baseScene = AbstractScene.getScene(window);
+
 
         AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
@@ -30,6 +32,9 @@ public class StartPage extends AbstractScene{
 
         addCustomComponents(anchorPane);
         addCustomComponents(vBox);
+
+        baseScene.getStylesheets().add("EscortFlasher.css");
+
 
 
         return baseScene;
@@ -64,7 +69,23 @@ public class StartPage extends AbstractScene{
         button.getStyleClass().add("standardButton");
         button.setMinSize(160, 30);
         vBox.getChildren().add(button);
+
+        Button matchViewButton = new Button("Matches");
+        matchViewButton.getStyleClass().add("matchViewButton");
+        matchViewButton.setMinSize(160, 30);
+
+     /*   matchViewButton.setOnAction(e->{
+            JavaFXActions.toMatchView(window);
+        });*/
+
+        vBox.getChildren().add(matchViewButton);
+
     }
+
+
+
+
+
 
 
 }

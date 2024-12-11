@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class MatchView extends AbstractScene {
     private static ListView matchListView;
     private static Button submit;
@@ -137,14 +139,6 @@ public class MatchView extends AbstractScene {
         });
         return deleteMatch;
     }
-
-
-
-
-
-
-
-
 
     private static void updateMatchList(){
         List<Match> matches = matchDAO.getAllMatches();
