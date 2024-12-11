@@ -1,5 +1,7 @@
 package com.example.piedpiperdb.View;
 
+import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -7,31 +9,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 //GEFP-4-SA
 public class StartPage extends AbstractScene{
-
 
     //GEFP-20-SA
     public static Scene startScene(Stage window){//Denna metod är den som kallas när man klickar på Login button i HelloApplication
         Scene baseScene = AbstractScene.getScene(window);
-
 
         AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
         HelloApplication helloApp = new HelloApplication();
         AbstractScene.back.setOnAction(e->{
-            try {
-                helloApp.start(window);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            ChangeSceneAction.toLoginPage(window);//GEFP-22-SA
         });
 
-        addCustomComponents(anchorPane);
-        addCustomComponents(vBox);
+        addCustomComponents(anchorPane,window);
+        addCustomComponents(vBox,window);
 
         baseScene.getStylesheets().add("EscortFlasher.css");
 
@@ -42,7 +36,7 @@ public class StartPage extends AbstractScene{
 
 
     //GEFP-20-SA
-    protected static void addCustomComponents(AnchorPane anchorPane){
+    protected static void addCustomComponents(AnchorPane anchorPane,Stage window){
 
         Button button = new Button("Start1");
         button.setLayoutX(10);
@@ -62,7 +56,7 @@ public class StartPage extends AbstractScene{
     }
 
     //GEFP-20-SA
-    protected static void addCustomComponents(VBox vBox){
+    protected static void addCustomComponents(VBox vBox,Stage window){
         System.out.println("I StartPage addCustomComponents");
 
         Button button = new Button("Start3");
@@ -80,12 +74,17 @@ public class StartPage extends AbstractScene{
 
         vBox.getChildren().add(matchViewButton);
 
+
+        Button gameViewButton = new Button("Games");
+        gameViewButton.getStyleClass().add("standardButton");
+        gameViewButton.setMinSize(160, 30);
+
+        gameViewButton.setOnAction(e->{
+            ChangeSceneAction.toGameView(window);//GEFP-22-SA
+        });
+
+        vBox.getChildren().addAll(button,gameViewButton);
     }
-
-
-
-
-
 
 
 }
