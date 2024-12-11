@@ -1,29 +1,34 @@
 package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
+import com.example.piedpiperdb.DAO.MatchDAO;
+import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Team;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 //GEFP-21-SJ
 public class TeamView extends AbstractScene{
 
-    private static TeamDAO teamDAO = new TeamDAO();
+    private static PlayerDAO playerDAO = new PlayerDAO();
     private static GameDAO gameDAO = new GameDAO();
+    private static TeamDAO teamDAO = new TeamDAO();
+    private static MatchDAO matchDAO = new MatchDAO();
 
     public static Scene teamScene(Stage window){
 
@@ -31,6 +36,15 @@ public class TeamView extends AbstractScene{
 
         AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
+
+        HelloApplication helloApp = new HelloApplication();
+        AbstractScene.back.setOnAction(e->{
+            try {
+                helloApp.start(window);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         addCustomComponents(vBox);
 
@@ -61,7 +75,7 @@ public class TeamView extends AbstractScene{
             showTable(anchorPane, listOfAllTeams);
         });
 
-        /* // Hittar inte ConfrimBox.displayCheckBoxOptions - inväntar updatering
+
         Button selectedTeamButton = new Button("Show Teams from \nselected Game \\ Games");
         selectedTeamButton.getStyleClass().add("standardButton");
         selectedTeamButton.setMinSize(160, 30);
@@ -82,7 +96,7 @@ public class TeamView extends AbstractScene{
             List<Team> teams = teamDAO.getTeamsByGame(ids);
             showTable(anchorPane, teams);
         });
-         */
+
 
         Button addNewTeamButton = new Button("Add New Team");
         addNewTeamButton.getStyleClass().add("standardButton");
@@ -90,6 +104,22 @@ public class TeamView extends AbstractScene{
         addNewTeamButton.setOnAction(event -> {
             showAddTeamForm(anchorPane);
         });
+
+        Button updateTeamByIdButton = new Button("Update Team by ID");
+        updateTeamByIdButton.getStyleClass().add("standardButton");
+        updateTeamByIdButton.setMinSize(160, 30);
+        updateTeamByIdButton.setOnAction(event -> {
+            showUpdateTeamForm(anchorPane);
+        });
+
+        Button deleteTeamByIdButton = new Button("Delete Team by ID");
+        deleteTeamByIdButton.getStyleClass().add("standardButton");
+        deleteTeamByIdButton.setMinSize(160, 30);
+        deleteTeamByIdButton.setOnAction(event -> {
+            showDeleteTeamForm(anchorPane);
+        });
+
+        vbox.getChildren().addAll(addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
     }
 
     public static void showTable(AnchorPane anchorPane, List<Team> players){
@@ -173,6 +203,7 @@ public class TeamView extends AbstractScene{
         */
 
         // Version 2:
+        /*
         saveTeamButton.setOnAction(event -> {
             try {
                 // Lägg in kontroll för annat än isEmpty.. t.ex (contains " ". elr möjligen fula ord.)
@@ -194,6 +225,26 @@ public class TeamView extends AbstractScene{
                 System.out.println(e.getMessage());
             }
         });
+         */
+
+        saveTeamButton.setOnAction(event -> {
+            try {
+                // Lägg in kontroll för annat än isEmpty.. t.ex (contains " ". elr möjligen fula ord.)
+                if (teamNamefield.getText().isEmpty()) {
+                    throw new IllegalArgumentException("Mandatory fields are empty.");
+                }
+
+                Team team = new Team(teamNamefield.getText());
+                Label savedLabel = new Label("Team has successfully been saved to the database.");
+                savedLabel.getStyleClass().add("standardLabel");
+                formContainer.getChildren().add(savedLabel);
+
+            } catch (IllegalArgumentException e) {
+                AlertBox.displayAlertBox("Error", "Please fill in mandatory fields marked with \"*\".");
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        });
 
         formContainer.getChildren().add(saveTeamButton);
         anchorPane.getChildren().add(formContainer);
@@ -201,7 +252,147 @@ public class TeamView extends AbstractScene{
     }
 
     private static void showUpdateTeamForm(AnchorPane anchorPane){
+        VBox getIdBox = new VBox();
+        getIdBox.setPadding(new Insets(20));
+        getIdBox.setSpacing(10);
+        getIdBox.getStyleClass().add("backgroundTeaGreen");
+        AnchorPane.setTopAnchor(getIdBox, 150.0);
+        AnchorPane.setLeftAnchor(getIdBox, 220.0);
+        AnchorPane.setRightAnchor(getIdBox, 30.0);
+        AnchorPane.setBottomAnchor(getIdBox, 30.0);
+
+        HBox teamIdBox = new HBox(5);
+        Label teamId = new Label("Enter Team ID: ");
+        teamId.getStyleClass().add("standardLabel");
+        TextField teamIdfield = new TextField();
+        teamIdfield.getStyleClass().add("textFieldOne");
+        teamIdfield.setPromptText("Team ID");
+        teamIdfield.setAlignment(Pos.BASELINE_CENTER); // Test för att se placeringen av Textfield - Önskar att det är oberoende av Label-width.
+        teamIdBox.getChildren().addAll(teamId, teamIdfield);
+
+        VBox formContainer = new VBox(5);
+        formContainer.setPadding(new Insets(20));
+        formContainer.getStyleClass().add("backgroundTeaGreen");
+        AnchorPane.setTopAnchor(formContainer, 250.0);
+        AnchorPane.setLeftAnchor(formContainer, 220.0);
+        AnchorPane.setRightAnchor(formContainer, 30.0);
+        AnchorPane.setBottomAnchor(formContainer, 30.0);
+
+        Button getButton = new Button("Get Team  to Update from database");
+        getButton.getStyleClass().add("standardButton");
+        //getButton.set
+
+        getButton.setOnAction(event -> {
+            try {
+                Team teamToUpdate = teamDAO.getTeamById(Integer.parseInt(teamIdfield.getText()));
+
+                if (teamToUpdate == null) {
+                    AlertBox.displayAlertBox("Error", "Team ID does not exist.");
+                    return;
+                }
+                HBox teamNameBox = new HBox(5);
+                Label teamName = new Label(" Team Name* ");
+                teamName.getStyleClass().add("standardLabel");
+                TextField teamNamefield = new TextField();
+                teamNamefield.getStyleClass().add("textFieldOne");
+                teamNamefield.setText(teamToUpdate.getTeamName());
+                teamNameBox.getChildren().addAll(teamName, teamNamefield);
+
+                Button updateButton = new Button("Update Team");
+                updateButton.getStyleClass().add("standardButton");
+                updateButton.setOnAction(actionEvent -> {
+
+                    teamToUpdate.setTeamName(teamNamefield.getText());
+
+                    teamDAO.updateTeam(teamToUpdate);
+                    Label updatedLabel = new Label("Team has successfully been updated in the database.");
+                    updatedLabel.getStyleClass().add("standardLabel");
+                    formContainer.getChildren().addAll(updatedLabel);
+
+                });
+
+                formContainer.getChildren().addAll(teamNameBox, updateButton);
+
+            } catch (Exception e) {
+                AlertBox.displayAlertBox("Error", "Could not update team.");
+            }
+        });
+
+        getIdBox.getChildren().addAll(getButton, teamIdBox);
+        anchorPane.getChildren().addAll(getIdBox, formContainer);
 
     }
+
+    private static void showDeleteTeamForm(AnchorPane anchorPane){
+        VBox getIdBox = new VBox();
+        getIdBox.setPadding(new Insets(20));
+        getIdBox.setSpacing(10);
+        getIdBox.getStyleClass().add("backgroundTeaGreen");
+        AnchorPane.setTopAnchor(getIdBox, 150.0);
+        AnchorPane.setLeftAnchor(getIdBox, 220.0);
+        AnchorPane.setRightAnchor(getIdBox, 30.0);
+        AnchorPane.setBottomAnchor(getIdBox, 30.0);
+
+        HBox teamIdBox = new HBox(5);
+        Label teamId = new Label("Enter Team ID: ");
+        teamId.getStyleClass().add("standardLabel");
+        TextField teamIdfield = new TextField();
+        teamIdfield.getStyleClass().add("textFieldOne");
+        teamIdfield.setPromptText("Team ID");
+        teamIdfield.setAlignment(Pos.BASELINE_CENTER); // Test för att se placeringen av Textfield - Önskar att det är oberoende av Label-width.
+        teamIdBox.getChildren().addAll(teamId, teamIdfield);
+
+        VBox formContainer = new VBox(5);
+        formContainer.setPadding(new Insets(20));
+        formContainer.getStyleClass().add("backgroundTeaGreen");
+        AnchorPane.setTopAnchor(formContainer, 250.0);
+        AnchorPane.setLeftAnchor(formContainer, 220.0);
+        AnchorPane.setRightAnchor(formContainer, 30.0);
+        AnchorPane.setBottomAnchor(formContainer, 30.0);
+
+        Button getButton = new Button("Get Team to Delete from database");
+        getButton.getStyleClass().add("standardButton");
+        getButton.setOnAction(event -> {
+            try {
+                Team teamToDelete = teamDAO.getTeamById(Integer.parseInt(teamIdfield.getText()));
+
+                if (teamToDelete == null) {
+                    AlertBox.displayAlertBox("Error", "Team ID does not exist.");
+                    return;
+                }
+
+                Button deleteButton = new Button("Delete Team");
+                deleteButton.getStyleClass().add("standardButton");
+                deleteButton.setOnAction(actionEvent -> {
+
+                    boolean deleteTeamConfirm = ConfrimBox.display("Delete Team", "Are you sure you want to delete this team from the database?");
+                    if (deleteTeamConfirm) {
+                        boolean deleted = teamDAO.deleteTeamById(teamToDelete.getTeamId());
+                        if (deleted) {
+                            Label deletedLabel = new Label("Team has successfully been deleted in the database.");
+                            deletedLabel.getStyleClass().add("standardLabel");
+                            formContainer.getChildren().addAll(deletedLabel);
+                        }
+                    } else {
+                        Label cancDeleteLabel = new Label("Cancelled deletion of Team");
+                        cancDeleteLabel.getStyleClass().add("standardLabel");
+                        formContainer.getChildren().add(cancDeleteLabel);
+                    }
+                });
+
+                formContainer.getChildren().addAll(deleteButton);
+
+            } catch (Exception e) {
+                AlertBox.displayAlertBox("Error", "Could not delete team.");
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
+        getIdBox.getChildren().addAll(getButton, teamIdBox);
+        anchorPane.getChildren().addAll(getIdBox, formContainer);
+    }
+
+
 
 }
