@@ -54,36 +54,13 @@ public class Team {
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
 
-    public Game getGameId() {
-        return gameId;
-    }
+    public Game getGameId() {return gameId;}
+    public void setGameId(Game game) {this.gameId = game;}
 
-    public void setGameId(Game game) {
-        this.gameId = game;
-    }
+    public int getTeamId() {return teamId;}
+    public void setTeamId(int teamId) {this.teamId = teamId;}
 
-    public int getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(int teamId) {
-        this.teamId = teamId;
-    }
-
-    /*
-    public int getGame_id() {return game_id;}
-    public void setGame_id(int game_id) {this.game_id = game_id;}
-
-    public Match getMatch_id() {return match_id;}
-    public void setMatch_id(Match match_id) {this.match_id = match_id;}
-     */
-
-    public List<Match> getMatchesInTeam() {
-        return matchesInTeam;
-    }
-
-    public void setMatchesInTeam(List<Match> matchesInTeam) {
-        this.matchesInTeam = matchesInTeam;
-    }
+    public List<Match> getMatchesInTeam() {return matchesInTeam;}
+    public void setMatchesInTeam(List<Match> matchesInTeam) {this.matchesInTeam = matchesInTeam;}
 }
 

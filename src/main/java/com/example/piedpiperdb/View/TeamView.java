@@ -46,8 +46,8 @@ public class TeamView extends AbstractScene{
         List<CheckBox> listOfCheckboxes = new ArrayList<>();
 
         for (Game game : listOfGames) {
-            String gameName = game.getGame_name();
-            int gameId = game.getGame_id();
+            String gameName = game.getGameName();
+            int gameId = game.getGameId();
             CheckBox checkBox = new CheckBox(gameName + " , Game ID: " + gameId);
             listOfCheckboxes.add(checkBox);
         }
@@ -61,6 +61,7 @@ public class TeamView extends AbstractScene{
             showTable(anchorPane, listOfAllTeams);
         });
 
+        /* // Hittar inte ConfrimBox.displayCheckBoxOptions - inväntar updatering
         Button selectedTeamButton = new Button("Show Teams from \nselected Game \\ Games");
         selectedTeamButton.getStyleClass().add("standardButton");
         selectedTeamButton.setMinSize(160, 30);
@@ -81,6 +82,7 @@ public class TeamView extends AbstractScene{
             List<Team> teams = teamDAO.getTeamsByGame(ids);
             showTable(anchorPane, teams);
         });
+         */
 
         Button addNewTeamButton = new Button("Add New Team");
         addNewTeamButton.getStyleClass().add("standardButton");
