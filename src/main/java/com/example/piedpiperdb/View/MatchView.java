@@ -39,28 +39,6 @@ public class MatchView extends AbstractScene {
 
 
     private static void addCustomComponents(VBox vBox){
-/*
-    List<Match> matches = MatchDAO.getAllMatches();
-        List<CheckBox> checkBoxes = new ArrayList<>();
-
-        for (Match match : matches) {
-            String name = match.getMatchName();
-            int matchId = match.getId();
-            Enum type = match.getMatchType();
-            CheckBox checkBox = new CheckBox(name + " MatchId: " + matchId + " MatchType: " + type);
-            checkBoxes.add(checkBox);
-        }
-
-        Button getAllMatches = new Button("Get All Matches");
-        getAllMatches.getStyleClass().add("standardButton");
-        getAllMatches.setMinSize(160,30);
-        getAllMatches.setOnAction(event -> {
-            List<Match> allMatches = matchDAO.getAllMatches();
-            System.out.println(matches.size());
-
-        });
-
-*/
         matchListView = new ListView<>();
         matchListView.setPrefHeight(300);
 
