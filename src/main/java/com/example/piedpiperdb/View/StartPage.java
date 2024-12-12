@@ -89,7 +89,7 @@ public class StartPage extends AbstractScene{
             ChangeSceneAction.toPlayerView(window);
         });
 
-        vBox.getChildren().addAll(button,gameViewButton, playerViewButton);
+        vBox.getChildren().addAll(button,gameViewButton,matchViewButton, playerViewButton);
     }
 
 

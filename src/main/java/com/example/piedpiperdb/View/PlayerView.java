@@ -1,6 +1,7 @@
 package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
+import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
@@ -54,26 +55,13 @@ public class PlayerView extends AbstractScene{
     public static Scene playerScene(Stage window){
         Scene baseScene = AbstractScene.getScene(window); // Skapar en sen från mallen i abstract Scene
 
-        //AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
-
-
-        HelloApplication helloApp = new HelloApplication();
         AbstractScene.back.setOnAction(e->{
-            try {
-                helloApp.start(window);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            ChangeSceneAction.toStartPage(window);
         });
 
-        //addCustomComponents(anchorPane);
         addCustomComponents(vBox);
-
-
-
-       //AnchorPane rootPane = (AnchorPane) baseScene.getRoot();
 
         return baseScene;
     }

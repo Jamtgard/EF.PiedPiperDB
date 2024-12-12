@@ -81,7 +81,7 @@ public class TeamView extends AbstractScene{
         selectedTeamButton.getStyleClass().add("standardButton");
         selectedTeamButton.setMinSize(160, 30);
         selectedTeamButton.setOnAction(event -> {
-            List<String> listSelection = ConfrimBox.displayCheckBoxOptions("Select Team \\ Teams", listOfCheckboxes);
+            List<String> listSelection = ConfirmBox.displayCheckBoxOptions("Select Team \\ Teams", listOfCheckboxes);
             List<Integer> ids = new ArrayList<>();
             for (String selection : listSelection) {
                 try {
@@ -366,7 +366,7 @@ public class TeamView extends AbstractScene{
                 deleteButton.getStyleClass().add("standardButton");
                 deleteButton.setOnAction(actionEvent -> {
 
-                    boolean deleteTeamConfirm = ConfrimBox.display("Delete Team", "Are you sure you want to delete this team from the database?");
+                    boolean deleteTeamConfirm = ConfirmBox.display("Delete Team", "Are you sure you want to delete this team from the database?");
                     if (deleteTeamConfirm) {
                         boolean deleted = teamDAO.deleteTeamById(teamToDelete.getTeamId());
                         if (deleted) {
