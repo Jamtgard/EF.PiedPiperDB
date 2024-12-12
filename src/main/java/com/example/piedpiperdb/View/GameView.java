@@ -212,6 +212,11 @@ public class GameView extends AbstractScene{
 
         VBox vBox1 = new VBox();
 
+        ListView playersList = new ListView();
+
+
+
+        /*
         TableView gameTable = new TableView();
 
         TableColumn<Player, String> playerColumn = new TableColumn<>("Player");
@@ -227,18 +232,18 @@ public class GameView extends AbstractScene{
         matchDateColumn.setCellValueFactory(new PropertyValueFactory<>("matchDate"));
 
 
-        gameTable.getItems().addAll(GameActions.getAllPlayers(),GameActions.getAllMatches());
+        //gameTable.getItems().addAll(GameActions.getAllPlayers(),GameActions.getAllMatches());
 
-        gameTable.getColumns().addAll(playerColumn,matchColumn,matchDateColumn);
+        gameTable.getColumns().addAll(playerColumn,matchColumn,matchDateColumn);*/
 
-        vBox1.getChildren().addAll(gameTable);
+        vBox1.getChildren().addAll();
 
 
         Button tableView = new Button("Table View");
         tableView.getStyleClass().add("standardButton");
         tableView.setMinSize(160, 30);
         tableView.setOnAction(e->{
-            clearAnchorpane(vBox1);
+            GameActions.getSelectedGame(gameListView);
         });
 
 

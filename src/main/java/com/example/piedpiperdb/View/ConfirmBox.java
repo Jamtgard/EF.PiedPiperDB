@@ -1,10 +1,10 @@
 package com.example.piedpiperdb.View;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -109,5 +109,44 @@ public class ConfirmBox {
 
         return selectedOptions;
 
+    }
+
+    public static void playersOfGame(String game, String players){
+        Stage window = new Stage();
+        window.setTitle("Player of "+game);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setMinWidth(300);
+        window.setMinHeight(250);
+
+        Label gameLabel = new Label(game);
+        gameLabel.getStyleClass().add("titel");
+
+        VBox layout = new VBox();
+        layout.setSpacing(5);
+        layout.setAlignment(Pos.CENTER);
+
+        Label label = new Label("Players");
+        label.getStyleClass().add("standardLabel");
+
+        Label playersLabel = new Label(players);
+        playersLabel.getStyleClass().add("standardLabelNoBorder");
+        playersLabel.setLineSpacing(5);
+
+        layout.getChildren().addAll(label, playersLabel);
+
+        Button ok = new Button("Ok");
+        ok.getStyleClass().add("standardButton");
+        ok.setOnAction(e -> {window.close();});
+
+        VBox vbox = new VBox();
+        vbox.setSpacing(25);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.getStyleClass().add("backgroundTeaGreen");
+        vbox.getChildren().addAll(gameLabel, layout,ok);
+
+        Scene scene = new Scene(vbox);
+        scene.getStylesheets().add("EscortFlasher.css");
+        window.setScene(scene);
+        window.showAndWait();
     }
 }

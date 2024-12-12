@@ -7,6 +7,7 @@ import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.View.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -14,10 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 //GEFP-22-SA
 public class GameActions {
@@ -70,6 +68,7 @@ public class GameActions {
         return gameById;
     }
 
+
     //GEFP-22-SA
     public static void deleteGame(ListView gameListView) {
         if(gameListView.getSelectionModel().getSelectedItems().size() == gameListView.getItems().size()) {
@@ -78,6 +77,7 @@ public class GameActions {
 
             Set<Integer> gameById = stringToId(gameListView);
 
+            System.out.println("p-----------------------------------------------------------------------------------------------");
             for (Integer gameId : gameById) {
                 System.out.println(gameId);
             }
@@ -126,23 +126,34 @@ public class GameActions {
         }
     }
 
-    public static List<Player> getAllPlayers(){
-        PlayerDAO playerDAO = new PlayerDAO();
-        ObservableList<Player>players = FXCollections.observableArrayList(playerDAO.getAllPlayers());
+    //GEFP-26-SA
+    public static void getSelectedGame(ListView gameListView) {
+        Set<Integer> gameById = stringToId(gameListView);//Får in alla id på valda spel
 
-        /*for(Game game : gameDAO.getAllGames()){
-            players.add(game.getPlayers().get(0));
-        }*/
-        return players;
-    }
-    public static List<Match> getAllMatches(){
-        MatchDAO matchDAO = new MatchDAO();
-        ObservableList<Match>matches = FXCollections.observableArrayList(matchDAO.getAllMatches());
-        /*for(Game game : gameDAO.getAllGames()){
-            matches.add(game.getMatches().get(0));
-        }*/
-        return matches;
-    }
+        System.out.println("y-------------------------------------------------------");
+        for(Integer game : gameById){
 
+            Game game1 = gameDAO.getGameById(game);
+
+            List<String> playerNickNames = new ArrayList<>();
+
+            String gameName = game1.getGameName();
+
+            System.out.println("Player of "+gameName+" are: ");
+            if(game1.getPlayers().isEmpty()){
+                ConfirmBox.playersOfGame(gameName,"No players");
+                //AlertBox.displayAlertBox(gameName,"No players");
+            }else {
+                String players = "";
+                for (int i = 0; i < game1.getPlayers().size(); i++) {
+                    playerNickNames.add(game1.getPlayers().get(i).getNickname());
+                    players += game1.getPlayers().get(i).getNickname() + "\n";
+                }
+                //AlertBox.displayAlertBox(gameName,players);
+                ConfirmBox.playersOfGame(gameName,players);
+
+            }
+        }
+    }
 
 }
