@@ -77,11 +77,11 @@ public class TeamView extends AbstractScene{
         });
 
 
-        Button selectedTeamButton = new Button("Show Teams from \nselected Game \\ Games");
+/*        Button selectedTeamButton = new Button("Show Teams from \nselected Game \\ Games");
         selectedTeamButton.getStyleClass().add("standardButton");
         selectedTeamButton.setMinSize(160, 30);
         selectedTeamButton.setOnAction(event -> {
-            List<String> listSelection = ConfrimBox.displayCheckBoxOptions("Select Team \\ Teams", listOfCheckboxes);
+            List<String> listSelection = ConfirmBox.displayCheckBoxOptions("Select Team \\ Teams", listOfCheckboxes);
             List<Integer> ids = new ArrayList<>();
             for (String selection : listSelection) {
                 try {
@@ -96,7 +96,7 @@ public class TeamView extends AbstractScene{
             }
             List<Team> teams = teamDAO.getTeamsByGame(ids);
             showTable(anchorPane, teams);
-        });
+        });*/
 
 
         Button addNewTeamButton = new Button("Add New Team");

@@ -72,7 +72,7 @@ public class StartPage extends AbstractScene{
             ChangeSceneAction.toGameView(window);//GEFP-22-SA
         });
 
-
+        //GEFP-23-AWS
         Button matchViewButton = new Button("Matches");
         matchViewButton.getStyleClass().add("standardButton");
         matchViewButton.setMinSize(160, 30);

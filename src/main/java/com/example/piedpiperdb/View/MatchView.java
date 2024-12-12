@@ -6,21 +6,18 @@ import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.MatchType;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 
 
 public class MatchView extends AbstractScene {
     private static ListView matchListView;
-    private static Button submit;
     private static MatchDAO matchDAO = new MatchDAO();
     private static Stage stage;
 
@@ -51,13 +48,14 @@ public class MatchView extends AbstractScene {
         Button getAllMatchesButton = createGetAllMatches();
         Button addMatchPvPButton = createAddMatchPvP();
         Button addMatchTvTButton = createAddMatchTvT();
+        Button uppdateMatchButton = createUppdateMatch();
         Button deleteMatch = createDeleteMatch();
 
-        vBox.getChildren().addAll(getAllMatchesButton, addMatchPvPButton, addMatchTvTButton, deleteMatch);
+        vBox.getChildren().addAll(getAllMatchesButton, addMatchPvPButton, addMatchTvTButton,uppdateMatchButton , deleteMatch);
     }
 
     private static Button createGetAllMatches(){
-        Button getAllMatches = new Button("Get All Matches");
+        Button getAllMatches = new Button("Show Matches");
         getAllMatches.getStyleClass().add("standardButton");
         getAllMatches.setMinSize(160,30);
         getAllMatches.setOnAction(actionEvent -> updateMatchList());
@@ -87,7 +85,7 @@ public class MatchView extends AbstractScene {
         addMatch.getStyleClass().add("standardButton");
         addMatch.setMinSize(160,30);
         addMatch.setOnAction(actionEvent -> {
-            Match newMatch = new Match(MatchType.PLAYER_VS_PLAYER);
+            Match newMatch = new Match(MatchType.TEAM_VS_TEAM);
             newMatch.setMatchName("New Match");
             newMatch.setMatchDate(LocalDate.now());
             boolean success = matchDAO.saveMatch(newMatch);
@@ -120,6 +118,15 @@ public class MatchView extends AbstractScene {
             }
         });
         return deleteMatch;
+    }
+
+    private static Button createUppdateMatch(){
+        Button updateMatch = new Button("Update Match");
+        updateMatch.getStyleClass().add("standardButton");
+        updateMatch.setMinSize(160,30);
+        updateMatch.setOnAction(actionEvent -> {
+        });
+        return updateMatch;
     }
 
     private static void updateMatchList(){
