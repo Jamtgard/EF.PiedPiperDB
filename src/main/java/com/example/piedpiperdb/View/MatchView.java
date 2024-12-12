@@ -10,6 +10,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,9 +19,11 @@ import java.util.List;
 
 
 public class MatchView extends AbstractScene {
+
     private static ListView matchListView;
     private static MatchDAO matchDAO = new MatchDAO();
     private static Stage stage;
+    private static VBox formContainer;
 
     public static Scene startSceneMatch(Stage window){
         Scene baseScene = AbstractScene.getScene(window);
@@ -134,5 +138,11 @@ public class MatchView extends AbstractScene {
         matchListView.getItems().clear();
         matchListView.getItems().addAll(matches);
     }
+
+    public static void showMatchTable(AnchorPane anchorPane, List<Match> matches){
+        formContainer = new createResultBox();
+    }
+
+
 
 }
