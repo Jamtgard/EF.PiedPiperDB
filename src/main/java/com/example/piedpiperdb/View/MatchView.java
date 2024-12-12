@@ -1,5 +1,6 @@
 package com.example.piedpiperdb.View;
 
+import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.MatchType;
@@ -21,20 +22,23 @@ public class MatchView extends AbstractScene {
     private static ListView matchListView;
     private static Button submit;
     private static MatchDAO matchDAO = new MatchDAO();
+    private static Stage stage;
 
-    public static Scene matchScene(Stage window){
+    public static Scene startSceneMatch(Stage window){
         Scene baseScene = AbstractScene.getScene(window);
+        stage = window;
+
         AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
         addCustomComponents(vBox);
 
         AbstractScene.back.setOnAction(actionEvent -> {
-            window.setScene(baseScene);
+            ChangeSceneAction.toStartPage(window);
         });
 
-        anchorPane.getChildren().add(vBox);
-        return new Scene(anchorPane);
+
+        return baseScene;
     }
 
 

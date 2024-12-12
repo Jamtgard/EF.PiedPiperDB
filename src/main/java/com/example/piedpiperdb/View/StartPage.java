@@ -62,7 +62,7 @@ public class StartPage extends AbstractScene{
         Button button = new Button("Start3");
         button.getStyleClass().add("standardButton");
         button.setMinSize(160, 30);
-        vBox.getChildren().add(button);
+        /*vBox.getChildren().add(button);*/
 
         Button gameViewButton = new Button("Games");
         gameViewButton.getStyleClass().add("standardButton");
@@ -72,15 +72,17 @@ public class StartPage extends AbstractScene{
             ChangeSceneAction.toGameView(window);//GEFP-22-SA
         });
 
-        vBox.getChildren().addAll(button,gameViewButton);
-    }
-   /* Button matchViewButton = new Button("Matches");
-        matchViewButton.getStyleClass().add("matchViewButton");
+
+        Button matchViewButton = new Button("Matches");
+        matchViewButton.getStyleClass().add("standardButton");
         matchViewButton.setMinSize(160, 30);
-          *//*   matchViewButton.setOnAction(e->{
-            JavaFXActions.toMatchView(window);
-        });*//*
-     vBox.getChildren().add(matchViewButton);*/
+        matchViewButton.setOnAction(e->{
+            ChangeSceneAction.toMatchView(window);
+        });
+
+        vBox.getChildren().addAll(button,gameViewButton, matchViewButton);
+    }
+
 
 
 }
