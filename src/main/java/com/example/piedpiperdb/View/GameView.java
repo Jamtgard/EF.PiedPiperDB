@@ -2,13 +2,21 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
+import com.example.piedpiperdb.Entities.Game;
+import com.example.piedpiperdb.Entities.Match;
+import com.example.piedpiperdb.Entities.Player;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //GEFP-22-SA
 public class GameView extends AbstractScene{
@@ -18,6 +26,7 @@ public class GameView extends AbstractScene{
     private static ListView gameListViewDelete;//GEFP-25-SA
     private static AnchorPane anchorPaneAction;
     private static Stage stage;
+    private static VBox vBoxAllGames;
     private static double middleOfStage = (HelloApplication.width/2) -110;//GEFP-25-SA, ändra storlek så den följer efter Stage storleken
 
     //GEFP-22-SA
@@ -45,9 +54,9 @@ public class GameView extends AbstractScene{
 
 
         //GEFP-22-SA
-        VBox listView = new VBox();//GEFP-25-SA
-        listView.setSpacing(10);
-        listView.setAlignment(Pos.CENTER);
+        vBoxAllGames = new VBox();//GEFP-25-SA
+        vBoxAllGames.setSpacing(10);
+        vBoxAllGames.setAlignment(Pos.CENTER);
 
         Label allGames = new Label();
         allGames.setText("All games");
@@ -57,11 +66,11 @@ public class GameView extends AbstractScene{
         gameListView = GameActions.gameListView(gameListView);
         gameListView.getStyleClass().add("list-cell");
 
-        listView.getChildren().addAll(allGames, gameListView);
+        vBoxAllGames.getChildren().addAll(allGames, gameListView);
 
         anchorPaneAction = new AnchorPane();
 
-        anchorPaneAction.getChildren().addAll(listView);
+        anchorPaneAction.getChildren().addAll(vBoxAllGames);
 
         anchorPaneAction.setLayoutX(middleOfStage);
         anchorPaneAction.setLayoutY(150);
@@ -196,14 +205,53 @@ public class GameView extends AbstractScene{
         showGames.getStyleClass().add("standardButton");
         showGames.setMinSize(160, 30);
         showGames.setOnAction(e->{
-            ChangeSceneAction.toGameView(stage);
+            clearAnchorpane(vBoxAllGames);
         });
 
-        vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame);
+        //--------------------------------------------------------------
+
+        VBox vBox1 = new VBox();
+
+        TableView gameTable = new TableView();
+
+        TableColumn<Player, String> playerColumn = new TableColumn<>("Player");
+        playerColumn.setMinWidth(100);
+        playerColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
+
+        TableColumn<Match, String> matchColumn = new TableColumn<>("Match");
+        matchColumn.setMinWidth(150);
+        matchColumn.setCellValueFactory(new PropertyValueFactory<>("matchName"));
+
+        TableColumn<Match, String> matchDateColumn = new TableColumn<>("Match Date");
+        matchDateColumn.setMinWidth(200);
+        matchDateColumn.setCellValueFactory(new PropertyValueFactory<>("matchDate"));
+
+
+        gameTable.getItems().addAll(GameActions.getAllPlayers(),GameActions.getAllMatches());
+
+        gameTable.getColumns().addAll(playerColumn,matchColumn,matchDateColumn);
+
+        vBox1.getChildren().addAll(gameTable);
+
+
+        Button tableView = new Button("Table View");
+        tableView.getStyleClass().add("standardButton");
+        tableView.setMinSize(160, 30);
+        tableView.setOnAction(e->{
+            clearAnchorpane(vBox1);
+        });
+
+
+
+        //--------------------------------------------------------------
+
+        vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame,tableView);
     }
 
     public static void clearAnchorpane (VBox vBox){
         anchorPaneAction.getChildren().clear();
         anchorPaneAction.getChildren().addAll(vBox);
     }
+
+
 }

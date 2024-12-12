@@ -10,7 +10,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 //GEFP-16-AA
-public class ConfrimBox {
+public class Confirm {
     private static boolean answer;
 
     public static boolean display(String title, String message){

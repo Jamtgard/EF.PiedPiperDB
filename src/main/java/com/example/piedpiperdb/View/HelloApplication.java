@@ -2,7 +2,6 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.*;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
-import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import com.example.piedpiperdb.Entities.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -142,7 +141,7 @@ public class HelloApplication extends Application {
 
     //GEFP-16-AA
     private void closeProgram() {
-        boolean answer = ConfrimBox.display("Exit", "Are you sure you want to exit?");
+        boolean answer = Confirm.display("Exit", "Are you sure you want to exit?");
 
         if (answer) {
             System.out.println("Exit program");
