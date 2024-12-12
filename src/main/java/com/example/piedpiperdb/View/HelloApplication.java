@@ -54,14 +54,6 @@ public class HelloApplication extends Application {
         System.out.println("Antal spel är: "+gameDAO.getAllGames().size());
         System.out.println("Antal lag är: "+teamDAO.getAllTeams().size());*/
 
-
-
-        // GEFP-9-AWS små testat
-/*
-        MatchDAO dao = new MatchDAO();
-        Match match = new Match(MatchType.PLAYER_VS_PLAYER);
-        dao.saveMatch(match);*/
-
         //GEFP-5-SA
         window = stage;
         window.setResizable(false);
@@ -141,7 +133,7 @@ public class HelloApplication extends Application {
 
     //GEFP-16-AA
     private void closeProgram() {
-        boolean answer = Confirm.display("Exit", "Are you sure you want to exit?");
+        boolean answer = ConfirmBox.display("Exit", "Are you sure you want to exit?");
 
         if (answer) {
             System.out.println("Exit program");

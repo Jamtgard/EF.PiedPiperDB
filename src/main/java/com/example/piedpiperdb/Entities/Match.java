@@ -93,31 +93,20 @@ public class Match {
     public void setGameId(Game game) {
         this.gameId = game;
     }
-    //GEFP-22-SA, var utkommenterat
     public Player getPlayer() {
         return player;
     }
     public void setPlayer(Player player) {
         this.player = player;
     }
-    /*
-    public Team getTeam() {
+
+   /* public Team getTeam() {
         return team;
     }
     public void setTeam(Team team) {
         this.team = team;
-    }*/
+    } */
 
-    //GEFP-22-SA, var utkommenterat
-    public List<Team> getTeams() {
-        return teams;
-    }
-
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
-    }
-
-    //GEFP-22-SA, la till getter och setter för MatchName
     public String getMatchName() {
         return matchName;
     }
