@@ -87,9 +87,6 @@ public class HelloApplication extends Application {
         //GEFP-4-SA
         loginButton.setOnAction(e -> {
             ChangeSceneAction.toStartPage(window);//GEFP-22-SA
-            window.setTitle("Start page 2");
-            //window.setScene(StartPage.startScene(window));
-            window.setScene(PlayerView.playerScene(window));
         });
 
         Label userName = new Label("Username");

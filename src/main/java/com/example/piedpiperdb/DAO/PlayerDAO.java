@@ -1,7 +1,6 @@
 package com.example.piedpiperdb.DAO;
 
 import com.example.piedpiperdb.Entities.Game;
-import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
 import jakarta.persistence.*;
@@ -29,6 +28,47 @@ public class PlayerDAO {
             return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            if (entityManager != null && transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public boolean isNicknameUnique(String nickname) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        String q = "SELECT COUNT(*) FROM Player p WHERE p.nickname = :nickname";
+
+        try {
+            TypedQuery<Long> query = entityManager.createQuery(q, Long.class);
+            query.setParameter("nickname", nickname);
+            Long count = query.getSingleResult();
+            return count == 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (entityManager != null && transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        } finally {
+            entityManager.close();
+        }
+    }
+    public boolean isEmailUnique(String email) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        String q = "SELECT COUNT(*) FROM Player p WHERE p.email = :email";
+
+        try {
+            TypedQuery<Long> query = entityManager.createQuery(q, Long.class);
+            query.setParameter("email", email);
+            Long count = query.getSingleResult();
+            return count == 0;
+        } catch (Exception e) {
+            e.printStackTrace();
             if (entityManager != null && transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }

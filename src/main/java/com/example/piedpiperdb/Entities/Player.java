@@ -245,8 +245,11 @@ public class Player {
     }
 
     public String getMatchInfo(){
-        return matchId !=null ? matchId.getMatchName() + ", " + matchId.getMatchDate() + ". Result:  " + matchId.getResult()
-                : "No match registered";
+        if (matchId == null){
+            return "No match registered";
+        }
+         String r = (matchId.getResult() !=null ? matchId.getResult() : "Upcoming game");
+        return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + r;
     }
 
     public void setMatchId(Match matchId) {
