@@ -42,14 +42,16 @@ public class MatchDAO {
             return matchToReturn;
         }
             // hämta lista med matcher
-        public List<Match> getAllMatches() {
+        public static List<Match> getAllMatches() {
             EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
             List<Match> listToReturn = new ArrayList<>();
             TypedQuery<Match> result = entityManager.createQuery("FROM Match", Match.class);
             listToReturn.addAll(result.getResultList());
             return listToReturn;
         }
+
     //AWS GEFP-13
+
     // Update
         public void updateMatch(Match matchToUpdate) {
             EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
