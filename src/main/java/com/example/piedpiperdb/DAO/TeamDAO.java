@@ -53,6 +53,36 @@ public class TeamDAO {
         return listToReturn;
     }
 
+    // Get Teams by Game
+
+    public List<Team> getTeamsByGame (List<Integer> listOfGameIDs){
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        List<Team> listToReturn = new ArrayList<>();
+
+        transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+
+            TypedQuery<Team> query = entityManager.createQuery(
+                    "SELECT t FROM Team t WHERE t.gameId.game_id IN :gameIDs", Team.class);
+            query.setParameter("gameIDs", listOfGameIDs);
+            listToReturn.addAll(query.getResultList());
+
+        } catch (Exception e) {
+
+            System.out.println(e.getMessage());
+            if (entityManager != null && transaction != null && transaction.isActive()){
+                transaction.rollback();
+            }
+
+        } finally {
+            entityManager.close();
+        }
+        return listToReturn;
+    }
+
     // Update Team
 
     public void updateTeam(Team team){
@@ -74,6 +104,31 @@ public class TeamDAO {
             if (entityManager != null && transaction != null && transaction.isActive()){
                 transaction.rollback();
             }
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    // Delete By Team
+
+    public boolean deleteTeam (Team team){
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+
+        transaction = entityManager.getTransaction();
+        transaction.begin();
+
+        try {
+            entityManager.remove(entityManager.contains(team) ? team : entityManager.merge(team));
+            transaction.commit();
+            System.out.println("Team " + team.getTeamName() + " deleted successfully");
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            if (entityManager != null && transaction != null && transaction.isActive()){
+                transaction.rollback();
+            }
+            return false;
         } finally {
             entityManager.close();
         }
@@ -103,6 +158,5 @@ public class TeamDAO {
             entityManager.close();
         }
     }
-
 }
 
