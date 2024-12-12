@@ -1,3 +1,4 @@
+/*SA*/
 .root{
     -fx-font-size: 14;
     -fx-font-family: "Comic Sans MS";
@@ -44,7 +45,32 @@
     -fx-border-radius: 2;
     -fx-border-color: #1A1F16;
 }
+/*GEFP-25-SA*/
+.standardLabelNoBorder{
+    -fx-font-size: 14;
+    -fx-font-family: "Bell MT";
+    -fx-text-fill: #1A1F16;
+}
+/*SA*/
 .columnV{
     -fx-border-radius: 2;
     -fx-border-color: #1A1F16;
+}
+/*GEFP-25-SA*/
+.list-cell:even{
+    -fx-font-size: 14;
+    -fx-font-family: "Bell MT";
+    -fx-text-fill: #1A1F16;
+    -fx-background-color: #ffffff;
+
+}
+.list-cell:odd{
+    -fx-font-size: 14;
+    -fx-font-family: "Bell MT";
+    -fx-text-fill: #1A1F16;
+    -fx-background-color: #E4FFF1;
+}
+.list-cell:filled:selected:focused, .list-cell:filled:selected{
+    -fx-background-color: #ADC698;
+    -fx-text-fill: #1A1F16;
 }

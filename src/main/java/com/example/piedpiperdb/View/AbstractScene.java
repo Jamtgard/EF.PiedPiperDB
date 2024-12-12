@@ -95,7 +95,8 @@ public abstract class AbstractScene {
         titelBox.setSpacing(5);
         titelBox.setPadding(new Insets(10, 10, 10, 10));
         titelBox.setLayoutY(30);
-        titelBox.setLayoutX(240);
+        titelBox.setLayoutX(((double) HelloApplication.width /2) - 110);//240, GEFP-25-SA, ändra storlek så den följer efter Stage storleken
+        //700/2=350
 
         Label titel = new Label("Piper Games");
         titel.getStyleClass().add("titel");
@@ -112,7 +113,7 @@ public abstract class AbstractScene {
     private static Node createPlaceForButtons(){
         //GEFP-4-SA
         Rectangle rectangleBGButtons = new Rectangle();
-        rectangleBGButtons.setHeight(440);
+        rectangleBGButtons.setHeight(HelloApplication.height-160);//GEFP-25-SA, ändra storlek så den följer efter Stage storleken
         rectangleBGButtons.setWidth(180);
         rectangleBGButtons.setFill(Paint.valueOf("#FFFFFF"));
         rectangleBGButtons.setOpacity(0.5);
@@ -134,8 +135,8 @@ public abstract class AbstractScene {
     private static Node createRectagleForActions(){
         //GEFP-4-SA
         Rectangle rectangleBGForAction = new Rectangle();
-        rectangleBGForAction.setHeight(440);
-        rectangleBGForAction.setWidth(465);
+        rectangleBGForAction.setHeight(HelloApplication.height-160);//440, GEFP-25-SA, ändra storlek så den följer efter Stage storleken
+        rectangleBGForAction.setWidth(HelloApplication.width-235);//465, GEFP-25-SA, ändra storlek så den följer efter Stage storleken
         rectangleBGForAction.setFill(Paint.valueOf("#FFFFFF"));
         rectangleBGForAction.setOpacity(0.5);
         rectangleBGForAction.setY(140);
@@ -150,7 +151,7 @@ public abstract class AbstractScene {
         back = new Button("Back");
         back.getStyleClass().add("darkerButton");
         back.setMinSize(160, 30);
-        back.setLayoutY(535.0);
+        back.setLayoutY(HelloApplication.height-65);//535.0, GEFP-25-SA, ändra storlek så den följer efter Stage storleken
         back.setLayoutX(30.0);
 
         return back;
@@ -163,7 +164,7 @@ public abstract class AbstractScene {
         searchField.setPromptText("Search: ");
         searchField.setMinSize(150, 30);
         searchField.setLayoutY(100.0);
-        searchField.setLayoutX(485.0);
+        searchField.setLayoutX(HelloApplication.width-215);//485.0, GEFP-25-SA, ändra storlek så den följer efter Stage storleken
 
         return searchField;
     }
@@ -174,7 +175,7 @@ public abstract class AbstractScene {
         userButton.getStyleClass().add("darkerButton");
         userButton.setMinSize(140, 30);
         userButton.setLayoutY(20.0);
-        userButton.setLayoutX(533.0);
+        userButton.setLayoutX(HelloApplication.width-167);//533.0, GEFP-25-SA, ändra storlek så den följer efter Stage storleken
 
         return userButton;
     }

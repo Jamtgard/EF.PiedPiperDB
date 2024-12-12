@@ -27,8 +27,8 @@ public class HelloApplication extends Application {
 
     private Button loginButton;
 
-    final static int height = 600;
-    final static int width = 700;
+    final static int height = 800;//600
+    final static int width = 1500;//700
 
     private final Label programTitel = new Label("Piper Games");
 
@@ -65,8 +65,8 @@ public class HelloApplication extends Application {
 
 
         Rectangle greenBackground = new Rectangle(width, height);
-        greenBackground.setHeight(500);
-        greenBackground.setWidth(600);
+        greenBackground.setHeight(height-100);//500, GEFP-25-SA, ändra storlek så den följer efter Stage storleken
+        greenBackground.setWidth(width-100);//600, GEFP-25-SA, ändra storlek så den följer efter Stage storleken
         greenBackground.setFill(Paint.valueOf("#FFFFFF"));
         greenBackground.setOpacity(0.5);
         greenBackground.setY(height/2);

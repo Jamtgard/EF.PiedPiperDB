@@ -14,10 +14,11 @@ import javafx.stage.Stage;
 public class GameView extends AbstractScene{
 
     //GEFP-22-SA
-    private static Button submit;
     private static ListView gameListView;
-    private static AnchorPane addStuff;
+    private static ListView gameListViewDelete;//GEFP-25-SA
+    private static AnchorPane anchorPaneAction;
     private static Stage stage;
+    private static double middleOfStage = (HelloApplication.width/2) -110;//GEFP-25-SA, ändra storlek så den följer efter Stage storleken
 
     //GEFP-22-SA
     public static Scene startSceneGame(Stage window){//Denna metod är den som kallas när man klickar på Login button i HelloApplication
@@ -44,34 +45,28 @@ public class GameView extends AbstractScene{
 
 
         //GEFP-22-SA
+        VBox listView = new VBox();//GEFP-25-SA
+        listView.setSpacing(10);
+        listView.setAlignment(Pos.CENTER);
 
-        VBox vBox = new VBox();
-        vBox.setSpacing(10);
-        vBox.setMinSize(445, 300);
-        vBox.setMaxSize(465, 400);
-
-        Label buttonLabel = new Label();
-        buttonLabel.setText("Hold ctrl or shift to select more than one game");
-        buttonLabel.getStyleClass().add("standardLabel");
-        buttonLabel.setAlignment(Pos.CENTER);
+        Label allGames = new Label();
+        allGames.setText("All games");
+        allGames.getStyleClass().add("titel");
 
         gameListView = new ListView();
         gameListView = GameActions.gameListView(gameListView);
-        gameListView.setMinSize(445,300);
-        gameListView.getStyleClass().add("standardButton");
+        gameListView.getStyleClass().add("list-cell");
 
-        vBox.getChildren().addAll(buttonLabel,gameListView);
+        listView.getChildren().addAll(allGames, gameListView);
 
-        addStuff = new AnchorPane();
-        addStuff.setLayoutY(150);
-        addStuff.setLayoutX(220);
-        addStuff.setMinSize(400, 400);
-        addStuff.getStyleClass().add("columnV");
+        anchorPaneAction = new AnchorPane();
 
+        anchorPaneAction.getChildren().addAll(listView);
 
-        addStuff.getChildren().addAll(vBox);
+        anchorPaneAction.setLayoutX(middleOfStage);
+        anchorPaneAction.setLayoutY(150);
 
-        anchorPane.getChildren().addAll(addStuff);
+        anchorPane.getChildren().addAll(anchorPaneAction);
     }
 
     //GEFP-20-SA
@@ -80,6 +75,7 @@ public class GameView extends AbstractScene{
         //GEFP-22-SA
 
         addCustomComponents(anchorPane);
+        //--------------------------------------------------------------------
 
         VBox addGameBox = new VBox();
         addGameBox.setSpacing(10);
@@ -107,7 +103,6 @@ public class GameView extends AbstractScene{
 
         addGame.setOnAction(e->{
             clearAnchorpane(addGameBox);
-            AbstractScene.back.setOnAction(event-> ChangeSceneAction.toGameView(stage));
 
             submitAdd.setOnAction(ev->{
                 GameActions.addGame(newGameInput);
@@ -120,9 +115,36 @@ public class GameView extends AbstractScene{
         Button deleteGame = new Button("Delete game");
         deleteGame.getStyleClass().add("standardButton");
         deleteGame.setMinSize(160, 30);
+
+        VBox vBoxDelete = new VBox();
+        vBoxDelete.setSpacing(10);
+        vBoxDelete.setAlignment(Pos.CENTER);
+
+        Label deleteGameLabel = new Label("Delete game");
+        deleteGameLabel.getStyleClass().add("titel");
+
+        gameListViewDelete = new ListView();//GEFP-25-SA
+        gameListViewDelete = GameActions.gameListView(gameListViewDelete);
+        gameListViewDelete.getStyleClass().add("list-cell");
+
+        Label buttonLabel = new Label();
+        buttonLabel.setText("Hold ctrl or shift to \nselect more than one game");
+        buttonLabel.getStyleClass().add("standardLabelNoBorder");
+
+        Button deleteGameButton = new Button();//GEFP-25-SA
+        deleteGameButton.setText("Delete");
+        deleteGameButton.getStyleClass().add("standardButton");
+        deleteGameButton.setMinSize(160, 30);
+
+        vBoxDelete.getChildren().addAll(deleteGameLabel,gameListViewDelete,buttonLabel,deleteGameButton);
+
         deleteGame.setOnAction(e->{
-            GameActions.deleteGame(gameListView);
-            ChangeSceneAction.toGameView(stage);
+            clearAnchorpane(vBoxDelete);
+
+            deleteGameButton.setOnAction(ev->{
+                GameActions.deleteGame(gameListViewDelete);
+                ChangeSceneAction.toGameView(stage);
+            });
         });
 
 
@@ -145,7 +167,7 @@ public class GameView extends AbstractScene{
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll(GameActions.getGamesString());
         choiceBox.setValue(choiceBox.getItems().get(0));
-        choiceBox.setMinSize(150, 30);
+        choiceBox.setMinSize(190, 30);
         choiceBox.getStyleClass().add("standardButton");
 
         Label chooseToUpdate = new Label("Choose game to update");
@@ -168,11 +190,20 @@ public class GameView extends AbstractScene{
 
         });
 
-        vBox.getChildren().addAll(addGame,deleteGame,updateGame);
+        //--------------------------------------------------------------
+
+        Button showGames = new Button("Show games");
+        showGames.getStyleClass().add("standardButton");
+        showGames.setMinSize(160, 30);
+        showGames.setOnAction(e->{
+            ChangeSceneAction.toGameView(stage);
+        });
+
+        vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame);
     }
 
     public static void clearAnchorpane (VBox vBox){
-        addStuff.getChildren().clear();
-        addStuff.getChildren().addAll(vBox);
+        anchorPaneAction.getChildren().clear();
+        anchorPaneAction.getChildren().addAll(vBox);
     }
 }
