@@ -4,9 +4,13 @@ import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.MatchType;
+import jakarta.persistence.Table;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -141,6 +145,34 @@ public class MatchView extends AbstractScene {
 
     public static void showMatchTable(AnchorPane anchorPane, List<Match> matches){
         formContainer = new createResultBox();
+        formContainer.getStyleClass().add("textFieldOne");
+        TableView<Match> table = createMatchTable(matches);
+        formContainer.getChildren().addAll(table);
+
+        anchorPane.getChildren().add(formContainer);
+    }
+
+    public static TableView<Match> createMatchTable(List<Match> matches){
+        ObservableList<Match> observableList = FXCollections.observableList(matches);
+        TableView<Match> table = new TableView<>();
+
+        TableColumn<Match, Integer> matchIdColumn = new TableColumn<>("Match ID");
+        matchIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Match, String> matchNameColumn = new TableColumn<>("Match Name");
+        matchNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        TableColumn<Match, String> matchDateColumn = new TableColumn<>("Match Date");
+        matchDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+        TableColumn<Match, String> matchTypeColumn = new TableColumn<>("Match Type");
+        matchTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+
+        table.getColumns().addAll(matchIdColumn, matchNameColumn, matchDateColumn, matchTypeColumn);
+        table.setItems(observableList);
+
+        return table;
     }
 
 
