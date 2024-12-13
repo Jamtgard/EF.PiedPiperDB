@@ -100,13 +100,12 @@ public abstract class AbstractScene {
 
         Label titel = new Label("Piper Games");
         titel.getStyleClass().add("titel");
-        titel.setAlignment(Pos.CENTER);
 
         Label titel2 = new Label("(Pied Piper DB)");
         titel2.getStyleClass().add("titel");
-        titel2.setAlignment(Pos.CENTER);
 
         titelBox.getChildren().addAll(titel, titel2);
+        titelBox.setAlignment(Pos.CENTER);//GEFP-26-SA ändra så vBoxen är Pos.CENTER så labels i den är centrerade över varandra
         return titelBox;
     }
     //GEFP-20-SA

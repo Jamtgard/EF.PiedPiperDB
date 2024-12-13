@@ -18,6 +18,7 @@ public class GameView extends AbstractScene{
     private static ListView gameListViewDelete;//GEFP-25-SA
     private static AnchorPane anchorPaneAction;
     private static Stage stage;
+    private static VBox vBoxAllGames;
     private static double middleOfStage = (HelloApplication.width/2) -110;//GEFP-25-SA, ändra storlek så den följer efter Stage storleken
 
     //GEFP-22-SA
@@ -45,9 +46,9 @@ public class GameView extends AbstractScene{
 
 
         //GEFP-22-SA
-        VBox listView = new VBox();//GEFP-25-SA
-        listView.setSpacing(10);
-        listView.setAlignment(Pos.CENTER);
+        vBoxAllGames = new VBox();//GEFP-25-SA
+        vBoxAllGames.setSpacing(10);
+        vBoxAllGames.setAlignment(Pos.CENTER);
 
         Label allGames = new Label();
         allGames.setText("All games");
@@ -57,11 +58,33 @@ public class GameView extends AbstractScene{
         gameListView = GameActions.gameListView(gameListView);
         gameListView.getStyleClass().add("list-cell");
 
-        listView.getChildren().addAll(allGames, gameListView);
+
+        Label buttonLabel = new Label();
+        buttonLabel.setText("Hold ctrl or shift to \nselect more than one game");
+        buttonLabel.getStyleClass().add("standardLabelNoBorder");
+
+        Button showPlayers = new Button("Show players");
+        showPlayers.getStyleClass().add("standardButton");
+        showPlayers.setMinSize(160, 30);
+        showPlayers.setOnAction(e->{
+            GameActions.getPlayerForGame(gameListView);
+        });
+
+        Button showMatches = new Button("Show matches");
+        showMatches.getStyleClass().add("standardButton");
+        showMatches.setMinSize(160, 30);
+        showMatches.setOnAction(e->{
+            GameActions.getMatchesForGame(gameListView);
+        });
+
+
+
+        //SA
+        vBoxAllGames.getChildren().addAll(allGames, gameListView,buttonLabel,showPlayers,showMatches);
 
         anchorPaneAction = new AnchorPane();
 
-        anchorPaneAction.getChildren().addAll(listView);
+        anchorPaneAction.getChildren().addAll(vBoxAllGames);
 
         anchorPaneAction.setLayoutX(middleOfStage);
         anchorPaneAction.setLayoutY(150);
@@ -190,14 +213,19 @@ public class GameView extends AbstractScene{
 
         });
 
+
         //--------------------------------------------------------------
+
 
         Button showGames = new Button("Show games");
         showGames.getStyleClass().add("standardButton");
         showGames.setMinSize(160, 30);
         showGames.setOnAction(e->{
-            ChangeSceneAction.toGameView(stage);
+            clearAnchorpane(vBoxAllGames);
         });
+
+
+        //--------------------------------------------------------------
 
         vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame);
     }
@@ -206,4 +234,6 @@ public class GameView extends AbstractScene{
         anchorPaneAction.getChildren().clear();
         anchorPaneAction.getChildren().addAll(vBox);
     }
+
+
 }
