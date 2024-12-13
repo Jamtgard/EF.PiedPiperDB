@@ -13,28 +13,28 @@ public class Player {
     private int id;
 
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name", length = 30, nullable = false)
     private String firstName;
 
-    @Column(name = "last_name",nullable = false)
+    @Column(name = "last_name",length = 40, nullable = false)
     private String lastName;
 
-    @Column(name = "nickname", nullable = false, unique = true)
+    @Column(name = "nickname", length = 20, nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "street_address",nullable = false)
+    @Column(name = "street_address", length = 10)
     private String streetAddress;
 
-    @Column(name = "zip_code", nullable = false)
+    @Column(name = "zip_code", length = 6)
     private String zipCode; //String för det brukar vara ett mellanrum i postnummer
 
-    @Column(name = "city",nullable = false)
+    @Column(name = "city", length = 30)
     private String city;
 
-    @Column(name = "country",nullable = false)
+    @Column(name = "country", length = 30)
     private String country;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "email", length = 50,unique = true)
     private String email;
 
 
@@ -66,6 +66,45 @@ public class Player {
         this.nickname = nickname;
     }
 
+    //GEFP-19-AA
+
+
+    public Player(String firstName, String lastName, String nickname, String streetAddress) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+    }
+
+    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+        this.zipCode = zipCode;
+    }
+
+    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+        this.zipCode = zipCode;
+        this.city = city;
+    }
+
+    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickname = nickname;
+        this.streetAddress = streetAddress;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.country = country;
+    }
+
+
+
     public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -89,7 +128,7 @@ public class Player {
         this.email = email;
         this.gameId = gameId;
         this.teamId = teamId;
-        this.matchId = matchId;//GEFP-22-SA, var utkommenterat
+        /*this.matchId = matchId;*/
     }
 
 //------------------------------------------------------
@@ -117,6 +156,11 @@ public class Player {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    //GEFP-19-AA
+    public String getFullName(){
+        return firstName + " " + lastName;
     }
 
     public String getNickname() {
@@ -151,6 +195,11 @@ public class Player {
         this.city = city;
     }
 
+    //GEFP-19-AA
+    public String getFullAddress(){
+        return streetAddress + "\n" + zipCode + "\n" + city;
+    }
+
     public String getCountry() {
         return country;
     }
@@ -171,11 +220,19 @@ public class Player {
         return gameId;
     }
 
+    public String getGameName(){
+        return gameId !=null ? gameId.getGameName() : "No game registered";
+    }
+
     public void setGameId(Game gameId) {
         this.gameId = gameId;
     }
     public Team getTeamId() {
         return teamId;
+    }
+
+    public String getTeamName(){
+        return teamId !=null ? teamId.getTeamName() : "No team registered";
     }
 
     public void setTeamId(Team teamId) {
@@ -187,7 +244,38 @@ public class Player {
         return matchId;
     }
 
+    public String getMatchInfo(){
+        if (matchId == null){
+            return "No match registered";
+        }
+
+         String r = (matchId.getResult() !=null ? matchId.getResult() : "Upcoming game");
+        return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + r;
+    }
+
     public void setMatchId(Match matchId) {
         this.matchId = matchId;
     }
+
+    public String getMatchName(){
+        return matchId !=null ? matchId.getMatchName() : "No match registered";
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", streetAddress='" + streetAddress + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", email='" + email + '\'' +
+                ", gameId=" + gameId +
+                ", teamId=" + teamId +
+                '}';
+    }
+
 }
