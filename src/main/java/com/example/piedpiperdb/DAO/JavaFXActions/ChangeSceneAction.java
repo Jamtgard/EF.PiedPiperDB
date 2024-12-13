@@ -1,9 +1,6 @@
 package com.example.piedpiperdb.DAO.JavaFXActions;
 
-import com.example.piedpiperdb.View.GameView;
-import com.example.piedpiperdb.View.HelloApplication;
-import com.example.piedpiperdb.View.StartPage;
-import com.example.piedpiperdb.View.MatchView;
+import com.example.piedpiperdb.View.*;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -32,6 +29,12 @@ public class ChangeSceneAction {
     public static void toMatchView(Stage window){
         window.setTitle("Matches");
         window.setScene(MatchView.startSceneMatch(window));
+    }
+
+    //GEFP-27-SJ
+    public static void toTeamView(Stage window){
+        window.setTitle("Teams");
+        window.setScene(TeamView.startTeamScene(window));
     }
 
 }
