@@ -2,13 +2,10 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
-import com.example.piedpiperdb.Entities.Game;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -61,28 +58,6 @@ public class GameView extends AbstractScene{
         gameListView = GameActions.gameListView(gameListView);
         gameListView.getStyleClass().add("list-cell");
 
-
-        //GEFP-26-SA
-        /*
-        TableView<Game> tableView = new TableView();
-
-        TableColumn<Game,String> playerNickName = new TableColumn<>("Players");
-        playerNickName.setCellValueFactory(new PropertyValueFactory<>("playersNickNames"));
-
-        TableColumn<Game,String>matchNames = new TableColumn<>("Matches");
-        matchNames.setCellValueFactory(new PropertyValueFactory<>("matchNames"));
-/*
-        TableColumn<Game, String>matchDates = new TableColumn<>("Match Dates");
-        matchDates.setCellValueFactory(new PropertyValueFactory<>("matchDates"));*/
-
-/*
-        tableView.setItems(GameActions.stringToGame(gameListView.getSelectionModel().getSelectedItems()));
-
-
-        tableView.getColumns().addAll(playerNickName, matchNames);
-
-        AnchorPane anchorPane1 = new AnchorPane();
-        anchorPane1.getChildren().add(tableView);*/
 
         Label buttonLabel = new Label();
         buttonLabel.setText("Hold ctrl or shift to \nselect more than one game");

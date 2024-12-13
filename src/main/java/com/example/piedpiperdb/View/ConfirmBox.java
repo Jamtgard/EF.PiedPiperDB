@@ -114,7 +114,7 @@ public class ConfirmBox {
     }
 
     //GEFP-26-SA
-    public static void noPlayersOrMathesOfGame(String game, String message,String titel){
+    public static void noPlayersOrMatchesOfGame(String game, String message, String titel){
         Stage window = new Stage();
         window.setTitle(titel+" of "+game);
         window.initModality(Modality.APPLICATION_MODAL);
