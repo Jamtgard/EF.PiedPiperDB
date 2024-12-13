@@ -1,5 +1,7 @@
 package com.example.piedpiperdb.View;
 
+import com.example.piedpiperdb.Entities.Match;
+import com.example.piedpiperdb.Entities.Player;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -112,9 +114,9 @@ public class ConfirmBox {
     }
 
     //GEFP-26-SA
-    public static void noPlayersOfGame(String game, String players){
+    public static void noPlayersOrMathesOfGame(String game, String message,String titel){
         Stage window = new Stage();
-        window.setTitle("Player of "+game);
+        window.setTitle(titel+" of "+game);
         window.initModality(Modality.APPLICATION_MODAL);
         window.setMinWidth(300);
         window.setMinHeight(150);
@@ -129,7 +131,7 @@ public class ConfirmBox {
         layout.setAlignment(Pos.CENTER);
         layout.getStyleClass().add("backgroundWhite");
 
-        Label playersLabel = new Label(players);
+        Label playersLabel = new Label(message);
         playersLabel.getStyleClass().add("standardLabelNoBorder");
         playersLabel.setLineSpacing(5);
 
@@ -153,7 +155,7 @@ public class ConfirmBox {
     }
 
     //GEFP-26-SA
-    public static void playersOfGame(String game, ObservableList<String> players){
+    public static void playersOfGame(String game, ObservableList<Player> players){
         Stage window = new Stage();
         window.setTitle("Player of "+game);
         window.initModality(Modality.APPLICATION_MODAL);
@@ -177,13 +179,57 @@ public class ConfirmBox {
         playersList.getStyleClass().add("list-cell");
         playersList.setMinWidth(100);
         playersList.setMinHeight(50);
-        playersList.getItems().addAll(players);
+        for(Player player : players){
+            playersList.getItems().add(player.getNickname());
+        }
+
 
         Button ok = new Button("Ok");
         ok.getStyleClass().add("standardButton");
         ok.setOnAction(e -> {window.close();});
 
         vBox.getChildren().addAll(gameLabel, label,playersList,ok);
+
+        Scene scene = new Scene(vBox);
+        scene.getStylesheets().add("EscortFlasher.css");
+        window.setScene(scene);
+        window.showAndWait();
+    }
+    //GEFP-26-SA
+    public static void matchesOfGame(String game, ObservableList<Match> matches){
+        Stage window = new Stage();
+        window.setTitle("Player of "+game);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setMinWidth(300);
+        window.setMinHeight(150);
+
+        Label gameLabel = new Label(game);
+        gameLabel.getStyleClass().add("titel");
+
+        VBox vBox = new VBox();
+        vBox.setSpacing(10);
+        vBox.setPadding(new Insets(20));
+        vBox.setMaxWidth(100);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getStyleClass().add("backgroundTeaGreen");
+
+        Label label = new Label("Matches");
+        label.getStyleClass().add("standardLabelNoBorder");
+
+        ListView<String>matchesList = new ListView<>();
+        matchesList.getStyleClass().add("list-cell");
+        matchesList.setMinWidth(100);
+        matchesList.setMinHeight(50);
+        for(Match match : matches){
+            matchesList.getItems().add(match.getMatchName());
+        }
+
+
+        Button ok = new Button("Ok");
+        ok.getStyleClass().add("standardButton");
+        ok.setOnAction(e -> {window.close();});
+
+        vBox.getChildren().addAll(gameLabel, label,matchesList,ok);
 
         Scene scene = new Scene(vBox);
         scene.getStylesheets().add("EscortFlasher.css");

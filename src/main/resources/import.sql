@@ -105,11 +105,37 @@ INSERT INTO matches (match_name, date, game_id) VALUES ('Game of Throws vs Fast 
 INSERT INTO matches (match_name, date, game_id) VALUES ('404: Team Name Not Found vs Unicorn Apocalypse', '2024-12-03', 3);
 
 --GEFP-26-SA
-INSERT INTO matches (match_name, date, game_id) VALUES ('404: Team Name Not Found vs Unicorn Apocalypse', '2024-12-03', 3);
+--Fixa datum
+INSERT INTO matches (match_name, date, game_id) VALUES ('Pixel Paddlers vs Bounce Battalion', '2024-12-04', 4);
+INSERT INTO matches (match_name, date, game_id) VALUES ('Bug Slayers vs Ashes', '2024-12-05', 5);
+INSERT INTO matches (match_name, date, game_id) VALUES ('Spirit vs MOUZ', '2024-12-06', 6);
+INSERT INTO matches (match_name, date, game_id) VALUES ('Dragon hunters vs Salem witches', '2024-12-07', 7);
+INSERT INTO matches (match_name, date, game_id) VALUES ('Asgardians vs Spiders squad', '2024-12-08', 8);
+INSERT INTO matches (match_name, date, game_id) VALUES ('Demon killers vs Doom-slayers', '2024-12-09', 9);
+INSERT INTO matches (match_name, date, game_id) VALUES ('FNATIC vs Heretics', '2024-12-10', 10);
 
 --GEFP-26-SA
 INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (1,1);
 INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (2,1);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (3,2);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (4,2);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (5,3);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (6,3);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (7,4);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (8,4);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (9,5);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (10,5);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (11,6);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (12,6);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (13,7);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (14,7);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (15,8);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (16,8);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (17,9);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (18,9);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (19,10);
+INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (20,10);
 
+--GEFP-26-SA, lägga in hur?
 INSERT INTO matches_teams(Match_match_id,teams_ORDER,teams_team_id) VALUES (1,1,1);
 

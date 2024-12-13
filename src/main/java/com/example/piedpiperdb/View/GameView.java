@@ -3,8 +3,6 @@ package com.example.piedpiperdb.View;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import com.example.piedpiperdb.Entities.Game;
-import com.example.piedpiperdb.Entities.Match;
-import com.example.piedpiperdb.Entities.Player;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,9 +12,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
 
 //GEFP-22-SA
 public class GameView extends AbstractScene{
@@ -68,16 +63,49 @@ public class GameView extends AbstractScene{
 
 
         //GEFP-26-SA
+        /*
+        TableView<Game> tableView = new TableView();
+
+        TableColumn<Game,String> playerNickName = new TableColumn<>("Players");
+        playerNickName.setCellValueFactory(new PropertyValueFactory<>("playersNickNames"));
+
+        TableColumn<Game,String>matchNames = new TableColumn<>("Matches");
+        matchNames.setCellValueFactory(new PropertyValueFactory<>("matchNames"));
+/*
+        TableColumn<Game, String>matchDates = new TableColumn<>("Match Dates");
+        matchDates.setCellValueFactory(new PropertyValueFactory<>("matchDates"));*/
+
+/*
+        tableView.setItems(GameActions.stringToGame(gameListView.getSelectionModel().getSelectedItems()));
+
+
+        tableView.getColumns().addAll(playerNickName, matchNames);
+
+        AnchorPane anchorPane1 = new AnchorPane();
+        anchorPane1.getChildren().add(tableView);*/
+
+        Label buttonLabel = new Label();
+        buttonLabel.setText("Hold ctrl or shift to \nselect more than one game");
+        buttonLabel.getStyleClass().add("standardLabelNoBorder");
+
         Button showPlayers = new Button("Show players");
         showPlayers.getStyleClass().add("standardButton");
         showPlayers.setMinSize(160, 30);
         showPlayers.setOnAction(e->{
-            GameActions.getSelectedGame(gameListView);
+            GameActions.getPlayerForGame(gameListView);
+        });
+
+        Button showMatches = new Button("Show matches");
+        showMatches.getStyleClass().add("standardButton");
+        showMatches.setMinSize(160, 30);
+        showMatches.setOnAction(e->{
+            GameActions.getMatchesForGame(gameListView);
         });
 
 
+
         //SA
-        vBoxAllGames.getChildren().addAll(allGames, gameListView,showPlayers);
+        vBoxAllGames.getChildren().addAll(allGames, gameListView,buttonLabel,showPlayers,showMatches);
 
         anchorPaneAction = new AnchorPane();
 

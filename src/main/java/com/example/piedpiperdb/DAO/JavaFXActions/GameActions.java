@@ -2,6 +2,8 @@ package com.example.piedpiperdb.DAO.JavaFXActions;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.Entities.Game;
+import com.example.piedpiperdb.Entities.Match;
+import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.View.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,7 +61,35 @@ public class GameActions {
         }
         return gameById;
     }
+    //GEFP-26-SA
+/*
+    public static ObservableList<Game> stringToGame(ObservableList<String>gameObservableList){
+        //Får in string med valda spel
+        //Vill få ut de spel som är valda, inte bara string, utan objektet
+        ObservableList<Game> games = getGames();
 
+        ObservableList<Game> gamesToSendBack = FXCollections.observableArrayList();
+
+        Set<Integer> gameById = new HashSet<>();
+        System.out.println("w-----------------------------------------------------------------------------------------");
+        for(String name : gameObservableList){
+            for(Game game : games){
+                if(game.getGameName().equals(name)){
+                    System.out.println("Valt spel: "+name);
+                    gameById.add(game.getGameId());
+                }
+            }
+
+        }
+
+        for(Integer gameId : gameById){
+            gamesToSendBack.add(gameDAO.getGameById(gameId));
+            System.out.println("Valt spel: "+gameId);
+        }
+
+        return gamesToSendBack;
+    }
+*/
 
     //GEFP-22-SA
     public static void deleteGame(ListView gameListView) {
@@ -119,7 +149,7 @@ public class GameActions {
     }
 
     //GEFP-26-SA
-    public static void getSelectedGame(ListView gameListView) {
+    public static void getPlayerForGame(ListView gameListView) {
         Set<Integer> gameById = stringToId(gameListView);//Får in alla id på valda spel
 
         System.out.println("y-------------------------------------------------------");
@@ -128,24 +158,40 @@ public class GameActions {
         }else {
             for (Integer game : gameById) {
 
-                Game game1 = gameDAO.getGameById(game);
+                Game selectedGame = gameDAO.getGameById(game);
 
-                List<String> playerNickNames = new ArrayList<>();
+                String gameName = selectedGame.getGameName();
 
-                String gameName = game1.getGameName();
-
-                if (game1.getPlayers().isEmpty()) {
-                    ConfirmBox.noPlayersOfGame(gameName, "No players");
+                if (selectedGame.getPlayers().isEmpty()) {
+                    ConfirmBox.noPlayersOrMathesOfGame(gameName, "No players","Players");
 
                 } else {
-                    for (int i = 0; i < game1.getPlayers().size(); i++) {
-                        playerNickNames.add(game1.getPlayers().get(i).getNickname());
-                    }
-
-                    ObservableList<String>players = FXCollections.observableArrayList(playerNickNames);
-
+                    ObservableList<Player>players = FXCollections.observableArrayList(selectedGame.getPlayers());
                     ConfirmBox.playersOfGame(gameName,players);
+                }
+            }
+        }
+    }
+    //GEFP-26-SA
+    public static void getMatchesForGame(ListView gameListView) {
+        Set<Integer> gameById = stringToId(gameListView);//Får in alla id på valda spel
 
+        System.out.println("y-------------------------------------------------------");
+        if(gameById.isEmpty()){
+            System.out.println("No game selected");
+        }else {
+            for (Integer game : gameById) {
+
+                Game selectedGame = gameDAO.getGameById(game);
+
+                String gameName = selectedGame.getGameName();
+
+                if (selectedGame.getMatches().isEmpty()) {
+                    ConfirmBox.noPlayersOrMathesOfGame(gameName, "No matches","Matches");
+
+                } else {
+                    ObservableList<Match>matches = FXCollections.observableArrayList(selectedGame.getMatches());
+                    ConfirmBox.matchesOfGame(gameName,matches);
                 }
             }
         }
