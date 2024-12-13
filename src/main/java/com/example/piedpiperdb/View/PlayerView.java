@@ -65,7 +65,7 @@ public class PlayerView extends AbstractScene{
 
             Button getAllPlayers = creatButton("Show all players");
             getAllPlayers.setOnAction(event -> {
-                clearResaultBox(resultBox, getIdBox);
+                clearResultBox(resultBox, getIdBox);
                  VBox resultBox = createResultBox();
                  resultBox = PlayerActions.getTableViewAllPlayers(resultBox);
                  anchorPane.getChildren().add(resultBox);
@@ -76,7 +76,7 @@ public class PlayerView extends AbstractScene{
             selectedPlayers.getStyleClass().add("standardButton");
             selectedPlayers.setMinSize(160, 50);
             selectedPlayers.setOnAction(actionEvent -> {
-                clearResaultBox(getIdBox, resultBox);
+                clearResultBox(getIdBox, resultBox);
                 VBox resultBox = createResultBox();
                 List<CheckBox> checkBoxes = PlayerActions.gameCheckBoxes();
                 List<String> selections = ConfirmBox.displayCheckBoxOptions("Select game or games", checkBoxes);
@@ -87,19 +87,19 @@ public class PlayerView extends AbstractScene{
 
             Button addNewPlayerButton = creatButton("Add new player");
             addNewPlayerButton.setOnAction(e -> {
-                clearResaultBox(getIdBox, resultBox);
+                clearResultBox(getIdBox, resultBox);
                 showAddPlayerForm(anchorPane);
             });
 
             Button updatePlayerByIdButton = creatButton("Update player by id");
             updatePlayerByIdButton.setOnAction(e -> {
-                clearResaultBox(getIdBox, resultBox);
+                clearResultBox(getIdBox, resultBox);
                 showUpdatePlayerForm(anchorPane);
             });
 
             Button deletePlayerByIdButton = creatButton("Delete player by id");
             deletePlayerByIdButton.setOnAction(e -> {
-                clearResaultBox(getIdBox, resultBox);
+                clearResultBox(getIdBox, resultBox);
                 showDeletePlayerForm(anchorPane);
             });
 
@@ -353,10 +353,46 @@ public class PlayerView extends AbstractScene{
         return button;
     }
 
+    private static void showDeletePlayerForm(AnchorPane anchorPane){
+        getIdBox = createResultBox();
+        TextField playerIdField = new TextField();
+        HBox playerIdBox = createResultBoxContentBox("Enter Player ID: ", "Player ID", playerIdField, false);
+
+        resultBox = createResultBox(250.0);
+        Label labelNoPlayerFound = new Label(" No player found! Enter a different ID (only numbers allowed). ");
+        labelNoPlayerFound.getStyleClass().add("standardLabel");
+
+        Button getButton = creatButton("Get player from database");
+        getButton.setOnAction(event -> {
+            try{
+                int playerId = Integer.parseInt(playerIdField.getText());
+                Player playerToDelete = PlayerActions.getPlayerById(playerId);
+
+                if (playerToDelete == null) {
+                    resultBox.getChildren().add(labelNoPlayerFound);
+                    return;
+                }
+
+                showPlayerInfoForPlayerToDelete(playerToDelete);
+
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+                AlertBox.displayAlertBox("Error", "An error occurred while deleting the player from database.");
+            }
+        });
+
+        getIdBox.getChildren().addAll(playerIdBox, getButton);
+        anchorPane.getChildren().addAll(getIdBox,resultBox);
+    }
+
+    private static void showPlayerInfoForPlayerToDelete(Player playerToDelete) {
+
+    }
+
 
     //------------------------------------------------------------------------------------------------------------------
 
-    private static void showDeletePlayerForm(AnchorPane anchorPane) {
+    /*private static void showDeletePlayerForm(AnchorPane anchorPane) {
         getIdBox = createResultBox();
 
         TextField playerInfield = new TextField();
@@ -423,12 +459,7 @@ public class PlayerView extends AbstractScene{
         getIdBox.getChildren().addAll(playerIdBox, getButton);
         anchorPane.getChildren().addAll(getIdBox, resultBox);
 
-    }
-
-    protected static void addCustomComponents(AnchorPane anchorPane, List<Player> players){
-
-
-    }
+    }*/
 
     private static VBox createResultBox() {
         VBox vBox = new VBox();
@@ -439,10 +470,6 @@ public class PlayerView extends AbstractScene{
         AnchorPane.setLeftAnchor(vBox, 210.0); // X för vänster
         AnchorPane.setRightAnchor(vBox, anchorPane.getWidth() - 210.0 - (HelloApplication.width - 235)); // Höger
         AnchorPane.setBottomAnchor(vBox, anchorPane.getHeight() - 140.0 - (HelloApplication.height - 160)); //
-       /* AnchorPane.setTopAnchor(vBox, 150.0);
-        AnchorPane.setLeftAnchor(vBox, 220.0);
-        AnchorPane.setRightAnchor(vBox, 30.0);
-        AnchorPane.setBottomAnchor(vBox, 30.0);*/
         return vBox;
     }
 
@@ -516,10 +543,11 @@ public class PlayerView extends AbstractScene{
         return box;
     }
 
-    private static void clearResaultBox (VBox a, VBox b){
+    private static void clearResultBox(VBox a, VBox b){
         if (a != null && !a.getChildren().isEmpty()) {
             a.getChildren().clear();
         }
+
         if (b != null && !b.getChildren().isEmpty()) {
             b.getChildren().clear();
         }

@@ -173,5 +173,8 @@ public class PlayerActions {
         playerDAO.updatePlayer(player);
     }
 
+    public static boolean deletePlayerById(int playerId) {
+        return playerDAO.deletePlayerById(playerId);
+    }
 
 }
