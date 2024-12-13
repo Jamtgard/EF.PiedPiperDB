@@ -60,4 +60,6 @@ public class Game {
     public int getGameId() {return gameId;}
 
     public void setGameId(int game_id) {this.gameId = game_id;}
+
+
 }

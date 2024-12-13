@@ -31,7 +31,7 @@ public class TeamView extends AbstractScene{
     private static TeamDAO teamDAO = new TeamDAO();
     private static MatchDAO matchDAO = new MatchDAO();
 
-    public static Scene teamScene(Stage window){
+    public static Scene startTeamScene(Stage window){
 
         Scene baseScene = AbstractScene.getScene(window);
 
@@ -366,7 +366,7 @@ public class TeamView extends AbstractScene{
                 deleteButton.getStyleClass().add("standardButton");
                 deleteButton.setOnAction(actionEvent -> {
 
-                    boolean deleteTeamConfirm = ConfrimBox.display("Delete Team", "Are you sure you want to delete this team from the database?");
+                    boolean deleteTeamConfirm = ConfirmBox.display("Delete Team", "Are you sure you want to delete this team from the database?");
                     if (deleteTeamConfirm) {
                         boolean deleted = teamDAO.deleteTeamById(teamToDelete.getTeamId());
                         if (deleted) {
