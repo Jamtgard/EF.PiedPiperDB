@@ -30,6 +30,10 @@ public class Team {
     @JoinColumn(name = "game_id",nullable = true)//GEFP-22-SA, ändra från gameId till game_id
     private Game gameId;//GEFP-22-SA, ändra från game till gameId
 
+    @ManyToOne
+    @JoinColumn (name = "match_id")
+    private Match matchId;
+
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Match>matchesInTeam = new ArrayList<>();
 
@@ -45,8 +49,8 @@ public class Team {
 
     // Getters & Setters
 
-    public int getId() {return teamId;}
-    public void setId(int id) {this.teamId = teamId;}
+    public int getTeamId() {return teamId;}
+    public void setTeamId(int teamId) {this.teamId = teamId;}
 
     public String getTeamName() {return teamName;}
     public void setTeamName(String teamName) {this.teamName = teamName;}
@@ -54,13 +58,43 @@ public class Team {
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
 
+    // Game
+
     public Game getGameId() {return gameId;}
     public void setGameId(Game game) {this.gameId = game;}
 
-    public int getTeamId() {return teamId;}
-    public void setTeamId(int teamId) {this.teamId = teamId;}
+    public String getGameName() { return gameId != null ? gameId.getGameName() : "-n-"; }
 
+    // Match
+
+    /* - SJ: Behövs en List?
     public List<Match> getMatchesInTeam() {return matchesInTeam;}
     public void setMatchesInTeam(List<Match> matchesInTeam) {this.matchesInTeam = matchesInTeam;}
+     */
+
+    public Match getMatchId() { return matchId; }
+
+    public String getMatchInfo (){
+        if (matchId != null) {
+            return "-n-";
+        }
+        String result = (matchId.getResult() != null ? matchId.getResult() : "Upcoming Match");
+        return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + result;
+    }
+
+    // ToString
+
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "teamId=" + teamId +
+                ", teamName='" + teamName + '\'' +
+                ", listOfPlayersInTeam=" + listOfPlayersInTeam +
+                ", gameId=" + gameId +
+                ", matchId=" + matchId +
+                ", matchesInTeam=" + matchesInTeam +
+                '}';
+    }
 }
 

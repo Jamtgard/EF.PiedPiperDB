@@ -6,7 +6,6 @@ import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
-import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
 import javafx.collections.FXCollections;
@@ -22,9 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 

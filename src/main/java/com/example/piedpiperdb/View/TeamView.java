@@ -1,6 +1,7 @@
 package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
+import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
@@ -30,6 +31,8 @@ public class TeamView extends AbstractScene{
     private static GameDAO gameDAO = new GameDAO();
     private static TeamDAO teamDAO = new TeamDAO();
     private static MatchDAO matchDAO = new MatchDAO();
+
+    private static TeamActions teamActions = new TeamActions();
 
     public static Scene startTeamScene(Stage window){
 
@@ -71,9 +74,10 @@ public class TeamView extends AbstractScene{
         getAllTeamsButton.getStyleClass().add("standardButton");
         getAllTeamsButton.setMinSize(160, 30);
         getAllTeamsButton.setOnAction(event -> {
-            List<Team> listOfAllTeams = teamDAO.getAllTeams();
-            System.out.println(listOfAllTeams.size());
-            showTable(anchorPane, listOfAllTeams);
+            List<Team> teams = teamActions.getAllTeams();
+            showTable(anchorPane, teams);
+            //System.out.println(teams.size());
+
         });
 
 
@@ -120,7 +124,7 @@ public class TeamView extends AbstractScene{
             showDeleteTeamForm(anchorPane);
         });
 
-        vbox.getChildren().addAll(addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
+        vbox.getChildren().addAll(getAllTeamsButton, selectedTeamButton, addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
     }
 
     public static void showTable(AnchorPane anchorPane, List<Team> players){
@@ -142,10 +146,22 @@ public class TeamView extends AbstractScene{
 
         TableView<Team> tableView = new TableView<>();
 
-        TableColumn<Team, String> team_id = new TableColumn<>("Team Name");
-        team_id.setCellValueFactory(new PropertyValueFactory<>("team_id"));
+        TableColumn<Team, Integer> team_id = new TableColumn<>("Team ID");
+        team_id.setCellValueFactory(new PropertyValueFactory<>("teamId"));
 
-        tableView.getColumns().add(team_id);
+        TableColumn<Team, String> team_name = new TableColumn<>("Team Name");
+        team_name.setCellValueFactory(new PropertyValueFactory<>("teamName"));
+
+        TableColumn<Team, String> game_name = new TableColumn<>("Game");
+        game_name.setCellValueFactory(new PropertyValueFactory<>("gameName"));
+
+        /*
+        TableColumn<Team, String> players = new TableColumn<>("Players");
+        players.setCellValueFactory(new PropertyValueFactory<>("listOfPlayersInTeam"));
+
+         */
+
+        tableView.getColumns().addAll(team_id, team_name, game_name);
         tableView.setItems(teamsObservableList);
         return tableView;
     }
@@ -173,60 +189,6 @@ public class TeamView extends AbstractScene{
         Button saveTeamButton = new Button("Save Team");
         saveTeamButton.getStyleClass().add("standardButton");
         saveTeamButton.setMinSize(160, 30);
-
-        // Version 1:
-        /*
-        saveTeamButton.setOnAction(event -> {
-
-            Team team = null;
-
-            if (teamNamefield.getText().isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Please fill in mandatory fields marked with \"*\".");
-                alert.show();
-
-            } else {
-                try {
-                    team = new Team(teamNamefield.getText());
-                    Label savedLabel = new Label("Team has successfully been saved to the database.");
-                    savedLabel.getStyleClass().add("standardLabel");
-                    formContainer.getChildren().add(savedLabel);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-            TeamDAO newTeam = new TeamDAO();
-            newTeam.createTeam(team);
-            System.out.println(team.toString());
-        });
-        */
-
-        // Version 2:
-        /*
-        saveTeamButton.setOnAction(event -> {
-            try {
-                // Lägg in kontroll för annat än isEmpty.. t.ex (contains " ". elr möjligen fula ord.)
-                if (teamNamefield.getText().isEmpty()) {
-                    throw new IllegalArgumentException("Mandatory fields are empty.");
-                }
-
-                Team team = new Team(teamNamefield.getText());
-                Label savedLabel = new Label("Team has successfully been saved to the database.");
-                savedLabel.getStyleClass().add("standardLabel");
-                formContainer.getChildren().add(savedLabel);
-
-            } catch (IllegalArgumentException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Please fill in mandatory fields marked with \"*\".");
-                alert.show();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        });
-         */
 
         saveTeamButton.setOnAction(event -> {
             try {

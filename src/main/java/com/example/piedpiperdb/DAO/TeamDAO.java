@@ -47,6 +47,10 @@ public class TeamDAO {
 
     public List<Team> getAllTeams(){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+
+        transaction = entityManager.getTransaction();
+        transaction.begin();
         List<Team> listToReturn = new ArrayList<>();
         TypedQuery<Team> result = entityManager.createQuery("FROM Team", Team.class);
         listToReturn.addAll(result.getResultList());
@@ -66,7 +70,7 @@ public class TeamDAO {
         try {
 
             TypedQuery<Team> query = entityManager.createQuery(
-                    "SELECT t FROM Team t WHERE t.gameId.gameId IN :gameIDs", Team.class);
+                    "SELECT t FROM Team t WHERE t.gameId IN :gameIDs", Team.class);
             query.setParameter("gameIDs", listOfGameIDs);
             listToReturn.addAll(query.getResultList());
 

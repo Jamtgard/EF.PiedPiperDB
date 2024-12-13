@@ -9,7 +9,9 @@ import javafx.scene.control.ListView;
 //GEFP-27-SJ
 public class TeamActions {
 
+
     private static TeamDAO teamDAO = new TeamDAO();
+
 
     public static ObservableList<Team> getAllTeams() {
         ObservableList<Team> teams = FXCollections.observableArrayList(teamDAO.getAllTeams());
@@ -31,5 +33,8 @@ public class TeamActions {
 
         return teamListView;
     }
+
+
+
 
 }
