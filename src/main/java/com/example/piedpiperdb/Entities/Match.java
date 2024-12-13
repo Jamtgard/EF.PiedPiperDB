@@ -37,7 +37,7 @@ public class Match {
 
     // ref till player
     @ManyToOne
-    @JoinColumn(name = "player_id", nullable = true)
+   @JoinColumn(name = "player_id", nullable = true)
     private Player player;
 
     // ref till lag
@@ -100,7 +100,7 @@ public class Match {
         this.player = player;
     }
 
-   /* public Team getTeam() {
+    /* public Team getTeam() {
         return team;
     }
     public void setTeam(Team team) {

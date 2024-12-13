@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -224,19 +225,39 @@ public class PlayerView extends AbstractScene{
                 );
 
 
-        List<Team> teams = teamDAO.getAllTeams();
+        List<Team> teams = new ArrayList<>();
         HBox teamBox = createResultBoxContentBox(
                 " Team ", "Select Team", teamField, teams, team -> team.getTeamId() + ", " + team.getTeamName()
                 );
 
 
-        List<Match> matches = matchDAO.getAllMatches();
-        HBox matchBox = createResultBoxContentBox(
-                " Match ", "Select Match", matchField, matches, match -> match.getMatchId() + ", " + match.getMatchName()
-                );
+        //GEFP-31-AA
+        //ChangeListener på gameField för att uppdatera teamField baserat på valt spel
+        gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Game changed from: " + oldValue + " to: " + newValue);
+            if (newValue != null && !newValue.isEmpty()) {
+                try {
+                    //spel ID
+                    int gameId = Integer.parseInt(newValue.split(",")[0].trim());
+                    List<Integer> gameIds = new ArrayList<>();
+                    gameIds.add(gameId);
 
+                    List<Team> filteredTeams = teamDAO.getTeamsByGame(gameIds);
 
-        vBox.getChildren().addAll(firstNameBox, lastNameBox, nicknameBox, addressBox,zipBox,cityBox, countryBox, emailBox, gameBox, teamBox, matchBox);
+                    teamField.getItems().clear();
+                    for (Team team : filteredTeams) {
+                        teamField.getItems().add(team.getTeamId() + ", " + team.getTeamName());
+                    }
+
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                teamField.getItems().clear();
+            }
+        });
+
+        vBox.getChildren().addAll(firstNameBox, lastNameBox, nicknameBox, addressBox,zipBox,cityBox, countryBox, emailBox, gameBox, teamBox)/*, matchBox)*/;
 
         Button saveButton = new Button("Save Player");
         saveButton.getStyleClass().add("standardButton");
@@ -260,7 +281,7 @@ public class PlayerView extends AbstractScene{
                         // Hämta valda spel, lag och matcher från ComboBox
                         String selectedGameValue = gameField.getValue();
                         String selectedTeamValue = teamField.getValue();
-                        String selectedMatchValue = matchField.getValue();
+                        //String selectedMatchValue = matchField.getValue();
 
 
                         if (selectedGameValue != null && !selectedGameValue.isEmpty()) {
@@ -274,13 +295,6 @@ public class PlayerView extends AbstractScene{
                             Team selectedTeam = teamDAO.getTeamById(teamId); // Hämta Team-objektet
                             player.setTeamId(selectedTeam); // Associera laget med spelaren
                         }
-
-                        if (selectedMatchValue != null && !selectedGameValue.isEmpty()) {
-                            int matchId = Integer.parseInt(selectedMatchValue.split(",")[0].trim());
-                            Match selectedMatch = matchDAO.getMatchById(matchId); // Hämta Match-objektet
-                            player.setMatchId(selectedMatch); // Associera matchen med spelaren
-                        }
-
 
                         Label labelSaved = new Label(" Player saved to database! ");
                         labelSaved.getStyleClass().add("standardLabel");
@@ -372,17 +386,39 @@ public class PlayerView extends AbstractScene{
                     System.out.println(selectedGameValue);
                     HBox gameBox = createResultBoxContentBoxComboBoxUpdate(" Game ", gameField, games, g -> g.getGameId() + ", " + g.getGameName(), selectedGameValue );
 
-                    List<Team> teams = teamDAO.getAllTeams();
+                    List<Team> teams = new ArrayList<>();
                     Team team = playerToUpdate.getTeamId();
                     String teamID = team != null ? String.valueOf(team.getTeamId()) : "0";
                     String selectedTeamValue = teamID + ", " + playerToUpdate.getTeamName();
                     HBox teamBox = createResultBoxContentBoxComboBoxUpdate(" Team ", teamField, teams, t -> t.getTeamId() + ", " + t.getTeamName(), selectedTeamValue );
 
-                    List<Match> matches = matchDAO.getAllMatches();
-                    Match match = playerToUpdate.getMatchId();
-                    String matchID = match != null ? String.valueOf(match.getMatchId()) : "0";
-                    String selectedMatchValue = matchID+ ", " + playerToUpdate.getMatchName();
-                    HBox matchBox = createResultBoxContentBoxComboBoxUpdate(" Match ", matchField, matches, t -> t.getMatchId() + ", " + t.getMatchName(), selectedMatchValue );
+                    //GEFP-31-AA
+                    gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
+                        System.out.println("Game changed from: " + oldValue + " to: " + newValue);
+                        if (newValue != null && !newValue.isEmpty()) {
+                            try {
+                                // Extrahera spel-ID
+                                int gameId = Integer.parseInt(newValue.split(",")[0].trim());
+                                List<Integer> gameIds = new ArrayList<>();
+                                gameIds.add(gameId);
+
+                                // Hämta filtrerade lag
+                                List<Team> filteredTeams = teamDAO.getTeamsByGame(gameIds);
+
+                                // Uppdatera teamField
+                                teamField.getItems().clear();
+                                for (Team filteredTeam : filteredTeams) {
+                                    teamField.getItems().add(filteredTeam.getTeamId() + ", " + filteredTeam.getTeamName());
+                                }
+
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            teamField.getItems().clear();
+                        }
+                    });
+
 
                     Button updateButton = new Button("Update Player");
                     updateButton.getStyleClass().add("standardButton");
@@ -426,12 +462,7 @@ public class PlayerView extends AbstractScene{
                                 playerToUpdate.setTeamId(selectedteam);
                             }
 
-                            if (matchField.getValue() != null && !selectedGameValue.isEmpty()) {
-                                String selectedMatch = matchField.getValue();
-                                int matchId = Integer.parseInt(selectedMatch.split(",")[0].trim());
-                                Match selectedmatch = matchDAO.getMatchById(matchId);
-                                playerToUpdate.setMatchId(selectedmatch);
-                            }
+
 
                             playerDAO.updatePlayer(playerToUpdate);
                             Label labelSaved = new Label(" Player saved and updated in the database! ");
@@ -445,7 +476,7 @@ public class PlayerView extends AbstractScene{
                     });
 
 
-                    vBox.getChildren().addAll(fistNameBox, lastNameBox, nicknameBox, addressBox, zipBox, cityBox, countryBox, emailBox,gameBox,teamBox,matchBox, updateButton);
+                    vBox.getChildren().addAll(fistNameBox, lastNameBox, nicknameBox, addressBox, zipBox, cityBox, countryBox, emailBox,gameBox,teamBox, updateButton);
 
                 }
             } catch (Exception e){
