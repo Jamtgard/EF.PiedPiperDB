@@ -66,7 +66,7 @@ public class TeamDAO {
         try {
 
             TypedQuery<Team> query = entityManager.createQuery(
-                    "SELECT t FROM Team t WHERE t.gameId.game_id IN :gameIDs", Team.class);
+                    "SELECT t FROM Team t WHERE t.gameId.gameId IN :gameIDs", Team.class);
             query.setParameter("gameIDs", listOfGameIDs);
             listToReturn.addAll(query.getResultList());
 
