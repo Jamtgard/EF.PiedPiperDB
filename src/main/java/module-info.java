@@ -3,7 +3,7 @@ module com.example.piedpiperdb {
     requires jakarta.persistence;
     requires org.hibernate.orm.core;
 
-    opens com.example.piedpiperdb.Entities to org.hibernate.orm.core;
+    opens com.example.piedpiperdb.Entities to org.hibernate.orm.core, javafx.base;
 //    exports com.example.piedpiperdb;
     exports com.example.piedpiperdb.View;
 }
