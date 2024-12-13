@@ -1,19 +1,11 @@
 package com.example.piedpiperdb.DAO.JavaFXActions;
 
 import com.example.piedpiperdb.DAO.GameDAO;
-import com.example.piedpiperdb.DAO.MatchDAO;
-import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.Entities.Game;
-import com.example.piedpiperdb.Entities.Match;
-import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.View.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.util.*;
 
@@ -131,27 +123,30 @@ public class GameActions {
         Set<Integer> gameById = stringToId(gameListView);//Får in alla id på valda spel
 
         System.out.println("y-------------------------------------------------------");
-        for(Integer game : gameById){
+        if(gameById.isEmpty()){
+            System.out.println("No game selected");
+        }else {
+            for (Integer game : gameById) {
 
-            Game game1 = gameDAO.getGameById(game);
+                Game game1 = gameDAO.getGameById(game);
 
-            List<String> playerNickNames = new ArrayList<>();
+                List<String> playerNickNames = new ArrayList<>();
 
-            String gameName = game1.getGameName();
+                String gameName = game1.getGameName();
 
-            System.out.println("Player of "+gameName+" are: ");
-            if(game1.getPlayers().isEmpty()){
-                ConfirmBox.playersOfGame(gameName,"No players");
-                //AlertBox.displayAlertBox(gameName,"No players");
-            }else {
-                String players = "";
-                for (int i = 0; i < game1.getPlayers().size(); i++) {
-                    playerNickNames.add(game1.getPlayers().get(i).getNickname());
-                    players += game1.getPlayers().get(i).getNickname() + "\n";
+                if (game1.getPlayers().isEmpty()) {
+                    ConfirmBox.noPlayersOfGame(gameName, "No players");
+
+                } else {
+                    for (int i = 0; i < game1.getPlayers().size(); i++) {
+                        playerNickNames.add(game1.getPlayers().get(i).getNickname());
+                    }
+
+                    ObservableList<String>players = FXCollections.observableArrayList(playerNickNames);
+
+                    ConfirmBox.playersOfGame(gameName,players);
+
                 }
-                //AlertBox.displayAlertBox(gameName,players);
-                ConfirmBox.playersOfGame(gameName,players);
-
             }
         }
     }

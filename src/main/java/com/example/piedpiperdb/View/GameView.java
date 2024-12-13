@@ -66,7 +66,18 @@ public class GameView extends AbstractScene{
         gameListView = GameActions.gameListView(gameListView);
         gameListView.getStyleClass().add("list-cell");
 
-        vBoxAllGames.getChildren().addAll(allGames, gameListView);
+
+        //GEFP-26-SA
+        Button showPlayers = new Button("Show players");
+        showPlayers.getStyleClass().add("standardButton");
+        showPlayers.setMinSize(160, 30);
+        showPlayers.setOnAction(e->{
+            GameActions.getSelectedGame(gameListView);
+        });
+
+
+        //SA
+        vBoxAllGames.getChildren().addAll(allGames, gameListView,showPlayers);
 
         anchorPaneAction = new AnchorPane();
 
@@ -199,7 +210,9 @@ public class GameView extends AbstractScene{
 
         });
 
+
         //--------------------------------------------------------------
+
 
         Button showGames = new Button("Show games");
         showGames.getStyleClass().add("standardButton");
@@ -208,49 +221,10 @@ public class GameView extends AbstractScene{
             clearAnchorpane(vBoxAllGames);
         });
 
-        //--------------------------------------------------------------
-
-        VBox vBox1 = new VBox();
-
-        ListView playersList = new ListView();
-
-
-
-        /*
-        TableView gameTable = new TableView();
-
-        TableColumn<Player, String> playerColumn = new TableColumn<>("Player");
-        playerColumn.setMinWidth(100);
-        playerColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
-
-        TableColumn<Match, String> matchColumn = new TableColumn<>("Match");
-        matchColumn.setMinWidth(150);
-        matchColumn.setCellValueFactory(new PropertyValueFactory<>("matchName"));
-
-        TableColumn<Match, String> matchDateColumn = new TableColumn<>("Match Date");
-        matchDateColumn.setMinWidth(200);
-        matchDateColumn.setCellValueFactory(new PropertyValueFactory<>("matchDate"));
-
-
-        //gameTable.getItems().addAll(GameActions.getAllPlayers(),GameActions.getAllMatches());
-
-        gameTable.getColumns().addAll(playerColumn,matchColumn,matchDateColumn);*/
-
-        vBox1.getChildren().addAll();
-
-
-        Button tableView = new Button("Table View");
-        tableView.getStyleClass().add("standardButton");
-        tableView.setMinSize(160, 30);
-        tableView.setOnAction(e->{
-            GameActions.getSelectedGame(gameListView);
-        });
-
-
 
         //--------------------------------------------------------------
 
-        vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame,tableView);
+        vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame);
     }
 
     public static void clearAnchorpane (VBox vBox){
