@@ -2,29 +2,23 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.PlayerActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
-import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -33,7 +27,7 @@ import java.util.function.Function;
 public class PlayerView extends AbstractScene{
 
     private static VBox getIdBox;
-    private static VBox vBox;
+    private static VBox resultBox;
 
     private static PlayerDAO playerDAO = new PlayerDAO();
     private static GameDAO gameDAO = new GameDAO();
@@ -68,75 +62,44 @@ public class PlayerView extends AbstractScene{
     }
 
     private static void addCustomComponents(VBox vBox){
-            List<Game> games = gameDAO.getAllGames();
-            List<CheckBox> checkBoxes = new ArrayList<>();
 
-
-            for (Game game : games) {
-                String name = game.getGameName();
-                int gameId = game.getGameId();
-                System.out.println(gameId);
-                CheckBox checkBox  = new CheckBox(name + ", GameID: " + gameId );
-                checkBoxes.add(checkBox);
-            }
-
-            Button getAllPlayers = new Button("Show all players");
-            getAllPlayers.getStyleClass().add("standardButton");
-            getAllPlayers.setMinSize(160, 30);
+            Button getAllPlayers = creatButton("Show all players");
             getAllPlayers.setOnAction(event -> {
-                List<Player> players = playerDAO.getAllPlayers();
-                System.out.println(players.size());
-                showTable(anchorPane, players );
-            });
+                clearResaultBox(resultBox, getIdBox);
+                 VBox resultBox = createResultBox();
+                 resultBox = PlayerActions.getTableViewAllPlayers(resultBox);
+                 anchorPane.getChildren().add(resultBox);
 
+            });
 
             Button selectedPlayers = new Button("Show players from \nselected game or games");
             selectedPlayers.getStyleClass().add("standardButton");
             selectedPlayers.setMinSize(160, 50);
             selectedPlayers.setOnAction(actionEvent -> {
-                clearResaultBox(getIdBox, PlayerView.vBox);
+                clearResaultBox(getIdBox, resultBox);
+                VBox resultBox = createResultBox();
+                List<CheckBox> checkBoxes = PlayerActions.gameCheckBoxes();
                 List<String> selections = ConfirmBox.displayCheckBoxOptions("Select game or games", checkBoxes);
-                List<Integer> ids = new ArrayList<>();
-                for (String selection : selections) {
-                    try {
-                        String[] parts = selection.split(" ");
-
-                        String lastPart = parts[parts.length - 1];
-                        int id = Integer.parseInt(lastPart);
-                        ids.add(id);
-                    } catch (NumberFormatException e) {
-                        System.out.println(e.getMessage());
-                        System.out.println("Could not parse id: " + selection);
-                    }
-                    System.out.println("IDs to query: " + ids);
-                }
-                List<Player> players = playerDAO.getAllPlayersFromSelectedGame(ids);
-                System.out.println(players.size());
-                showTable(anchorPane, players );
+                resultBox = PlayerActions.getTableViewSelectedPlayers(resultBox, selections);
+                anchorPane.getChildren().add(resultBox);
             });
 
 
-            Button addNewPlayerButton = new Button("Add new player");
-            addNewPlayerButton.getStyleClass().add("standardButton");
-            addNewPlayerButton.setMinSize(160, 30);
+            Button addNewPlayerButton = creatButton("Add new player");
             addNewPlayerButton.setOnAction(e -> {
-                clearResaultBox(getIdBox, PlayerView.vBox);
+                clearResaultBox(getIdBox, resultBox);
                 showAddPlayerForm(anchorPane);
             });
 
-            Button updatePlayerByIdButton = new Button("Update player by ID");
-            updatePlayerByIdButton.getStyleClass().add("standardButton");
-            updatePlayerByIdButton.setMinSize(160, 30);
+            Button updatePlayerByIdButton = creatButton("Update player by id");
             updatePlayerByIdButton.setOnAction(e -> {
-                clearResaultBox(getIdBox, PlayerView.vBox);
+                clearResaultBox(getIdBox, resultBox);
                 showUpdatePlayerForm(anchorPane);
             });
 
-            Button deletePlayerByIdButton = new Button("Delete player by ID");
-            deletePlayerByIdButton.getStyleClass().add("standardButton");
-            deletePlayerByIdButton.setMinSize(160, 30);
+            Button deletePlayerByIdButton = creatButton("Delete player by id");
             deletePlayerByIdButton.setOnAction(e -> {
-                clearResaultBox(getIdBox, PlayerView.vBox);
+                clearResaultBox(getIdBox, resultBox);
                 showDeletePlayerForm(anchorPane);
             });
 
@@ -145,56 +108,10 @@ public class PlayerView extends AbstractScene{
 
     }
 
-    public static void showTable(AnchorPane anchorPane, List<Player> players){
-        vBox = createResultBox();
-        vBox.getStyleClass().add("textFieldOne");
-        TableView<Player> table = createPlayerTable(players); //Skapa tableView
-        table.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        VBox.setVgrow(table, Priority.ALWAYS);
-        vBox.getChildren().addAll(table);
+    //------------------------------------------------------------------------------------------------------------------
 
-        anchorPane.getChildren().add(vBox);
-    }
-
-    private static TableView<Player> createPlayerTable(List<Player> players){
-        ObservableList<Player> observableList = FXCollections.observableList(players);
-
-        TableView<Player> table = new TableView<>();
-
-        TableColumn<Player, Integer> player_id = new TableColumn<>("Player ID");
-        player_id.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-        TableColumn<Player, String> nickname = new TableColumn<>("Nickname");
-        nickname.setCellValueFactory(new PropertyValueFactory<>("nickname"));
-
-        TableColumn<Player, String> fullName = new TableColumn<>("Name");
-        fullName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-
-        TableColumn<Player, String> address = new TableColumn<>("Address");
-        address.setCellValueFactory(new PropertyValueFactory<>("fullAddress"));
-
-        TableColumn<Player, String> country = new TableColumn<>("Country");
-        country.setCellValueFactory(new PropertyValueFactory<>("country"));
-
-        TableColumn<Player, String> email = new TableColumn<>("E-mail");
-        email.setCellValueFactory(new PropertyValueFactory<>("email"));
-
-        TableColumn<Player, String> game_name = new TableColumn<>("Game");
-        game_name.setCellValueFactory(new PropertyValueFactory<>("gameName"));
-
-        TableColumn<Player, String> team_name = new TableColumn<>("Team");
-        team_name.setCellValueFactory(new PropertyValueFactory<>("teamName"));
-
-        TableColumn<Player, String> match = new TableColumn<>("Match");
-        match.setCellValueFactory(new PropertyValueFactory<>("matchInfo"));
-
-        table.getColumns().addAll(player_id, nickname, fullName, address, country, email, game_name, team_name, match);
-        table.setItems(observableList);
-        return table;
-    }
-
-    private static void showAddPlayerForm(AnchorPane anchorPane){
+    public static void showAddPlayerForm(AnchorPane anchorPane) {
+        // Skapa fält
         firstNameField = new TextField();
         lastNameField = new TextField();
         nicknameField = new TextField();
@@ -206,130 +123,71 @@ public class PlayerView extends AbstractScene{
 
         gameField = new ComboBox<>();
         teamField = new ComboBox<>();
-        matchField = new ComboBox<>();
 
-        vBox = createResultBox();
+        resultBox = createResultBox();
 
-        HBox firstNameBox = createResultBoxContentBox(" First Name* ","First Name", firstNameField, false);
-        HBox lastNameBox = createResultBoxContentBox(" Last Name* ","Last Name", lastNameField, false);
-        HBox nicknameBox = createResultBoxContentBox(" Nickname* ","Nickname", nicknameField, false);
-        HBox addressBox = createResultBoxContentBox(" Street Address ","Street Address", streetAddressField, false);
-        HBox zipBox = createResultBoxContentBox(" Zip Code ","Zip Code", zipCodeField, false);
-        HBox cityBox = createResultBoxContentBox(" City ","City", cityField, false);
-        HBox countryBox = createResultBoxContentBox(" Country ","Country", countryField, false);
-        HBox emailBox = createResultBoxContentBox(" E-mail* ", "E-mail", emailField, false);
-
-        List<Game> games = gameDAO.getAllGames();
-        HBox gameBox = createResultBoxContentBox(
-                " Game ", "Select Game",gameField, games, game -> game.getGameId() + ", " + game.getGameName()
-                );
-
+        resultBox.getChildren().addAll(
+                createResultBoxContentBox("First Name*", "First Name", firstNameField, false),
+                createResultBoxContentBox("Last Name*", "Last Name", lastNameField, false),
+                createResultBoxContentBox("Nickname*", "Nickname", nicknameField, false),
+                createResultBoxContentBox("Street Address", "Street Address", streetAddressField, false),
+                createResultBoxContentBox("Zip Code", "Zip Code", zipCodeField, false),
+                createResultBoxContentBox("City", "City", cityField, false),
+                createResultBoxContentBox("Country", "Country", countryField, false),
+                createResultBoxContentBox("E-mail*", "E-mail", emailField, false)
+        );
+        List<Game> games = PlayerActions.getAllGames();
+        resultBox.getChildren().add(createResultBoxContentBoxComboBox(
+                "Game", "Select Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName()
+        ));
 
         List<Team> teams = new ArrayList<>();
-        HBox teamBox = createResultBoxContentBox(
-                " Team ", "Select Team", teamField, teams, team -> team.getTeamId() + ", " + team.getTeamName()
-                );
-
+        resultBox.getChildren().add(createResultBoxContentBoxComboBox(
+                "Team", "Select Team", teamField, teams, team -> team.getTeamId() + ", " + team.getTeamName()
+        ));
 
         //GEFP-31-AA
-        //ChangeListener på gameField för att uppdatera teamField baserat på valt spel
         gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("Game changed from: " + oldValue + " to: " + newValue);
             if (newValue != null && !newValue.isEmpty()) {
                 try {
-                    //spel ID
                     int gameId = Integer.parseInt(newValue.split(",")[0].trim());
-                    List<Integer> gameIds = new ArrayList<>();
-                    gameIds.add(gameId);
-
-                    List<Team> filteredTeams = teamDAO.getTeamsByGame(gameIds);
+                    List<Team> filteredTeams = PlayerActions.getTeamsByGame(gameId);
 
                     teamField.getItems().clear();
-                    for (Team team : filteredTeams) {
-                        teamField.getItems().add(team.getTeamId() + ", " + team.getTeamName());
-                    }
-
-                } catch (NumberFormatException e) {
-                    throw new RuntimeException(e);
+                    filteredTeams.forEach(team -> teamField.getItems().add(team.getTeamId() + ", " + team.getTeamName()));
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
                 }
-            } else {
-                teamField.getItems().clear();
             }
         });
 
-        vBox.getChildren().addAll(firstNameBox, lastNameBox, nicknameBox, addressBox,zipBox,cityBox, countryBox, emailBox, gameBox, teamBox)/*, matchBox)*/;
-
-        Button saveButton = new Button("Save Player");
-        saveButton.getStyleClass().add("standardButton");
-        saveButton.setMinSize(160, 30);
+        Button saveButton = creatButton("Save player");
         saveButton.setOnAction(event -> {
-            Player player = null;
-            try {
-                if (firstNameField.getText().isEmpty() || lastNameField.getText().isEmpty() || nicknameField.getText().isEmpty() || emailField.getText().isEmpty()) {
-                    AlertBox.displayAlertBox("Error", "Please fill in all mandatory fields. Fields marked with *.");
-                    return;
-                } else if (!playerDAO.isNicknameUnique(nicknameField.getText())) {
-                    AlertBox.displayAlertBox("Error", "Nickname is already taken. Try a different one!");
-                    return;
-                } else if (!playerDAO.isEmailUnique(emailField.getText())) {
-                    AlertBox.displayAlertBox("Error", "E-mail is already taken. Try a different one!");
-                    return;
-                } else {
-                    try {
-                        player = new Player(firstNameField.getText(), lastNameField.getText(), nicknameField.getText(), streetAddressField.getText(), zipCodeField.getText(), cityField.getText(), countryField.getText(), emailField.getText());
+            if (validateInput(
+                    firstNameField.getText(), lastNameField.getText(), nicknameField.getText(), emailField.getText())) {
 
-                        // Hämta valda spel, lag och matcher från ComboBox
-                        String selectedGameValue = gameField.getValue();
-                        String selectedTeamValue = teamField.getValue();
-                        //String selectedMatchValue = matchField.getValue();
+                Player player = PlayerActions.createPlayerFromFields(
+                        firstNameField.getText(), lastNameField.getText(), nicknameField.getText(),
+                        streetAddressField.getText(), zipCodeField.getText(), cityField.getText(),
+                        countryField.getText(), emailField.getText(),
+                        gameField.getValue(), teamField.getValue()
+                );
 
-
-                        if (selectedGameValue != null && !selectedGameValue.isEmpty()) {
-                            int gameId = Integer.parseInt(selectedGameValue.split(",")[0].trim());
-                            Game selectedGame = gameDAO.getGameById(gameId); // Hämta Game-objektet
-                            player.setGameId(selectedGame); // Associera spelet med spelaren
-                        }
-
-                        if (selectedTeamValue != null && !selectedGameValue.isEmpty()) {
-                            int teamId = Integer.parseInt(selectedTeamValue.split(",")[0].trim());
-                            Team selectedTeam = teamDAO.getTeamById(teamId); // Hämta Team-objektet
-                            player.setTeamId(selectedTeam); // Associera laget med spelaren
-                        }
-
-                        Label labelSaved = new Label(" Player saved to database! ");
-                        labelSaved.getStyleClass().add("standardLabel");
-                        vBox.getChildren().add(labelSaved);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-
-
-                    }
-                }
-
-
-                PlayerDAO newPlayer = new PlayerDAO();
-                newPlayer.savePlayer(player);
-                System.out.println(player.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                AlertBox.displayAlertBox("Error", "An error occurred while saving new player!");
+                PlayerActions.savePlayer(player);
+                Label labelSaved = new Label(" Player saved and updated in the database! ");
+                labelSaved.getStyleClass().add("standardLabel");
+                resultBox.getChildren().add(labelSaved);
             }
-
         });
 
+        resultBox.getChildren().add(saveButton);
+        anchorPane.getChildren().add(resultBox);
 
-
-
-        vBox.getChildren().add(saveButton);
-
-        anchorPane.getChildren().add(vBox);
 
     }
 
-    private static void showUpdatePlayerForm(AnchorPane anchorPane){
-        System.out.println("update player");
 
+    public static void showUpdatePlayerForm(AnchorPane anchorPane) {
         firstNameField = new TextField();
         lastNameField = new TextField();
         nicknameField = new TextField();
@@ -341,153 +199,162 @@ public class PlayerView extends AbstractScene{
 
         gameField = new ComboBox<>();
         teamField = new ComboBox<>();
-        matchField = new ComboBox<>();
+        resultBox = createResultBox(230.0);
 
-        getIdBox = createResultBox();
-        vBox = createResultBox(230.0);
-
-        TextField playerInfield = new TextField();
-        HBox playerIdBox = createResultBoxContentBox("Enter Player ID: ", "Player ID", playerInfield,false);
-
-        Label labelNoPlayerId = new Label(" No player found! Enter a different ID (only numbers allowed). ");
-        labelNoPlayerId.getStyleClass().add("standardLabel");
-
-        Button getButton = new Button("Get Player from database");
-
-        getButton.getStyleClass().add("standardButton");
-        getButton.setOnAction(event -> {
+        TextField playerIdField = new TextField();
+        Button getPlayerButton = creatButton("Get player");
+        getPlayerButton.setOnAction(event -> {
             try {
-                Player playerToUpdate = playerDAO.getPlayer(Integer.parseInt(playerInfield.getText()));
-                System.out.println(playerToUpdate.toString());
+                int playerId = Integer.parseInt(playerIdField.getText());
+                Player playerToUpdate = PlayerActions.getPlayerById(playerId);
 
                 if (playerToUpdate == null) {
-                    System.out.println(playerInfield.getText());
-                    vBox.getChildren().add(labelNoPlayerId);
+                    AlertBox.displayAlertBox("Error", "No player found with the given ID.");
                     return;
-                } else {
-                    if (!vBox.getChildren().isEmpty()) {
-                        vBox.getChildren().clear();
-                    }
-                    System.out.println(playerToUpdate.toString());
-
-                    HBox fistNameBox = createResultBoxContentBox(" First Name* ", playerToUpdate.getFirstName(),firstNameField, true );
-                    HBox lastNameBox = createResultBoxContentBox(" Last Name* ", playerToUpdate.getLastName(),lastNameField, true );
-                    HBox nicknameBox = createResultBoxContentBox(" Nickname* ", playerToUpdate.getNickname(),nicknameField, true );
-                    HBox addressBox = createResultBoxContentBox(" Street Address ", playerToUpdate.getStreetAddress(),streetAddressField, true );
-                    HBox zipBox = createResultBoxContentBox(" Zip Code ", playerToUpdate.getZipCode(),zipCodeField, true );
-                    HBox cityBox = createResultBoxContentBox(" City ", playerToUpdate.getCity(),cityField, true );
-                    HBox countryBox = createResultBoxContentBox(" Country ", playerToUpdate.getCountry(),countryField, true );
-                    HBox emailBox = createResultBoxContentBox(" E-mail ", playerToUpdate.getEmail(),emailField, true );
-
-                    List<Game> games = gameDAO.getAllGames();
-                    Game game = playerToUpdate.getGameId();
-                    String gameID = game != null ? String.valueOf(game.getGameId()) : "0";
-                    String selectedGameValue = gameID + ", " + playerToUpdate.getGameName();
-                    System.out.println(selectedGameValue);
-                    HBox gameBox = createResultBoxContentBoxComboBoxUpdate(" Game ", gameField, games, g -> g.getGameId() + ", " + g.getGameName(), selectedGameValue );
-
-                    List<Team> teams = new ArrayList<>();
-                    Team team = playerToUpdate.getTeamId();
-                    String teamID = team != null ? String.valueOf(team.getTeamId()) : "0";
-                    String selectedTeamValue = teamID + ", " + playerToUpdate.getTeamName();
-                    HBox teamBox = createResultBoxContentBoxComboBoxUpdate(" Team ", teamField, teams, t -> t.getTeamId() + ", " + t.getTeamName(), selectedTeamValue );
-
-                    //GEFP-31-AA
-                    gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
-                        System.out.println("Game changed from: " + oldValue + " to: " + newValue);
-                        if (newValue != null && !newValue.isEmpty()) {
-                            try {
-                                // Extrahera spel-ID
-                                int gameId = Integer.parseInt(newValue.split(",")[0].trim());
-                                List<Integer> gameIds = new ArrayList<>();
-                                gameIds.add(gameId);
-
-                                // Hämta filtrerade lag
-                                List<Team> filteredTeams = teamDAO.getTeamsByGame(gameIds);
-
-                                // Uppdatera teamField
-                                teamField.getItems().clear();
-                                for (Team filteredTeam : filteredTeams) {
-                                    teamField.getItems().add(filteredTeam.getTeamId() + ", " + filteredTeam.getTeamName());
-                                }
-
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            teamField.getItems().clear();
-                        }
-                    });
-
-
-                    Button updateButton = new Button("Update Player");
-                    updateButton.getStyleClass().add("standardButton");
-                    updateButton.setOnAction(e -> {
-
-                        try {
-                            // Kontrollera om nickname har ändrats och är unikt
-                            if (!nicknameField.getText().equals(playerToUpdate.getNickname())
-                                    && !playerDAO.isNicknameUnique(nicknameField.getText())) {
-                                AlertBox.displayAlertBox("Error", "Nickname is already taken. Try a different one!");
-                                return;
-                            }
-
-                            // Kontrollera om email har ändrats och är unikt
-                            if (!emailField.getText().equals(playerToUpdate.getEmail())
-                                    && !playerDAO.isEmailUnique(emailField.getText())) {
-                                AlertBox.displayAlertBox("Error", "Email is already taken. Try a different one!");
-                                return;
-                            }
-
-                            playerToUpdate.setFirstName(firstNameField.getText());
-                            playerToUpdate.setLastName(lastNameField.getText());
-                            playerToUpdate.setNickname(nicknameField.getText());
-                            playerToUpdate.setStreetAddress(streetAddressField.getText());
-                            playerToUpdate.setZipCode(zipCodeField.getText());
-                            playerToUpdate.setCity(cityField.getText());
-                            playerToUpdate.setCountry(countryField.getText());
-                            playerToUpdate.setEmail(emailField.getText());
-
-                            if (gameField.getValue() != null && !selectedGameValue.isEmpty()) {
-                                String selectedGame = gameField.getValue();
-                                int gameId = Integer.parseInt(selectedGame.split(",")[0].trim());
-                                Game selectedgame = gameDAO.getGameById(gameId);
-                                playerToUpdate.setGameId(selectedgame);
-                            }
-
-                            if (teamField.getValue() != null && !selectedGameValue.isEmpty()) {
-                                String selectedTeam = teamField.getValue();
-                                int teamId = Integer.parseInt(selectedTeam.split(",")[0].trim());
-                                Team selectedteam = teamDAO.getTeamById(teamId);
-                                playerToUpdate.setTeamId(selectedteam);
-                            }
-
-
-
-                            playerDAO.updatePlayer(playerToUpdate);
-                            Label labelSaved = new Label(" Player saved and updated in the database! ");
-                            labelSaved.getStyleClass().add("standardLabel");
-                            vBox.getChildren().add(labelSaved);
-                        } catch (Exception ex){
-                            ex.printStackTrace();
-                            AlertBox.displayAlertBox("Error", "An error occurred while updating player!");
-                        }
-
-                    });
-
-
-                    vBox.getChildren().addAll(fistNameBox, lastNameBox, nicknameBox, addressBox, zipBox, cityBox, countryBox, emailBox,gameBox,teamBox, updateButton);
-
                 }
-            } catch (Exception e){
-                System.out.println(e.getMessage());
-                vBox.getChildren().add(labelNoPlayerId);
+
+                populateUpdatePlayerFormFields(playerToUpdate);
+            } catch (NumberFormatException ex) {
+                AlertBox.displayAlertBox("Error", "Please enter a valid Player ID.");
+            }
+        });
+        getIdBox = createResultBox();
+        getIdBox.getChildren().addAll(
+                createResultBoxContentBox("Player ID", "Enter Player ID", playerIdField, false),
+                getPlayerButton
+        );
+
+        anchorPane.getChildren().addAll(getIdBox, resultBox);
+    }
+
+    private static void populateUpdatePlayerFormFields(Player playerToUpdate) {
+        // Fyll i formulärfälten med spelarens data
+        firstNameField.setText(playerToUpdate.getFirstName());
+        lastNameField.setText(playerToUpdate.getLastName());
+        nicknameField.setText(playerToUpdate.getNickname());
+        streetAddressField.setText(playerToUpdate.getStreetAddress());
+        zipCodeField.setText(playerToUpdate.getZipCode());
+        cityField.setText(playerToUpdate.getCity());
+        countryField.setText(playerToUpdate.getCountry());
+        emailField.setText(playerToUpdate.getEmail());
+
+
+        List<Game> games = PlayerActions.getAllGames();
+        Game game = playerToUpdate.getGameId();
+        String selectedGameValue = game != null ? game.getGameId() + ", " + game.getGameName() : null;
+
+        List<Team> teams = PlayerActions.getTeamsByGame(game.getGameId());
+        Team team = playerToUpdate.getTeamId();
+        String selectedTeamValue = team != null ? team.getTeamId() + ", " + team.getTeamName() : null;
+
+
+        HBox gameBox = createResultBoxContentBoxComboBoxUpdate(
+                "Game", gameField, games, g -> g.getGameId() + ", " + g.getGameName(), selectedGameValue
+        );
+
+        HBox teamBox = createResultBoxContentBoxComboBoxUpdate(
+                "Team", teamField, teams, t -> t.getTeamId() + ", " + t.getTeamName(), selectedTeamValue
+        );
+
+        gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.isEmpty()) {
+                try {
+                    int gameId = Integer.parseInt(newValue.split(",")[0].trim());
+                    List<Team> filteredTeams = PlayerActions.getTeamsByGame(gameId);
+                    teamField.getItems().clear();
+                    filteredTeams.forEach(filteredTeam -> teamField.getItems().add(filteredTeam.getTeamId() + ", " + filteredTeam.getTeamName()));
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
-        getIdBox.getChildren().addAll(playerIdBox, getButton);
-        anchorPane.getChildren().addAll(getIdBox, vBox);
+        Button updatePlayerButton = creatButton("Update player");
+        updatePlayerButton.setOnAction(event -> {
+            try {
+                if (!nicknameField.getText().equals(playerToUpdate.getNickname())
+                        && !PlayerActions.isNicknameUnique(nicknameField.getText())) {
+                    AlertBox.displayAlertBox("Error", "Nickname is already taken. Try a different one!");
+                    return;
+                }
+
+                if (!emailField.getText().equals(playerToUpdate.getEmail())
+                        && !PlayerActions.isEmailUnique(emailField.getText())) {
+                    AlertBox.displayAlertBox("Error", "Email is already taken. Try a different one!");
+                    return;
+                }
+
+                playerToUpdate.setFirstName(firstNameField.getText());
+                playerToUpdate.setLastName(lastNameField.getText());
+                playerToUpdate.setNickname(nicknameField.getText());
+                playerToUpdate.setStreetAddress(streetAddressField.getText());
+                playerToUpdate.setZipCode(zipCodeField.getText());
+                playerToUpdate.setCity(cityField.getText());
+                playerToUpdate.setCountry(countryField.getText());
+                playerToUpdate.setEmail(emailField.getText());
+
+                if (gameField.getValue() != null) {
+                    int gameId = Integer.parseInt(gameField.getValue().split(",")[0].trim());
+                    playerToUpdate.setGameId(PlayerActions.getAllGames().stream()
+                            .filter(g -> g.getGameId() == gameId).findFirst().orElse(null));
+                }
+
+                if (teamField.getValue() != null) {
+                    int teamId = Integer.parseInt(teamField.getValue().split(",")[0].trim());
+                    playerToUpdate.setTeamId(PlayerActions.getTeamsByGame(playerToUpdate.getGameId().getGameId()).stream()
+                            .filter(t -> t.getTeamId() == teamId).findFirst().orElse(null));
+                }
+
+                PlayerActions.updatePlayer(playerToUpdate);
+                Label labelUpdated = new Label("Player updated in the database!");
+                labelUpdated.getStyleClass().add("standardLabel");
+                resultBox.getChildren().add(labelUpdated);
+            } catch (Exception ex) {
+                AlertBox.displayAlertBox("Error", "An error occurred while updating the player.");
+            }
+        });
+
+        resultBox.getChildren().clear();
+        resultBox.getChildren().addAll(
+                createResultBoxContentBox("First Name*", playerToUpdate.getFirstName(), firstNameField, true),
+                createResultBoxContentBox("Last Name*", playerToUpdate.getLastName(), lastNameField, true),
+                createResultBoxContentBox("Nickname*", playerToUpdate.getNickname(), nicknameField, true),
+                createResultBoxContentBox("Street Address", playerToUpdate.getStreetAddress(), streetAddressField, true),
+                createResultBoxContentBox("Zip Code", playerToUpdate.getZipCode(), zipCodeField, true),
+                createResultBoxContentBox("City", playerToUpdate.getCity(), cityField, true),
+                createResultBoxContentBox("Country", playerToUpdate.getCountry(), countryField, true),
+                createResultBoxContentBox("E-mail*", playerToUpdate.getEmail(), emailField,true),
+                gameBox,
+                teamBox,
+                updatePlayerButton
+        );
     }
+
+    public static boolean validateInput(String firstName, String lastName, String nickname, String email) {
+        if (PlayerActions.areFieldsEmpty(firstName, lastName, nickname, email)) {
+            AlertBox.displayAlertBox("Error", "Please fill in all mandatory fields. Fields marked with *.");
+            return false;
+        } else if (!PlayerActions.isNicknameUnique(nickname)) {
+            AlertBox.displayAlertBox("Error", "Nickname is already taken. Try a different one!");
+            return false;
+        } else if (!PlayerActions.isEmailUnique(email)) {
+            AlertBox.displayAlertBox("Error", "E-mail is already taken. Try a different one!");
+            return false;
+        }
+        return true;
+    }
+
+
+    private static Button creatButton (String text){
+        Button button = new Button(text);
+        new Button("Update Player");
+        button.getStyleClass().add("standardButton");
+        button.setMinSize(160,30);
+        return button;
+    }
+
+
+    //------------------------------------------------------------------------------------------------------------------
 
     private static void showDeletePlayerForm(AnchorPane anchorPane) {
         getIdBox = createResultBox();
@@ -495,7 +362,7 @@ public class PlayerView extends AbstractScene{
         TextField playerInfield = new TextField();
         HBox playerIdBox = createResultBoxContentBox("Enter Player ID: ", "Player ID", playerInfield, false );
 
-        vBox = createResultBox(250.0);
+        resultBox = createResultBox(250.0);
 
         Label labelNoPlayerId = new Label(" No player found! Enter a different ID (only numbers allowed). ");
         labelNoPlayerId.getStyleClass().add("standardLabel");
@@ -507,11 +374,11 @@ public class PlayerView extends AbstractScene{
                 Player playerToDelete = playerDAO.getPlayer(Integer.parseInt(playerInfield.getText()));
 
                 if (playerToDelete == null) {
-                    vBox.getChildren().add(labelNoPlayerId);
+                    resultBox.getChildren().add(labelNoPlayerId);
                     return;
                 } else {
-                    if (!vBox.getChildren().isEmpty()) {
-                        vBox.getChildren().clear();
+                    if (!resultBox.getChildren().isEmpty()) {
+                        resultBox.getChildren().clear();
                     }
 
                     Label player = new Label();
@@ -526,7 +393,7 @@ public class PlayerView extends AbstractScene{
                             "Match: " + playerToDelete.getMatchName()
                     );
                     player.getStyleClass().add("standardLabel");
-                    vBox.getChildren().add(player);
+                    resultBox.getChildren().add(player);
 
                     Button deleteButton = new Button("Delete Player");
                     deleteButton.getStyleClass().add("standardButton");
@@ -537,15 +404,15 @@ public class PlayerView extends AbstractScene{
                           if (deleted) {
                               Label labelDeleted = new Label(" Player deleted. Database up to date! ");
                               labelDeleted.getStyleClass().add("standardLabel");
-                              vBox.getChildren().add(labelDeleted);
+                              resultBox.getChildren().add(labelDeleted);
                           }
 
                         } else {
                             Label labelNotDeleted = new Label("Player NOT deleted");
-                            vBox.getChildren().add(labelNotDeleted);
+                            resultBox.getChildren().add(labelNotDeleted);
                         }
                     });
-                    vBox.getChildren().add(deleteButton);
+                    resultBox.getChildren().add(deleteButton);
 
                 }
             } catch (Exception e){
@@ -554,7 +421,7 @@ public class PlayerView extends AbstractScene{
         } );
 
         getIdBox.getChildren().addAll(playerIdBox, getButton);
-        anchorPane.getChildren().addAll(getIdBox, vBox);
+        anchorPane.getChildren().addAll(getIdBox, resultBox);
 
     }
 
@@ -605,7 +472,7 @@ public class PlayerView extends AbstractScene{
         return  box;
     }
 
-    private static <T> HBox createResultBoxContentBox(String label, String prompt, ComboBox<String> comboBox, List<T> items, Function<T, String> itemMapper) {
+    private static <T> HBox createResultBoxContentBoxComboBox(String label, String prompt, ComboBox<String> comboBox, List<T> items, Function<T, String> itemMapper) {
         HBox box = new HBox(5);
         Label l = new Label(label);
         l.getStyleClass().add("standardLabel");
