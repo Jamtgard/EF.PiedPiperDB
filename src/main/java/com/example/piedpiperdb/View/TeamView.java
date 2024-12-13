@@ -31,7 +31,7 @@ public class TeamView extends AbstractScene{
     private static TeamDAO teamDAO = new TeamDAO();
     private static MatchDAO matchDAO = new MatchDAO();
 
-    public static Scene teamScene(Stage window){
+    public static Scene startTeamScene(Stage window){
 
         Scene baseScene = AbstractScene.getScene(window);
 
