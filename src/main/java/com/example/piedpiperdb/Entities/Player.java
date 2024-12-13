@@ -22,7 +22,7 @@ public class Player {
     @Column(name = "nickname", length = 20, nullable = false, unique = true)
     private String nickname;
 
-    @Column(name = "street_address", length = 10)
+    @Column(name = "street_address", length = 100)
     private String streetAddress;
 
     @Column(name = "zip_code", length = 6)
