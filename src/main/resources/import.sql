@@ -56,7 +56,7 @@ INSERT INTO teams (team_name,game_id) VALUES ('Heretics',10);
 
 
 -- GEFP-18-SA, ändrade stavfelet på street_address
-INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Alma', 'Johansson', 'AmazingAlma', 'Blomvägen 10', '54321', 'Linköping', 'Sweden', 'alma.johansson@example.se', 1, 1);
+INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Alma', 'Johansson', 'AmazingAlma', 'Blomvägen 10', '54321', 'Linköping', 'Sweden', 'alma.johansson@example.se', 1,1);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Erik', 'Nilsson', 'EagleErik', 'Kyrkogatan 22', '13579', 'Helsingborg', 'Sweden', 'erik.nilsson@example.se', 1, 2);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Saga', 'Karlsson', 'SwiftSaga', 'Vallgatan 14', '24680', 'Örebro', 'Sweden', 'saga.karlsson@example.se', 2, 3);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Johan', 'Svensson', 'JollyJohan', 'Åkervägen 7', '90210', 'Gävle', 'Sweden', 'johan.svensson@example.se', 2, 3);
