@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.function.Function;
 
 
-//GEFP-19-AA
+//GEFP-19-AA //GEFP-30-AA Delat upp koden i PlayerAction och PlayerView
 public class PlayerView extends AbstractScene{
 
     private static VBox getIdBox;
@@ -146,24 +146,11 @@ public class PlayerView extends AbstractScene{
                 "Team", "Select Team", teamField, teams, team -> team.getTeamId() + ", " + team.getTeamName()
         ));
 
-        //GEFP-31-AA
-        gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !newValue.isEmpty()) {
-                try {
-                    int gameId = Integer.parseInt(newValue.split(",")[0].trim());
-                    List<Team> filteredTeams = PlayerActions.getTeamsByGame(gameId);
+        addGameFieldListener(gameField, teamField);
 
-                    teamField.getItems().clear();
-                    filteredTeams.forEach(team -> teamField.getItems().add(team.getTeamId() + ", " + team.getTeamName()));
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        Button saveButton = creatButton("Save player");
+        Button saveButton = creatButton("Save Player");
         saveButton.setOnAction(event -> {
-            if (validateInput(
+            if (validateInputNewPlayer(
                     firstNameField.getText(), lastNameField.getText(), nicknameField.getText(), emailField.getText())) {
 
                 Player player = PlayerActions.createPlayerFromFields(
@@ -174,8 +161,7 @@ public class PlayerView extends AbstractScene{
                 );
 
                 PlayerActions.savePlayer(player);
-                Label labelSaved = new Label(" Player saved and updated in the database! ");
-                labelSaved.getStyleClass().add("standardLabel");
+                Label labelSaved = creatLabel(" Player saved and updated in the database! ");
                 resultBox.getChildren().add(labelSaved);
             }
         });
@@ -184,6 +170,25 @@ public class PlayerView extends AbstractScene{
         anchorPane.getChildren().add(resultBox);
 
 
+    }
+
+    //GEFP-31-AA
+    public static void addGameFieldListener(ComboBox<String> gameField, ComboBox<String> teamField) {
+        gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.isEmpty()) {
+                try {
+                    int gameId = Integer.parseInt(newValue.split(",")[0].trim());
+                    List<Team> filteredTeams = PlayerActions.getTeamsByGame(gameId);
+
+                    // Uppdatera teamField
+                    teamField.getItems().clear();
+                    filteredTeams.forEach(filteredTeam ->
+                            teamField.getItems().add(filteredTeam.getTeamId() + ", " + filteredTeam.getTeamName()));
+                } catch (NumberFormatException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
 
@@ -202,7 +207,7 @@ public class PlayerView extends AbstractScene{
         resultBox = createResultBox(230.0);
 
         TextField playerIdField = new TextField();
-        Button getPlayerButton = creatButton("Get player");
+        Button getPlayerButton = creatButton("Get Player");
         getPlayerButton.setOnAction(event -> {
             try {
                 int playerId = Integer.parseInt(playerIdField.getText());
@@ -256,30 +261,17 @@ public class PlayerView extends AbstractScene{
                 "Team", teamField, teams, t -> t.getTeamId() + ", " + t.getTeamName(), selectedTeamValue
         );
 
-        gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !newValue.isEmpty()) {
-                try {
-                    int gameId = Integer.parseInt(newValue.split(",")[0].trim());
-                    List<Team> filteredTeams = PlayerActions.getTeamsByGame(gameId);
-                    teamField.getItems().clear();
-                    filteredTeams.forEach(filteredTeam -> teamField.getItems().add(filteredTeam.getTeamId() + ", " + filteredTeam.getTeamName()));
-                } catch (NumberFormatException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
+        addGameFieldListener(gameField, teamField);
 
-        Button updatePlayerButton = creatButton("Update player");
+        Button updatePlayerButton = creatButton("Update Player");
         updatePlayerButton.setOnAction(event -> {
             try {
-                if (!nicknameField.getText().equals(playerToUpdate.getNickname())
-                        && !PlayerActions.isNicknameUnique(nicknameField.getText())) {
+                if (!nicknameField.getText().equals(playerToUpdate.getNickname()) && !PlayerActions.isNicknameUnique(nicknameField.getText())) {
                     AlertBox.displayAlertBox("Error", "Nickname is already taken. Try a different one!");
                     return;
                 }
 
-                if (!emailField.getText().equals(playerToUpdate.getEmail())
-                        && !PlayerActions.isEmailUnique(emailField.getText())) {
+                if (!emailField.getText().equals(playerToUpdate.getEmail()) && !PlayerActions.isEmailUnique(emailField.getText())) {
                     AlertBox.displayAlertBox("Error", "Email is already taken. Try a different one!");
                     return;
                 }
@@ -306,8 +298,7 @@ public class PlayerView extends AbstractScene{
                 }
 
                 PlayerActions.updatePlayer(playerToUpdate);
-                Label labelUpdated = new Label("Player updated in the database!");
-                labelUpdated.getStyleClass().add("standardLabel");
+                Label labelUpdated = creatLabel("Player updated in the database!");
                 resultBox.getChildren().add(labelUpdated);
             } catch (Exception ex) {
                 AlertBox.displayAlertBox("Error", "An error occurred while updating the player.");
@@ -330,7 +321,7 @@ public class PlayerView extends AbstractScene{
         );
     }
 
-    public static boolean validateInput(String firstName, String lastName, String nickname, String email) {
+    public static boolean validateInputNewPlayer(String firstName, String lastName, String nickname, String email) {
         if (PlayerActions.areFieldsEmpty(firstName, lastName, nickname, email)) {
             AlertBox.displayAlertBox("Error", "Please fill in all mandatory fields. Fields marked with *.");
             return false;
@@ -342,15 +333,6 @@ public class PlayerView extends AbstractScene{
             return false;
         }
         return true;
-    }
-
-
-    private static Button creatButton (String text){
-        Button button = new Button(text);
-        new Button("Update Player");
-        button.getStyleClass().add("standardButton");
-        button.setMinSize(160,30);
-        return button;
     }
 
     private static void showDeletePlayerForm(AnchorPane anchorPane){
@@ -386,80 +368,54 @@ public class PlayerView extends AbstractScene{
     }
 
     private static void showPlayerInfoForPlayerToDelete(Player playerToDelete) {
+        resultBox.getChildren().clear();
+        Label playerInfo = creatLabel(
+                        "\tName: " + playerToDelete.getFullName() + "\n" +
+                        "\tNickname: " + playerToDelete.getNickname() + "\n" +
+                        "\tAddress: " + playerToDelete.getStreetAddress() + "\n" +
+                        "\t\t\t" + playerToDelete.getZipCode() + "\n" +
+                        "\t\t\t" + playerToDelete.getCity() + "\n" +
+                        "\tCountry: " + playerToDelete.getCountry() + "\n" +
+                        "\tE-mail: " + playerToDelete.getEmail() + "\t\n" +
+                        "\tGame: " + playerToDelete.getGameName() + "\n" +
+                        "\tTeam: " + playerToDelete.getTeamName() + "\n" +
+                        "\tMatch: " + playerToDelete.getMatchName()
+                );
+        resultBox.getChildren().add(playerInfo);
 
+        Button deleteButton = creatButton("Delete Player");
+        deleteButton.setOnAction(event -> {
+            boolean deletePlayer = ConfirmBox.display("Delete Player", "Are you sure you want to delete" + playerToDelete.getFullName() +  "from the database?");
+
+            if (deletePlayer) {
+                boolean deleted = PlayerActions.deletePlayerById(playerToDelete.getId());
+
+                if (deleted) {
+                    Label deletedLabel = creatLabel("Player deleted! Database up to date!");
+                    resultBox.getChildren().add(deletedLabel);
+                } else {
+                    AlertBox.displayAlertBox("Error", "Delete player failed! Please try again.");
+                }
+            } else {
+                AlertBox.displayAlertBox("Error", "Delete player failed! Please try again.");
+            }
+        });
+        resultBox.getChildren().add(deleteButton);
     }
 
+    private static Button creatButton (String text){
+        Button button = new Button(text);
+        new Button("Update Player");
+        button.getStyleClass().add("standardButton");
+        button.setMinSize(160,30);
+        return button;
+    }
 
-    //------------------------------------------------------------------------------------------------------------------
-
-    /*private static void showDeletePlayerForm(AnchorPane anchorPane) {
-        getIdBox = createResultBox();
-
-        TextField playerInfield = new TextField();
-        HBox playerIdBox = createResultBoxContentBox("Enter Player ID: ", "Player ID", playerInfield, false );
-
-        resultBox = createResultBox(250.0);
-
-        Label labelNoPlayerId = new Label(" No player found! Enter a different ID (only numbers allowed). ");
-        labelNoPlayerId.getStyleClass().add("standardLabel");
-
-        Button getButton = new Button("Get Player from database");
-        getButton.getStyleClass().add("standardButton");
-        getButton.setOnAction(event -> {
-            try {
-                Player playerToDelete = playerDAO.getPlayer(Integer.parseInt(playerInfield.getText()));
-
-                if (playerToDelete == null) {
-                    resultBox.getChildren().add(labelNoPlayerId);
-                    return;
-                } else {
-                    if (!resultBox.getChildren().isEmpty()) {
-                        resultBox.getChildren().clear();
-                    }
-
-                    Label player = new Label();
-                    player.setText(
-                            "Namn: " + playerToDelete.getFullName() + "\n" +
-                            "Nickname: " + playerToDelete.getNickname() + "\n" +
-                            "Address: " + playerToDelete.getFullAddress() + "\n" +
-                            "Country: " + playerToDelete.getCountry() + "\n" +
-                            "E-mail: " + playerToDelete.getEmail() + "\n" +
-                            "Game: " + playerToDelete.getGameName() + "\n" +
-                            "Team: " + playerToDelete.getTeamName() + "\n" +
-                            "Match: " + playerToDelete.getMatchName()
-                    );
-                    player.getStyleClass().add("standardLabel");
-                    resultBox.getChildren().add(player);
-
-                    Button deleteButton = new Button("Delete Player");
-                    deleteButton.getStyleClass().add("standardButton");
-                    deleteButton.setOnAction(e -> {
-                        boolean deletePlayer = ConfirmBox.display("Delete Player", "Are you sure you want to delete this player from the database?");
-                        if (deletePlayer) {
-                          boolean deleted = playerDAO.deletePlayerById(playerToDelete.getId());
-                          if (deleted) {
-                              Label labelDeleted = new Label(" Player deleted. Database up to date! ");
-                              labelDeleted.getStyleClass().add("standardLabel");
-                              resultBox.getChildren().add(labelDeleted);
-                          }
-
-                        } else {
-                            Label labelNotDeleted = new Label("Player NOT deleted");
-                            resultBox.getChildren().add(labelNotDeleted);
-                        }
-                    });
-                    resultBox.getChildren().add(deleteButton);
-
-                }
-            } catch (Exception e){
-            e.printStackTrace();
-            }
-        } );
-
-        getIdBox.getChildren().addAll(playerIdBox, getButton);
-        anchorPane.getChildren().addAll(getIdBox, resultBox);
-
-    }*/
+    private static Label creatLabel (String text){
+        Label label = new Label(text);
+        label.getStyleClass().add("standardLabel");
+        return label;
+    }
 
     private static VBox createResultBox() {
         VBox vBox = new VBox();
