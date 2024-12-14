@@ -81,6 +81,13 @@ public class MatchView extends AbstractScene {
         addMatch.setMinSize(160,30);
 
         addMatch.setOnAction(actionEvent -> {
+
+            // hämtar info om lag o spelare ifrån databas
+            TeamDAO teamDAO = new TeamDAO();
+            List<Team> allTeams = teamDAO.getAllTeams();
+            PlayerDAO playerDAO = new PlayerDAO();
+            List<Player> allPlayers = playerDAO.getAllPlayers();
+
             // vbox för formuläret
             VBox addMatchBox = new VBox();
             addMatchBox.setSpacing(10);
@@ -98,11 +105,13 @@ public class MatchView extends AbstractScene {
             // för att välja spel
             ComboBox<Game> gameComboBox = new ComboBox<>();
             gameComboBox.setPromptText("Select Game");
+
             // hämtar ifrån data basen
             GameDAO gameDAO = new GameDAO();
             List<Game> games = gameDAO.getAllGames();
             gameComboBox.getItems().addAll(games);
-            // anpassad cellfabrik för att visa spelens namn
+
+            // anpassar hur spelen visas i listan
             gameComboBox.setCellFactory(param -> new ListCell<>(){
                 @Override
                 protected void updateItem(Game game, boolean empty) {
@@ -118,7 +127,6 @@ public class MatchView extends AbstractScene {
                     setText(empty || game == null ? null : game.getGameName());
                 }
             });
-
 
             // för att välja datum
             DatePicker matchDatePicker = new DatePicker(LocalDate.now());
@@ -137,15 +145,26 @@ public class MatchView extends AbstractScene {
             secondParticipantComboBox.setPromptText("Second Participant");
             secondParticipantComboBox.setVisible(false);
 
+            // dynamisk logik beroende på pvp elle tvt
             matchTypeComboBox.setOnAction(event->{
                 MatchType selectedMatchType = matchTypeComboBox.getValue();
                 // döljer knapparna
+                firstParticipantComboBox.getItems().clear();
+                secondParticipantComboBox.getItems().clear();
+
                 firstParticipantComboBox.setVisible(false);
                 secondParticipantComboBox.setVisible(false);
                 participantLabel.setVisible(false);
 
                 if(selectedMatchType == MatchType.TEAM_VS_TEAM){
                     participantLabel.setText("Select Teams");
+
+                    firstParticipantComboBox.getItems().addAll(
+                            allTeams.stream().map(Team::getTeamName).toList()
+                    );
+                    secondParticipantComboBox.getItems().addAll(
+                            allTeams.stream().map(Team::getTeamName).toList()
+                    );
                     // visar knapparna
                     firstParticipantComboBox.setVisible(true);
                     secondParticipantComboBox.setVisible(true);
@@ -154,14 +173,21 @@ public class MatchView extends AbstractScene {
                     firstParticipantComboBox.setValue("Team 1");
                     secondParticipantComboBox.setValue("Team 2");
 
-                    TeamDAO teamDAO = new TeamDAO();
+                   /* TeamDAO teamDAO = new TeamDAO();
                     List<Team> teams = teamDAO.getAllTeams();
                     for(Team team : teams){
                         firstParticipantComboBox.getItems().add(team.getTeamName());
                         secondParticipantComboBox.getItems().add(team.getTeamName());
-                    }
-                }else if (selectedMatchType == MatchType.PLAYER_VS_PLAYER){
+                    }*/
+                }else if (selectedMatchType == MatchType.PLAYER_VS_PLAYER) {
                     participantLabel.setText("Select Players");
+                    firstParticipantComboBox.getItems().addAll(
+                            allPlayers.stream().map(Player::getNickname).toList()
+                    );
+                    secondParticipantComboBox.getItems().addAll(
+                            allPlayers.stream().map(Player::getNickname).toList()
+                    );
+
                     // visar knapparna
                     firstParticipantComboBox.setVisible(true);
                     secondParticipantComboBox.setVisible(true);
@@ -169,14 +195,47 @@ public class MatchView extends AbstractScene {
 
                     firstParticipantComboBox.setValue("Player 1");
                     secondParticipantComboBox.setValue("Player 2");
-
-                    PlayerDAO playerDAO = new PlayerDAO();
-                    List<Player> players = playerDAO.getAllPlayers();
-                    for(Player player : players){
-                        firstParticipantComboBox.getItems().add(player.getNickname());
-                        secondParticipantComboBox.getItems().add(player.getNickname());
-                    }
                 }
+                    // döljer så man inte kan välja 2 av samma spelare/lag
+                    firstParticipantComboBox.setCellFactory(param -> new ListCell<>(){
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if(empty || item == null){
+                                setText(null);
+                                setDisable(false);
+                            }else{
+                                if(item.equals(secondParticipantComboBox.getValue())){
+                                    setText("----------");
+                                    setDisable(true);
+                                } else{
+                                    setText(item);
+                                    setDisable(false);
+                                }
+                            }
+                        }
+                    });
+                    // döljer så man inte kan välja 2 av samma spelare/lag
+                    secondParticipantComboBox.setCellFactory(param -> new ListCell<>(){
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if(empty || item == null){
+                                setText(null);
+                                setDisable(false);
+                            } else {
+                                if(item.equals(firstParticipantComboBox.getValue())){
+                                    setText("----------");
+                                    setDisable(true);
+                                } else {
+                                    setText(item);
+                                    setDisable(false);
+                                }
+                            }
+                        }
+                    });
+                    firstParticipantComboBox.setOnAction(event1 -> secondParticipantComboBox.setButtonCell(secondParticipantComboBox.getButtonCell()));
+                    secondParticipantComboBox.setOnAction(event2 -> firstParticipantComboBox.setButtonCell(firstParticipantComboBox.getButtonCell()));
             });
 
             // submit knapp
@@ -186,12 +245,14 @@ public class MatchView extends AbstractScene {
 
             addMatchBox.getChildren().addAll(addMatchLabel,matchTypeComboBox,  gameComboBox, matchDatePicker,firstParticipantComboBox,secondParticipantComboBox, submitButton);
 
+            //skapar scene och visar formulär
             Scene addMatchScene = new Scene(addMatchBox, 400, 300);
             Stage addMatchStage = new Stage();
             addMatchStage.setTitle("Add Match");
             addMatchStage.setScene(addMatchScene);
             addMatchStage.show();
 
+            // lägger till matchen
             submitButton.setOnAction(event -> {
                 Game selectedGame = gameComboBox.getValue();
                 MatchType selectedMatchType = matchTypeComboBox.getValue();
@@ -200,8 +261,6 @@ public class MatchView extends AbstractScene {
                 String secondParticipant = secondParticipantComboBox.getValue();
 
                 String matchName = firstParticipant + " vs " + secondParticipant;
-
-
 
                 if(selectedMatchType == null){
                     System.out.println("Select Match Type");
@@ -223,8 +282,6 @@ public class MatchView extends AbstractScene {
                     return;
                 }
 
-
-
                 addMatch(matchName, selectedMatchType, matchDate, selectedGame);
                 System.out.println("Match added successfully");
                 addMatchStage.close();
@@ -233,26 +290,6 @@ public class MatchView extends AbstractScene {
         });
         return addMatch;
     }
-
-
-/*    private static Button createAddMatchTvT(){
-        Button addMatch = new Button("Add Match (TvT)");
-        addMatch.getStyleClass().add("standardButton");
-        addMatch.setMinSize(160,30);
-        addMatch.setOnAction(actionEvent -> {
-            Match newMatch = new Match(MatchType.TEAM_VS_TEAM);
-            newMatch.setMatchName("New Match");
-            newMatch.setMatchDate(LocalDate.now());
-            boolean success = matchDAO.saveMatch(newMatch);
-            if(success){
-                System.out.println("Match added successfully");
-                updateMatchList();
-            }else {
-                System.out.println("Failed to save match");
-            }
-        });
-        return addMatch;
-    }*/
 
     private static Button createDeleteMatch(){
         Button deleteMatch = new Button("Delete Selected Match");
