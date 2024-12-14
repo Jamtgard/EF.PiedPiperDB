@@ -3,7 +3,7 @@
 INSERT INTO games (game_name) VALUES ('Guitar Hero');
 INSERT INTO games (game_name) VALUES ('Mario Kart');
 INSERT INTO games (game_name) VALUES ('Tibia');
-
+--GEFP-28-AWS
 INSERT INTO games (game_name) VALUES ('Pong');
 INSERT INTO games (game_name) VALUES ('Battleship');
 INSERT INTO games (game_name) VALUES ('Counter-Strike');
@@ -53,9 +53,26 @@ INSERT INTO teams (team_name,game_id) VALUES ('Doom-slayers',9);
 INSERT INTO teams (team_name,game_id) VALUES ('FNATIC',10);
 INSERT INTO teams (team_name,game_id) VALUES ('Heretics',10);
 
+--GEFP-28-AWS Ändrat så matches skapas innan player annars läggs inte players till korrekt i databasen
+-- Fixat så man kan välja match_type och ändrat till TvT - AWS
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Ctrl Alt Defeat vs Sassy Sasquatches', '2024-12-01','TEAM_VS_TEAM' ,1);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Game of Throws vs Fast but Last', '2024-12-02', 'TEAM_VS_TEAM' ,2);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('404: Team Name Not Found vs Unicorn Apocalypse', '2024-12-03', 'TEAM_VS_TEAM' ,3);
+
+--GEFP-26-SA
+--Fixa datum -- Fixat så man kan välja match_type och ändrat till TvT - AWS
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Pixel Paddlers vs Bounce Battalion', '2024-12-04', 'TEAM_VS_TEAM' ,4);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Bug Slayers vs Ashes', '2024-12-05', 'TEAM_VS_TEAM' ,5);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Spirit vs MOUZ', '2024-12-06', 'TEAM_VS_TEAM' ,6);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Dragon hunters vs Salem witches', '2024-12-07', 'TEAM_VS_TEAM' ,7);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Asgardians vs Spiders squad', '2024-12-08', 'TEAM_VS_TEAM' ,8);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Demon killers vs Doom-slayers', '2024-12-09', 'TEAM_VS_TEAM' ,9);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('FNATIC vs Heretics', '2024-12-10', 'TEAM_VS_TEAM' ,10);
+
 
 
 -- GEFP-18-SA, ändrade stavfelet på street_address
+--GEFP-28-AWS
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Alma', 'Johansson', 'AmazingAlma', 'Blomvägen 10', '54321', 'Linköping', 'Sweden', 'alma.johansson@example.se', 1,1);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Erik', 'Nilsson', 'EagleErik', 'Kyrkogatan 22', '13579', 'Helsingborg', 'Sweden', 'erik.nilsson@example.se', 1, 2);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Saga', 'Karlsson', 'SwiftSaga', 'Vallgatan 14', '24680', 'Örebro', 'Sweden', 'saga.karlsson@example.se', 2, 3);
@@ -100,19 +117,7 @@ INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,cit
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Olivia', 'Karlsson', 'OliviaPower', 'Västerlånggatan 56', '11223', 'Västerås', 'Sweden', 'olivia.karlsson@example.se', 10, 20);
 
 
-INSERT INTO matches (match_name, date, game_id) VALUES ('Ctrl Alt Defeat vs Sassy Sasquatches', '2024-12-01', 1);
-INSERT INTO matches (match_name, date, game_id) VALUES ('Game of Throws vs Fast but Last', '2024-12-02', 2);
-INSERT INTO matches (match_name, date, game_id) VALUES ('404: Team Name Not Found vs Unicorn Apocalypse', '2024-12-03', 3);
 
---GEFP-26-SA
---Fixa datum
-INSERT INTO matches (match_name, date, game_id) VALUES ('Pixel Paddlers vs Bounce Battalion', '2024-12-04', 4);
-INSERT INTO matches (match_name, date, game_id) VALUES ('Bug Slayers vs Ashes', '2024-12-05', 5);
-INSERT INTO matches (match_name, date, game_id) VALUES ('Spirit vs MOUZ', '2024-12-06', 6);
-INSERT INTO matches (match_name, date, game_id) VALUES ('Dragon hunters vs Salem witches', '2024-12-07', 7);
-INSERT INTO matches (match_name, date, game_id) VALUES ('Asgardians vs Spiders squad', '2024-12-08', 8);
-INSERT INTO matches (match_name, date, game_id) VALUES ('Demon killers vs Doom-slayers', '2024-12-09', 9);
-INSERT INTO matches (match_name, date, game_id) VALUES ('FNATIC vs Heretics', '2024-12-10', 10);
 
 --GEFP-26-SA
 INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (1,1);

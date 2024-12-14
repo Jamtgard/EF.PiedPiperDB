@@ -15,8 +15,9 @@ public class Match {
     @Column(name = "match_id")//GEFP-18-SA
     private int matchId;
 
-    @Column (nullable = false)
+
     @Enumerated(EnumType.STRING) //Enum som sträng i db
+    @Column (name = "match_type", nullable = false)
     private MatchType matchType;       //player vs player, team vs team
 
     //GEFP-18-SA
