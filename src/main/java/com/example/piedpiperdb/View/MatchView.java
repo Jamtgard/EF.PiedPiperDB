@@ -358,7 +358,6 @@ public class MatchView extends AbstractScene {
         TableColumn<Match, String> matchResultColumn = new TableColumn<>("Result");
         matchResultColumn.setCellValueFactory(new PropertyValueFactory<>("MatchResult"));
 
-
         table.getColumns().addAll(matchIdColumn, matchNameColumn, matchTypeColumn, gameColumn, matchDateColumn, matchResultColumn);
         table.setItems(observableList);
 
