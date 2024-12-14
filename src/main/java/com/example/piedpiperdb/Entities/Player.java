@@ -244,14 +244,14 @@ public class Player {
         return matchId;
     }
 
-    public String getMatchInfo(){
+    /*public String getMatchInfo(){
         if (matchId == null){
             return "No match registered";
         }
 
          String r = (matchId.getResult() !=null ? matchId.getResult() : "Upcoming game");
         return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + r;
-    }
+    }*/
 
     public void setMatchId(Match matchId) {
         this.matchId = matchId;
