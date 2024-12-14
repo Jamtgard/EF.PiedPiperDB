@@ -1,11 +1,7 @@
 package com.example.piedpiperdb.View;
 
-import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.JavaFXActions.PlayerActions;
-import com.example.piedpiperdb.DAO.MatchDAO;
-import com.example.piedpiperdb.DAO.PlayerDAO;
-import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
@@ -16,7 +12,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +24,6 @@ public class PlayerView extends AbstractScene{
     private static VBox getIdBox;
     private static VBox resultBox;
 
-    private static PlayerDAO playerDAO = new PlayerDAO();
-    private static GameDAO gameDAO = new GameDAO();
-    private static TeamDAO teamDAO = new TeamDAO();
-    private static MatchDAO matchDAO = new MatchDAO();
-
     private static TextField firstNameField;
     private static TextField lastNameField;
     private static TextField nicknameField;
@@ -44,7 +34,6 @@ public class PlayerView extends AbstractScene{
     private static TextField emailField;
     private static ComboBox<String> gameField;
     private static ComboBox<String> teamField;
-    private static ComboBox<String> matchField;
 
 
     public static Scene playerScene(Stage window){
@@ -69,7 +58,6 @@ public class PlayerView extends AbstractScene{
                  VBox resultBox = createResultBox();
                  resultBox = PlayerActions.getTableViewAllPlayers(resultBox);
                  anchorPane.getChildren().add(resultBox);
-
             });
 
             Button selectedPlayers = new Button("Show players from \nselected game or games");
@@ -83,7 +71,6 @@ public class PlayerView extends AbstractScene{
                 resultBox = PlayerActions.getTableViewSelectedPlayers(resultBox, selections);
                 anchorPane.getChildren().add(resultBox);
             });
-
 
             Button addNewPlayerButton = creatButton("Add new player");
             addNewPlayerButton.setOnAction(e -> {
@@ -104,25 +91,10 @@ public class PlayerView extends AbstractScene{
             });
 
             vBox.getChildren().addAll(getAllPlayers, selectedPlayers, addNewPlayerButton, updatePlayerByIdButton, deletePlayerByIdButton );
-
-
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-
     public static void showAddPlayerForm(AnchorPane anchorPane) {
-        // Skapa fält
-        firstNameField = new TextField();
-        lastNameField = new TextField();
-        nicknameField = new TextField();
-        streetAddressField = new TextField();
-        zipCodeField = new TextField();
-        cityField = new TextField();
-        countryField = new TextField();
-        emailField = new TextField();
-
-        gameField = new ComboBox<>();
-        teamField = new ComboBox<>();
+        initializeTextFieldsPlayerInfo();
 
         resultBox = createResultBox();
 
@@ -165,11 +137,8 @@ public class PlayerView extends AbstractScene{
                 resultBox.getChildren().add(labelSaved);
             }
         });
-
         resultBox.getChildren().add(saveButton);
         anchorPane.getChildren().add(resultBox);
-
-
     }
 
     //GEFP-31-AA
@@ -191,19 +160,9 @@ public class PlayerView extends AbstractScene{
         });
     }
 
-
     public static void showUpdatePlayerForm(AnchorPane anchorPane) {
-        firstNameField = new TextField();
-        lastNameField = new TextField();
-        nicknameField = new TextField();
-        streetAddressField = new TextField();
-        zipCodeField = new TextField();
-        cityField = new TextField();
-        countryField = new TextField();
-        emailField = new TextField();
+        initializeTextFieldsPlayerInfo();
 
-        gameField = new ComboBox<>();
-        teamField = new ComboBox<>();
         resultBox = createResultBox(230.0);
 
         TextField playerIdField = new TextField();
@@ -228,7 +187,6 @@ public class PlayerView extends AbstractScene{
                 createResultBoxContentBox("Player ID", "Enter Player ID", playerIdField, false),
                 getPlayerButton
         );
-
         anchorPane.getChildren().addAll(getIdBox, resultBox);
     }
 
@@ -243,7 +201,6 @@ public class PlayerView extends AbstractScene{
         countryField.setText(playerToUpdate.getCountry());
         emailField.setText(playerToUpdate.getEmail());
 
-
         List<Game> games = PlayerActions.getAllGames();
         Game game = playerToUpdate.getGameId();
         String selectedGameValue = game != null ? game.getGameId() + ", " + game.getGameName() : null;
@@ -251,7 +208,6 @@ public class PlayerView extends AbstractScene{
         List<Team> teams = PlayerActions.getTeamsByGame(game.getGameId());
         Team team = playerToUpdate.getTeamId();
         String selectedTeamValue = team != null ? team.getTeamId() + ", " + team.getTeamName() : null;
-
 
         HBox gameBox = createResultBoxContentBoxComboBoxUpdate(
                 "Game", gameField, games, g -> g.getGameId() + ", " + g.getGameName(), selectedGameValue
@@ -403,6 +359,20 @@ public class PlayerView extends AbstractScene{
         resultBox.getChildren().add(deleteButton);
     }
 
+    private static void initializeTextFieldsPlayerInfo() {
+        firstNameField = new TextField();
+        lastNameField = new TextField();
+        nicknameField = new TextField();
+        streetAddressField = new TextField();
+        zipCodeField = new TextField();
+        cityField = new TextField();
+        countryField = new TextField();
+        emailField = new TextField();
+
+        gameField = new ComboBox<>();
+        teamField = new ComboBox<>();
+    }
+
     private static Button creatButton (String text){
         Button button = new Button(text);
         new Button("Update Player");
@@ -508,6 +478,4 @@ public class PlayerView extends AbstractScene{
             b.getChildren().clear();
         }
     }
-
-
 }

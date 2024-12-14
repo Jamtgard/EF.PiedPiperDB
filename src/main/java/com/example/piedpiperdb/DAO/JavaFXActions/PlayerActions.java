@@ -31,7 +31,6 @@ public class PlayerActions {
         List<Player> players = playerDAO.getAllPlayers();
         System.out.println(players.size());
         return showTable(vBox, players );
-
     }
 
     public static VBox getTableViewSelectedPlayers(VBox vBox, List<String> selections) {
@@ -58,7 +57,6 @@ public class PlayerActions {
         List<Game> games = gameDAO.getAllGames();
         List<CheckBox> checkBoxes = new ArrayList<>();
 
-
         for (Game game : games) {
             String name = game.getGameName();
             int gameId = game.getGameId();
@@ -66,7 +64,6 @@ public class PlayerActions {
             CheckBox checkBox  = new CheckBox(name + ", GameID: " + gameId );
             checkBoxes.add(checkBox);
         }
-
         return checkBoxes;
     }
 
@@ -176,5 +173,4 @@ public class PlayerActions {
     public static boolean deletePlayerById(int playerId) {
         return playerDAO.deletePlayerById(playerId);
     }
-
 }
