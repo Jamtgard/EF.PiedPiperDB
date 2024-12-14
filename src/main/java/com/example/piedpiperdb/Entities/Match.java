@@ -15,8 +15,9 @@ public class Match {
     @Column(name = "match_id")//GEFP-18-SA
     private int matchId;
 
-    @Column (nullable = false)
+
     @Enumerated(EnumType.STRING) //Enum som sträng i db
+    @Column (name = "match_type", nullable = false)
     private MatchType matchType;       //player vs player, team vs team
 
     //GEFP-18-SA
@@ -24,11 +25,11 @@ public class Match {
     private String matchName;
 
     //AWS GEFP-3
-
     @Column (name = "date", nullable = false)
     private LocalDate matchDate;
 
-    private String result;
+    @Column (name = "match_result")
+    private String matchResult;
 
     // ref till spel
     @ManyToOne
@@ -36,21 +37,14 @@ public class Match {
     private Game gameId;//GEFP-22-SA, bytte namn från "game" till "gameId"
 
     // ref till player
-    @ManyToOne
-   @JoinColumn(name = "player_id", nullable = true)
-    private Player player;
-
-    // ref till lag
-    /* //GEFP-22-SA, kommentera ut och la till ManyToOne istället
-    @ManyToOne
-    @JoinColumn(name = "team_id", nullable = true)
-    private Team team;*/
+    @OneToMany
+    @JoinColumn(name = "player_id", nullable = true)
+    private List <Player> players = new ArrayList<>();
 
     //GEFP-22-SA
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @OrderColumn
     private List<Team> teams = new ArrayList<>();
-
 
     public Match() {
     }
@@ -59,6 +53,16 @@ public class Match {
         this.matchType = matchType;
     }
 
+    public Match(String matchName, MatchType selectedMatchType, LocalDate matchDate, Game gameId) {
+        this.matchName = matchName;
+        this.gameId = gameId;
+        this.matchType = selectedMatchType;
+        this.matchDate = matchDate;
+
+    }
+
+    // ------------------------------- GETTERS AND SETTERS --------------------------------------
+
     //AWS GEFP-3
     public int getMatchId() {
         return matchId;
@@ -66,26 +70,26 @@ public class Match {
     public void setMatchId(int id) {
         this.matchId = id;
     }
-
     public MatchType getMatchType() {
         return matchType;
     }
-
     public void setMatchType(MatchType matchType) {
         this.matchType = matchType;
     }
-
     public LocalDate getMatchDate() {
         return matchDate;
     }
     public void setMatchDate(LocalDate matchDate) {
         this.matchDate = matchDate;
     }
-    public String getResult() {
-        return result;
+    public String getMatchResult() {
+        return matchResult;
     }
-    public void setResult(String result) {
-        this.result = result;
+    public void setMatchResult(String result) {
+        this.matchResult = result;
+    }
+    public String getGameName() {
+        return gameId !=null ? gameId.getGameName() : "No Game Registered";
     }
     public Game getGameId() {
         return gameId;
@@ -93,25 +97,23 @@ public class Match {
     public void setGameId(Game game) {
         this.gameId = game;
     }
-    public Player getPlayer() {
-        return player;
+    public List<Player> getPlayers() {
+        return players;
     }
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
-
-    /* public Team getTeam() {
-        return team;
+    public List<Team> getTeams() {
+        return teams;
     }
-    public void setTeam(Team team) {
-        this.team = team;
-    } */
-
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
     public String getMatchName() {
         return matchName;
     }
-
     public void setMatchName(String matchName) {
         this.matchName = matchName;
     }
+
 }

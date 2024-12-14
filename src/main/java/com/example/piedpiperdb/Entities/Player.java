@@ -249,7 +249,7 @@ public class Player {
             return "No match registered";
         }
 
-         String r = (matchId.getResult() !=null ? matchId.getResult() : "Upcoming game");
+         String r = (matchId.getMatchResult() !=null ? matchId.getMatchResult() : "Upcoming game");
         return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + r;
     }
 
