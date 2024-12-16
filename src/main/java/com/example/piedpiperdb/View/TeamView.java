@@ -6,7 +6,9 @@ import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
+import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -23,6 +25,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //GEFP-21-SJ
 public class TeamView extends AbstractScene{
@@ -141,8 +144,8 @@ public class TeamView extends AbstractScene{
         anchorPane.getChildren().addAll(table);
     }
 
-    private static TableView<Team> createTeamTable(List<Team> teamMembers){
-        ObservableList<Team> teamsObservableList = FXCollections.observableArrayList(teamMembers);
+    private static TableView<Team> createTeamTable(List<Team> teams){
+        ObservableList<Team> teamsObservableList = FXCollections.observableArrayList(teams);
 
         TableView<Team> tableView = new TableView<>();
 
@@ -155,13 +158,44 @@ public class TeamView extends AbstractScene{
         TableColumn<Team, String> game_name = new TableColumn<>("Game");
         game_name.setCellValueFactory(new PropertyValueFactory<>("gameName"));
 
+        TableColumn<Team, String> player_nickname = new TableColumn<>("Players");
+        player_nickname.setCellValueFactory(cellData ->{
+            Team team = cellData.getValue();
+            String nicknames = team.getListOfPlayersInTeam().stream()
+                    .map(Player::getNickname)
+                    .collect(Collectors.joining("\n"));
+            return new SimpleStringProperty(nicknames);
+        });
+
         /*
         TableColumn<Team, String> players = new TableColumn<>("Players");
         players.setCellValueFactory(new PropertyValueFactory<>("listOfPlayersInTeam"));
 
+        for (Team team : teams) {
+            for (Player player : team.getListOfPlayersInTeam()){
+                TableColumn<Team, String> players = new TableColumn<>("Player");
+                players.setCellValueFactory(new PropertyValueFactory<>(player.getNickname()));
+                tableView.getColumns().add(players);
+            }
+        }
+        tableView.setItems(teamsObservableList);
          */
 
-        tableView.getColumns().addAll(team_id, team_name, game_name);
+        /*
+        TableColumn<Team, String> players = new TableColumn<>("Players");
+        players.setCellValueFactory(cellData ->{
+            Team team = cellData.getValue();
+            List<Player> listOfPlayers = team.getListOfPlayersInTeam();
+
+            String playerNickNames = listOfPlayers.stream()
+                    .map(Player::getNickname)
+                    .collect(Collectors.joining("\n"));
+            return new SimpleStringProperty(playerNickNames.isEmpty() ? "-n-" : playerNickNames);
+        });
+         */
+
+
+        tableView.getColumns().addAll(team_id, team_name, game_name, player_nickname);
         tableView.setItems(teamsObservableList);
         return tableView;
     }

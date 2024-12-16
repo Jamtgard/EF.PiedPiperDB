@@ -58,6 +58,10 @@ public class Team {
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
 
+    // Player
+
+    //public Player getPlayer (int playerId) {}
+
     // Game
 
     public Game getGameId() {return gameId;}
