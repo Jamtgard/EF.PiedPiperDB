@@ -343,9 +343,13 @@ public class MatchView extends AbstractScene {
                    System.out.println("Select Match to delete.");
                    return;
                }
-
+               boolean success = matchDAO.deleteMatchById(selectedMatch.getMatchId());
+               if (success) {
+                   System.out.println("Match deleted successfully from database.");
+               } else {
+                   System.out.println("Match could not be deleted from database.");
+               }
                matchDAO.deleteMatchById(selectedMatch.getMatchId());
-               matchDAO.deleteMatch(selectedMatch);
 
                updateMatchList();
                resultBox.getChildren().clear();
@@ -367,7 +371,7 @@ public class MatchView extends AbstractScene {
 
             VBox selectMatchBox = new VBox();
             selectMatchBox.setSpacing(10);
-            selectMatchBox.setPadding(new Insets(50,10,50,10));
+            selectMatchBox.setPadding(new Insets(10,10,10,10));
             selectMatchBox.setAlignment(Pos.CENTER);
 
 
@@ -401,7 +405,8 @@ public class MatchView extends AbstractScene {
 
             VBox resultBox = createResultBox();
 
-            resultBox.getChildren().addAll(selectMatchLabel, matchComboBox, proceedButton);
+            selectMatchBox.getChildren().addAll(selectMatchLabel,matchComboBox,proceedButton);
+            resultBox.getChildren().addAll(selectMatchBox);
             AbstractScene.anchorPane.getChildren().add(resultBox);
 
             proceedButton.setOnAction(event -> {
