@@ -252,20 +252,20 @@ public class Player {
 
         if (matchId != null) {
             String r = (matchId.getMatchResult() != null ? matchId.getMatchResult() : "Upcoming game");
-            playerMatch = matchId.getMatchName() + ", " + matchId.getMatchDate() + "\nResult: " + r + "\n";
+            playerMatch = matchId.getMatchName() + ", " + matchId.getMatchDate() + "\nResult: " + r + "\n---\n";
             matches.append(playerMatch);
         }
 
         if (teamId != null && teamId.getMatchesInTeam() != null && !teamId.getMatchesInTeam().isEmpty()) {
             for (Match match : teamId.getMatchesInTeam()) {
                 String r = (match.getMatchResult() != null ? match.getMatchResult() : "Upcoming game");
-                teamMatch = match.getMatchName() + ", " + match.getMatchDate() + "\nResult: " + r + "\n";
+                teamMatch = match.getMatchName() + ", " + match.getMatchDate() + "\nResult: " + r + "\n---\n";
                 matches.append(teamMatch);
             }
         }
 
         if (matches.length() > 0) {
-            return matches.toString().trim();
+            return matches.toString();
         } else {
             return "No matches registered";
         }
