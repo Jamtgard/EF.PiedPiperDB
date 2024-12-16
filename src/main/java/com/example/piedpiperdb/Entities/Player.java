@@ -245,12 +245,29 @@ public class Player {
     }
 
     public String getMatchInfo(){
-        if (matchId == null){
-            return "No match registered";
+        String playerMatch = null;
+        String teamMatch = null;
+        StringBuilder matches = new StringBuilder();
+
+        if (matchId != null) {
+            String r = (matchId.getMatchResult() != null ? matchId.getMatchResult() : "Upcoming game");
+            playerMatch = matchId.getMatchName() + ", " + matchId.getMatchDate() + "\nResult: " + r + "\n";
+            matches.append(playerMatch);
         }
 
-         String r = (matchId.getMatchResult() !=null ? matchId.getMatchResult() : "Upcoming game");
-        return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + r;
+        if (teamId != null && teamId.getMatchesInTeam() != null && !teamId.getMatchesInTeam().isEmpty()) {
+            for (Match match : teamId.getMatchesInTeam()) {
+                String r = (match.getMatchResult() != null ? match.getMatchResult() : "Upcoming game");
+                teamMatch = match.getMatchName() + ", " + match.getMatchDate() + "\nResult: " + r + "\n";
+                matches.append(teamMatch);
+            }
+        }
+
+        if (matches.length() > 0) {
+            return matches.toString().trim();
+        } else {
+            return "No matches registered";
+        }
     }
 
     public void setMatchId(Match matchId) {
