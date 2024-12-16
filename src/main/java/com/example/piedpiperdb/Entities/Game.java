@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,18 @@ public class Game {
     @OneToMany(mappedBy = "gameId", orphanRemoval = false,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<Team> teams = new ArrayList<>();
 
+    //GEFP-34-SA
+    @ElementCollection
+    private List<String> playersNickNames = new ArrayList<>();
+    @ElementCollection
+    private List<String> matchDates = new ArrayList<>();
+    @ElementCollection
+    private List<String> matchNames = new ArrayList<>();
+
+    @ElementCollection
+    private List<LocalDate> matchDates2 = new ArrayList<>();//Istället för String? Testa
+
+    //GEFP-18-SA
     public Game() {
 
     }
@@ -64,25 +77,29 @@ public class Game {
     public void setGameId(int game_id) {this.gameId = game_id;}
 
     //GEFP-34-SA
+
     public ObservableList<String> getPlayersNickNames(){
         ObservableList<String> nicknames = FXCollections.observableArrayList();
         for (Player player : players) {
-            nicknames.add(player.getNickname());
+            playersNickNames.add(player.getNickname());
         }
+        nicknames.addAll(playersNickNames);
         return nicknames;
     }
     public ObservableList<String> getMatchNames(){
         ObservableList<String> matchesList = FXCollections.observableArrayList();
         for (Match match : matches) {
-            matchesList.add(match.getMatchName());
+            matchNames.add(match.getMatchName());
         }
+        matchesList.addAll();
         return matchesList;
     }
     public ObservableList<String> getMatchDates(){
         ObservableList<String> matchesDateList = FXCollections.observableArrayList();
         for (Match match : matches) {
-            matchesDateList.add(match.getMatchDate().toString());
+            matchDates.add(match.getMatchDate().toString());
         }
+        matchesDateList.addAll(matchDates);
         return matchesDateList;
     }
 
