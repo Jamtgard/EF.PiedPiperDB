@@ -244,6 +244,7 @@ public class Player {
         return matchId;
     }
 
+    //GEFP-35-AA - Omskriven för att inkludera spelarens registrerade lags matcher.
     public String getMatchInfo(){
         String playerMatch = null;
         String teamMatch = null;
