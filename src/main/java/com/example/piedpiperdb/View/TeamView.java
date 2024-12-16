@@ -1,7 +1,7 @@
 package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
-import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
+import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
@@ -35,30 +35,18 @@ public class TeamView extends AbstractScene{
     private static TeamDAO teamDAO = new TeamDAO();
     private static MatchDAO matchDAO = new MatchDAO();
 
-    private static TeamActions teamActions = new TeamActions();
-
     public static Scene startTeamScene(Stage window){
 
         Scene baseScene = AbstractScene.getScene(window);
-
-        AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
-        HelloApplication helloApp = new HelloApplication();
         AbstractScene.back.setOnAction(e->{
-            try {
-                helloApp.start(window);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            ChangeSceneAction.toStartPage(window);
         });
 
         addCustomComponents(vBox);
 
-        AnchorPane rootPane = (AnchorPane) baseScene.getRoot();
-
         return baseScene;
-
     }
 
     private static void addCustomComponents(VBox vbox) {
@@ -77,10 +65,9 @@ public class TeamView extends AbstractScene{
         getAllTeamsButton.getStyleClass().add("standardButton");
         getAllTeamsButton.setMinSize(160, 30);
         getAllTeamsButton.setOnAction(event -> {
-            List<Team> teams = teamActions.getAllTeams();
-            showTable(anchorPane, teams);
-            //System.out.println(teams.size());
-
+            List<Team> listOfAllTeams = teamDAO.getAllTeams();
+            System.out.println(listOfAllTeams.size());
+            showTable(anchorPane, listOfAllTeams);
         });
 
 
@@ -127,7 +114,7 @@ public class TeamView extends AbstractScene{
             showDeleteTeamForm(anchorPane);
         });
 
-        vbox.getChildren().addAll(getAllTeamsButton, selectedTeamButton, addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
+        vbox.getChildren().addAll(getAllTeamsButton, addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
     }
 
     public static void showTable(AnchorPane anchorPane, List<Team> players){
@@ -144,12 +131,12 @@ public class TeamView extends AbstractScene{
         anchorPane.getChildren().addAll(table);
     }
 
-    private static TableView<Team> createTeamTable(List<Team> teams){
-        ObservableList<Team> teamsObservableList = FXCollections.observableArrayList(teams);
+    private static TableView<Team> createTeamTable(List<Team> teamMembers){
+        ObservableList<Team> teamsObservableList = FXCollections.observableArrayList(teamMembers);
 
         TableView<Team> tableView = new TableView<>();
 
-        TableColumn<Team, Integer> team_id = new TableColumn<>("Team ID");
+        TableColumn<Team, String> team_id = new TableColumn<>("Team Name");
         team_id.setCellValueFactory(new PropertyValueFactory<>("teamId"));
 
         TableColumn<Team, String> team_name = new TableColumn<>("Team Name");
@@ -161,39 +148,11 @@ public class TeamView extends AbstractScene{
         TableColumn<Team, String> player_nickname = new TableColumn<>("Players");
         player_nickname.setCellValueFactory(cellData ->{
             Team team = cellData.getValue();
-            String nicknames = team.getListOfPlayersInTeam().stream()
+            String Nicknames = team.getListOfPlayersInTeam().stream()
                     .map(Player::getNickname)
                     .collect(Collectors.joining("\n"));
-            return new SimpleStringProperty(nicknames);
+            return new SimpleStringProperty(Nicknames);
         });
-
-        /*
-        TableColumn<Team, String> players = new TableColumn<>("Players");
-        players.setCellValueFactory(new PropertyValueFactory<>("listOfPlayersInTeam"));
-
-        for (Team team : teams) {
-            for (Player player : team.getListOfPlayersInTeam()){
-                TableColumn<Team, String> players = new TableColumn<>("Player");
-                players.setCellValueFactory(new PropertyValueFactory<>(player.getNickname()));
-                tableView.getColumns().add(players);
-            }
-        }
-        tableView.setItems(teamsObservableList);
-         */
-
-        /*
-        TableColumn<Team, String> players = new TableColumn<>("Players");
-        players.setCellValueFactory(cellData ->{
-            Team team = cellData.getValue();
-            List<Player> listOfPlayers = team.getListOfPlayersInTeam();
-
-            String playerNickNames = listOfPlayers.stream()
-                    .map(Player::getNickname)
-                    .collect(Collectors.joining("\n"));
-            return new SimpleStringProperty(playerNickNames.isEmpty() ? "-n-" : playerNickNames);
-        });
-         */
-
 
         tableView.getColumns().addAll(team_id, team_name, game_name, player_nickname);
         tableView.setItems(teamsObservableList);
@@ -218,11 +177,15 @@ public class TeamView extends AbstractScene{
         teamNamefield.setPromptText("First name");
         teamNameBox.getChildren().addAll(teamName, teamNamefield);
 
+
+
+        //Korrigera nedan:
         formContainer.getChildren().add(teamNameBox);
 
         Button saveTeamButton = new Button("Save Team");
         saveTeamButton.getStyleClass().add("standardButton");
         saveTeamButton.setMinSize(160, 30);
+
 
         saveTeamButton.setOnAction(event -> {
             try {

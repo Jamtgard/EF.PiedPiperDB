@@ -89,7 +89,16 @@ public class StartPage extends AbstractScene{
             ChangeSceneAction.toPlayerView(window);
         });
 
-        vBox.getChildren().addAll(button,gameViewButton,matchViewButton, playerViewButton);
+        //GEFP-27-SJ
+        Button teamViewButton = new Button("Teams");
+        teamViewButton.getStyleClass().add("standardButton");
+        teamViewButton.setMinSize(160, 30);
+
+        teamViewButton.setOnAction(e->{
+            ChangeSceneAction.toTeamView(window);
+        });
+
+        vBox.getChildren().addAll(button,gameViewButton,matchViewButton, playerViewButton, teamViewButton);
     }
 
 

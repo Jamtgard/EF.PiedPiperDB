@@ -82,7 +82,7 @@ public class Team {
         if (matchId != null) {
             return "-n-";
         }
-        String result = (matchId.getResult() != null ? matchId.getResult() : "Upcoming Match");
+        String result = (matchId.getMatchResult() != null ? matchId.getMatchResult() : "Upcoming Match");
         return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + result;
     }
 
