@@ -1,6 +1,8 @@
 package com.example.piedpiperdb.Entities;
 
 import jakarta.persistence.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +62,30 @@ public class Game {
     public int getGameId() {return gameId;}
 
     public void setGameId(int game_id) {this.gameId = game_id;}
+
+    //GEFP-34-SA
+    public ObservableList<String> getPlayersNickNames(){
+        ObservableList<String> nicknames = FXCollections.observableArrayList();
+        for (Player player : players) {
+            nicknames.add(player.getNickname());
+        }
+        return nicknames;
+    }
+    public ObservableList<String> getMatchNames(){
+        ObservableList<String> matchesList = FXCollections.observableArrayList();
+        for (Match match : matches) {
+            matchesList.add(match.getMatchName());
+        }
+        return matchesList;
+    }
+    public ObservableList<String> getMatchDates(){
+        ObservableList<String> matchesDateList = FXCollections.observableArrayList();
+        for (Match match : matches) {
+            matchesDateList.add(match.getMatchDate().toString());
+        }
+        return matchesDateList;
+    }
+
 
 
 }

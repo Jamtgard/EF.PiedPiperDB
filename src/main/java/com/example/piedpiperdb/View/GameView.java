@@ -2,10 +2,14 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
+import com.example.piedpiperdb.Entities.Game;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -63,11 +67,47 @@ public class GameView extends AbstractScene{
         buttonLabel.setText("Hold ctrl or shift to \nselect more than one game");
         buttonLabel.getStyleClass().add("standardLabelNoBorder");
 
+        //GEFP-34-SA
+
+        TableView<Game> tableView = new TableView();
+
+        TableColumn<Game,String> playerNickName = new TableColumn<>("Players");
+        playerNickName.setCellValueFactory(new PropertyValueFactory<>("playersNickNames"));
+
+        TableColumn<Game,String>matchNames = new TableColumn<>("Matches");
+        matchNames.setCellValueFactory(new PropertyValueFactory<>("matchNames"));
+
+        TableColumn<Game, String>matchDates = new TableColumn<>("Match Dates");
+        matchDates.setCellValueFactory(new PropertyValueFactory<>("matchDates"));
+
+        ObservableList<Game> chosenGames = FXCollections.observableArrayList();
+
+        chosenGames.addAll(GameActions.stringToGame(gameListView.getSelectionModel().getSelectedItems()));
+
+        System.out.println("o---------------------------------------------------------------------------------------------------------------------");
+        System.out.println("Number of games: " + chosenGames.size());
+        for(Game game : chosenGames){
+            System.out.println("Player nickname: " + game.getPlayersNickNames());
+            System.out.println("Match names: " + game.getMatchNames());
+            System.out.println("Match dates: " + game.getMatchDates());
+        }
+
+        tableView.setItems(chosenGames);
+
+
+        tableView.getColumns().addAll(playerNickName, matchNames,matchDates);
+
+        AnchorPane anchorPane1 = new AnchorPane();
+        anchorPane1.getChildren().add(tableView);
+
+        //GEFP-26-SA
         Button showPlayers = new Button("Show players");
         showPlayers.getStyleClass().add("standardButton");
         showPlayers.setMinSize(160, 30);
         showPlayers.setOnAction(e->{
-            GameActions.getPlayerForGame(gameListView);
+            //GameActions.getPlayerForGame(gameListView);
+            anchorPaneAction.getChildren().clear();
+            anchorPaneAction.getChildren().add(tableView);
         });
 
         Button showMatches = new Button("Show matches");

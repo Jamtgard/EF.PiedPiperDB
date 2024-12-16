@@ -168,4 +168,35 @@ public class GameActions {
         }
     }
 
+    //GEFP-34-SA
+
+    public static ObservableList<Game> stringToGame(ObservableList<String>gameObservableList){
+        //Får in string med valda spel
+        //Vill få ut de spel som är valda, inte bara string, utan objektet
+        ObservableList<Game> games = getGames();
+
+        ObservableList<Game> gamesToSendBack = FXCollections.observableArrayList();
+
+        Set<Integer> gameById = new HashSet<>();
+        System.out.println("w-----------------------------------------------------------------------------------------");
+        for(String name : gameObservableList){
+            for(Game game : games){
+                if(game.getGameName().equals(name)){
+                    System.out.println("Valt spel: "+name);
+                    gameById.add(game.getGameId());
+                }
+            }
+
+        }
+
+        for(Integer gameId : gameById){
+            gamesToSendBack.add(gameDAO.getGameById(gameId));
+            System.out.println("Valt spel: "+gameId);
+        }
+
+        return gamesToSendBack;
+    }
+
+
+
 }
