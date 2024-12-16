@@ -69,6 +69,13 @@ INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Asgardians 
 INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('Demon killers vs Doom-slayers', '2024-12-09', 'TEAM_VS_TEAM' ,9);
 INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('FNATIC vs Heretics', '2024-12-10', 'TEAM_VS_TEAM' ,10);
 
+--GEFP-33-AA - lägger in matcher på spelare
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('AmazingAlma vs EagleErik', '2024-12-11', 'PLAYER_VS_PLAYER', 1);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('SwiftSaga vs JollyJohan', '2024-12-12', 'PLAYER_VS_PLAYER', 2);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('MightyMaria vs LuckyOskar', '2024-12-13', 'PLAYER_VS_PLAYER', 2);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('EliteEmma vs LiamMaster', '2024-12-14', 'PLAYER_VS_PLAYER', 3);
+INSERT INTO matches (match_name, date, match_type, game_id) VALUES ('EmmaPongQueen vs SuperMaja', '2024-12-15', 'PLAYER_VS_PLAYER', 4);
+
 
 
 -- GEFP-18-SA, ändrade stavfelet på street_address
@@ -116,7 +123,22 @@ INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,cit
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Victor', 'Eriksson', 'VictorQuest', 'Storgatan 101', '75112', 'Uppsala', 'Sweden', 'victor.eriksson@example.se', 10, 20);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Olivia', 'Karlsson', 'OliviaPower', 'Västerlånggatan 56', '11223', 'Västerås', 'Sweden', 'olivia.karlsson@example.se', 10, 20);
 
-
+-- GEFP-33-AA Uppdaterar och ligger in matcher på spelare
+-- Match: AmazingAlma vs EagleErik
+UPDATE players SET match_id = 1 WHERE nickname = 'AmazingAlma';
+UPDATE players SET match_id = 1 WHERE nickname = 'EagleErik';
+-- Match: SwiftSaga vs JollyJohan
+UPDATE players SET match_id = 2 WHERE nickname = 'SwiftSaga';
+UPDATE players SET match_id = 2 WHERE nickname = 'JollyJohan';
+-- Match: MightyMaria vs LuckyOskar
+UPDATE players SET match_id = 3 WHERE nickname = 'MightyMaria';
+UPDATE players SET match_id = 3 WHERE nickname = 'LuckyOskar';
+-- Match: EliteEmma vs LiamMaster
+UPDATE players SET match_id = 4 WHERE nickname = 'EliteEmma';
+UPDATE players SET match_id = 4 WHERE nickname = 'LiamMaster';
+-- Match: EmmaPongQueen vs SuperMaja
+UPDATE players SET match_id = 5 WHERE nickname = 'EmmaPongQueen';
+UPDATE players SET match_id = 5 WHERE nickname = 'SuperMaja';
 
 
 --GEFP-26-SA

@@ -37,8 +37,8 @@ public class Match {
     private Game gameId;//GEFP-22-SA, bytte namn från "game" till "gameId"
 
     // ref till player
-    @OneToMany
-    @JoinColumn(name = "player_id", nullable = true)
+    @OneToMany (mappedBy = "matchId", cascade = CascadeType.ALL) //GEFP-33-AA Tog bort joinColumn då det skapade en CONSTRAINT till player_id
+    // @JoinColumn(name = "player_id", nullable = true)
     private List <Player> players = new ArrayList<>();
 
     //GEFP-22-SA
