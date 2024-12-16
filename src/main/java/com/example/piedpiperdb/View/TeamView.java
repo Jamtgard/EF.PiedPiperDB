@@ -84,7 +84,7 @@ public class TeamView extends AbstractScene{
         });
 
 
-        Button selectedTeamButton = new Button("Show Teams from \nselected Game \\ Games");
+/*        Button selectedTeamButton = new Button("Show Teams from \nselected Game \\ Games");
         selectedTeamButton.getStyleClass().add("standardButton");
         selectedTeamButton.setMinSize(160, 30);
         selectedTeamButton.setOnAction(event -> {
@@ -103,7 +103,7 @@ public class TeamView extends AbstractScene{
             }
             List<Team> teams = teamDAO.getTeamsByGame(ids);
             showTable(anchorPane, teams);
-        });
+        });*/
 
 
         Button addNewTeamButton = new Button("Add New Team");
