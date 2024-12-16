@@ -70,12 +70,6 @@ public class GameActions {
 
             Set<Integer> gameById = stringToId(gameListView);
 
-            System.out.println("p-----------------------------------------------------------------------------------------------");
-            for (Integer gameId : gameById) {
-                System.out.println(gameId);
-            }
-
-
             for (Integer gameId : gameById) {
                 System.out.println("Deleting game with id " + gameId);
                 gameDAO.updatePlayersBeforeDelete(gameId);
@@ -99,31 +93,46 @@ public class GameActions {
         //GEFP-26-SA, la till if-sats för om textfield är tomt
         if(textField.getText().isEmpty() || textField.getText().replaceAll("\\s+","").equals("")){
             AlertBox.displayAlertBox("Update game","You can't update \""+choiceBox.getValue()+"\" to an empty game name");
-        } else {
-            String selectedGame = choiceBox.getValue();
-            System.out.println(selectedGame);
+            return;
+        } else {//GEFP-34-SA, la till om man försöker uppdatera till ett spelnamn som redan finns
+            String gameName = textField.getText().toLowerCase();
 
-            String newGameName = textField.getText();
-            System.out.println(newGameName);
-
-            ObservableList<Game> game = getGames();
-
-            for (int i = 0; i < game.size(); i++) {
-                if (game.get(i).getGameName().equals(selectedGame)) {
-                    Game oldGame = game.get(i);
-                    System.out.println(oldGame.getGameName());
-                    gameDAO.updateGame(oldGame, newGameName);
+            boolean gameExists = false;
+            for(String game : getGamesString()){
+                if(game.toLowerCase().contains(gameName)){
+                    gameExists = true;
+                    break;
                 }
             }
-
+            if(gameExists){
+                AlertBox.displayAlertBox("Update game","This game name is already in use");
+                return;
+            }
         }
+
+        String selectedGame = choiceBox.getValue();
+        System.out.println(selectedGame);
+
+        String newGameName = textField.getText();
+        System.out.println(newGameName);
+
+        ObservableList<Game> game = getGames();
+
+        for (int i = 0; i < game.size(); i++) {
+            if (game.get(i).getGameName().equals(selectedGame)) {
+                Game oldGame = game.get(i);
+                System.out.println(oldGame.getGameName());
+                gameDAO.updateGame(oldGame, newGameName);
+            }
+        }
+
+
     }
 
     //GEFP-26-SA
     public static void getPlayerForGame(ListView gameListView) {
         Set<Integer> gameById = stringToId(gameListView);//Får in alla id på valda spel
 
-        System.out.println("y-------------------------------------------------------");
         if(gameById.isEmpty()){
             System.out.println("No game selected");
         }else {
@@ -138,7 +147,8 @@ public class GameActions {
 
                 } else {
                     ObservableList<Player>players = FXCollections.observableArrayList(selectedGame.getPlayers());
-                    ConfirmBox.playersOfGame(gameName,players);
+                    String playersCount = String.valueOf(players.size());
+                    ConfirmBox.playersOfGame(gameName,players,playersCount);
                 }
             }
         }
@@ -147,7 +157,6 @@ public class GameActions {
     public static void getMatchesForGame(ListView gameListView) {
         Set<Integer> gameById = stringToId(gameListView);//Får in alla id på valda spel
 
-        System.out.println("y-------------------------------------------------------");
         if(gameById.isEmpty()){
             System.out.println("No game selected");
         }else {
@@ -162,14 +171,14 @@ public class GameActions {
 
                 } else {
                     ObservableList<Match>matches = FXCollections.observableArrayList(selectedGame.getMatches());
-                    ConfirmBox.matchesOfGame(gameName,matches);
+                    String matchesCount = String.valueOf(matches.size());
+                    ConfirmBox.matchesOfGame(gameName,matches,matchesCount);
                 }
             }
         }
     }
 
     //GEFP-34-SA
-
     public static ObservableList<Game> stringToGame(ObservableList<String>gameObservableList){
         //Får in string med valda spel
         //Vill få ut de spel som är valda, inte bara string, utan objektet
@@ -182,7 +191,7 @@ public class GameActions {
         for(String name : gameObservableList){
             for(Game game : games){
                 if(game.getGameName().equals(name)){
-                    System.out.println("Valt spel: "+name);
+                    System.out.println("Chosen game: "+name);
                     gameById.add(game.getGameId());
                 }
             }
@@ -191,7 +200,7 @@ public class GameActions {
 
         for(Integer gameId : gameById){
             gamesToSendBack.add(gameDAO.getGameById(gameId));
-            System.out.println("Valt spel: "+gameId);
+            System.out.println("Chosen game: "+gameId);
         }
 
         return gamesToSendBack;

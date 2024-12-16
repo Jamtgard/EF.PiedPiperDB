@@ -74,28 +74,20 @@ public class GameView extends AbstractScene{
         TableColumn<Game,String> playerNickName = new TableColumn<>("Players");
         playerNickName.setCellValueFactory(new PropertyValueFactory<>("playersNickNames"));
 
+/*
         TableColumn<Game,String>matchNames = new TableColumn<>("Matches");
-        matchNames.setCellValueFactory(new PropertyValueFactory<>("matchNames"));
+        matchNames.setCellValueFactory(new PropertyValueFactory<>("matchName"));
 
         TableColumn<Game, String>matchDates = new TableColumn<>("Match Dates");
-        matchDates.setCellValueFactory(new PropertyValueFactory<>("matchDates"));
+        matchDates.setCellValueFactory(new PropertyValueFactory<>("matchDates"));*/
 
         ObservableList<Game> chosenGames = FXCollections.observableArrayList();
 
-        chosenGames.addAll(GameActions.stringToGame(gameListView.getSelectionModel().getSelectedItems()));
-
-        System.out.println("o---------------------------------------------------------------------------------------------------------------------");
-        System.out.println("Number of games: " + chosenGames.size());
-        for(Game game : chosenGames){
-            System.out.println("Player nickname: " + game.getPlayersNickNames());
-            System.out.println("Match names: " + game.getMatchNames());
-            System.out.println("Match dates: " + game.getMatchDates());
-        }
 
         tableView.setItems(chosenGames);
 
 
-        tableView.getColumns().addAll(playerNickName, matchNames,matchDates);
+        tableView.getColumns().addAll(playerNickName);
 
         AnchorPane anchorPane1 = new AnchorPane();
         anchorPane1.getChildren().add(tableView);
@@ -105,9 +97,13 @@ public class GameView extends AbstractScene{
         showPlayers.getStyleClass().add("standardButton");
         showPlayers.setMinSize(160, 30);
         showPlayers.setOnAction(e->{
-            //GameActions.getPlayerForGame(gameListView);
+            GameActions.getPlayerForGame(gameListView);
+/*
+            chosenGames.addAll(GameActions.stringToGame(gameListView.getSelectionModel().getSelectedItems()));
+            System.out.println("o---------------------------------------------------------------------------------------------------------------------");
+            System.out.println("Number of games: " + chosenGames.size());
             anchorPaneAction.getChildren().clear();
-            anchorPaneAction.getChildren().add(tableView);
+            anchorPaneAction.getChildren().add(tableView);*/
         });
 
         Button showMatches = new Button("Show matches");

@@ -66,31 +66,26 @@ public class GameDAO {
     public void updateGame(Game gameToUpdate,String newName){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
-        System.out.println("c-------------------------------------------------------------------");
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
 
             if(entityManager.contains(gameToUpdate)){
-                System.out.println("Spelet finns i poolen");
-                //gameToUpdate.setGameName(newName);
-                entityManager.merge(gameToUpdate);//Helt nya saker som ska sparas
+                System.out.println("Game exists in the pool");
+                entityManager.merge(gameToUpdate);
 
 
             } else {
-                System.out.println("Finns inte i poolen");
+                System.out.println("Game doesn't exists in the pool");
                 gameToUpdate.setGameName(newName);
                 Game revivedGame = entityManager.merge(gameToUpdate);
                 System.out.println(revivedGame.getGameId() + " is alive");
-
                 System.out.println(revivedGame.getGameName() + " is alive");
-                System.out.println("g---------------------------------------------------------------------------------------------------------------");
 
             }
             entityManager.merge(gameToUpdate);
             transaction.commit();
         } catch (Exception e){
-            System.out.println("d----------------------------------------------------------------------------------------------------");
             System.out.println(e.getMessage());
             if(entityManager != null && transaction != null && transaction.isActive()){
                 transaction.rollback();
@@ -112,19 +107,15 @@ public class GameDAO {
 
             Game gameToDelete = entityManager.find(Game.class, id);
 
-            System.out.println(gameToDelete.getGameId() + " is alive");
-            System.out.println(gameToDelete.getGameName() + " is alive");
-            System.out.println(gameToDelete.getPlayers().size() + " antal spelare för spelet");
-
-            List<Player>playersToRemove2 = new ArrayList<>();
+            List<Player>playersToRemove = new ArrayList<>();
 
             for (int i = 0; i < gameToDelete.getPlayers().size(); i++) {
                 System.out.println(gameToDelete.getPlayers().get(i).getFirstName() + " in for-loop");
                 System.out.println(gameToDelete.getPlayers().get(i).getId() + " in for-loop");
-                playersToRemove2.add(entityManager.find(Player.class, gameToDelete.getPlayers().get(i).getId()));
+                playersToRemove.add(entityManager.find(Player.class, gameToDelete.getPlayers().get(i).getId()));
             }
 
-            for(Player player : playersToRemove2){
+            for(Player player : playersToRemove){
                 System.out.println(player.getFirstName());
                 gameToDelete.getPlayers().remove(player);
                 player.setGameId(null);
@@ -133,10 +124,7 @@ public class GameDAO {
 
 
             entityManager.merge(gameToDelete);
-            System.out.println("Efter merges");
-
             transaction.commit();
-
 
         }catch (Exception e){
             System.out.println(e.getMessage());

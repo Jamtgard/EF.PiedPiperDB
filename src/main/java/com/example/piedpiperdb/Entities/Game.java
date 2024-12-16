@@ -37,15 +37,25 @@ public class Game {
     private List<Team> teams = new ArrayList<>();
 
     //GEFP-34-SA
+    /*
     @ElementCollection
+    @CollectionTable(name = "game_players",joinColumns = @JoinColumn(name = "game_id"))
+    @Column(name = "player_nickname")
     private List<String> playersNickNames = new ArrayList<>();
+
     @ElementCollection
+    @CollectionTable(name = "game_matches",joinColumns = @JoinColumn(name = "game_id"))
+    @Column(name = "match_name")
     private List<String> matchDates = new ArrayList<>();
+
     @ElementCollection
+    @CollectionTable(name = "game_match_dates",joinColumns = @JoinColumn(name = "game_id"))
+    @Column(name = "match_date")
     private List<String> matchNames = new ArrayList<>();
 
     @ElementCollection
     private List<LocalDate> matchDates2 = new ArrayList<>();//Istället för String? Testa
+    */
 
     //GEFP-18-SA
     public Game() {
@@ -81,11 +91,15 @@ public class Game {
     public ObservableList<String> getPlayersNickNames(){
         ObservableList<String> nicknames = FXCollections.observableArrayList();
         for (Player player : players) {
-            playersNickNames.add(player.getNickname());
+            nicknames.add(player.getNickname());
+            player.getNickname();
         }
-        nicknames.addAll(playersNickNames);
+        //nicknames.addAll(playersNickNames);
         return nicknames;
     }
+
+
+    /*
     public ObservableList<String> getMatchNames(){
         ObservableList<String> matchesList = FXCollections.observableArrayList();
         for (Match match : matches) {
@@ -101,8 +115,38 @@ public class Game {
         }
         matchesDateList.addAll(matchDates);
         return matchesDateList;
+    }*/
+
+    /*
+    public List<String> getPlayersNickNames() {
+        return playersNickNames;
     }
 
+    public void setPlayersNickNames(List<String> playersNickNames) {
+        this.playersNickNames = playersNickNames;
+    }
 
+    public List<String> getMatchDates() {
+        return matchDates;
+    }
 
+    public void setMatchDates(List<String> matchDates) {
+        this.matchDates = matchDates;
+    }
+
+    public List<String> getMatchNames() {
+        return matchNames;
+    }
+
+    public void setMatchNames(List<String> matchNames) {
+        this.matchNames = matchNames;
+    }
+
+    public List<LocalDate> getMatchDates2() {
+        return matchDates2;
+    }
+
+    public void setMatchDates2(List<LocalDate> matchDates2) {
+        this.matchDates2 = matchDates2;
+    }*/
 }
