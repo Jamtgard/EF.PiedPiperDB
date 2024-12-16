@@ -82,6 +82,27 @@ public class GameActions {
     }
     //GEFP-22-SA
     public static void addGame(TextField textField) {
+        //GEFP-34-SA
+        if(textField.getText().isEmpty() || textField.getText().replaceAll("\\s+","").equals("")){
+            AlertBox.displayAlertBox("Add game","You can't add an empty game name");
+            return;
+        } else {
+            String gameName = textField.getText().toLowerCase();
+
+            boolean gameExists = false;
+            for(String game : getGamesString()){
+                if(game.toLowerCase().contains(gameName)){
+                    gameExists = true;
+                    break;
+                }
+            }
+            if(gameExists){
+                AlertBox.displayAlertBox("Add game","This game name is already in use");
+                return;
+            }
+        }
+
+        //GEFP-22-SA
         String gameName = textField.getText();
         Game newGame = new Game(gameName);
         gameDAO.saveGame(newGame);
