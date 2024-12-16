@@ -79,6 +79,12 @@ public class PlayerActions {
     }
 
     private static TableView<Player> createPlayerTable(List<Player> players){
+        players.forEach(player -> {
+            System.out.println("Player: " + player.getNickname());
+            System.out.println("Match Type: " + (player.getMatchId() != null ? player.getMatchId().getMatchType() : "No Match"));
+            System.out.println("Match Info: " + player.getMatchInfo());
+        });
+
         ObservableList<Player> observableList = FXCollections.observableList(players);
 
         TableView<Player> table = new TableView<>();
