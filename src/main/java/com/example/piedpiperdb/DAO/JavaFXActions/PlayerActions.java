@@ -25,7 +25,6 @@ public class PlayerActions {
     private static PlayerDAO playerDAO = new PlayerDAO();
     private static GameDAO gameDAO = new GameDAO();
     private static TeamDAO teamDAO = new TeamDAO();
-    private static MatchDAO matchDAO = new MatchDAO();
 
     public static VBox getTableViewAllPlayers(VBox vBox) {
         List<Player> players = playerDAO.getAllPlayers();
@@ -137,7 +136,24 @@ public class PlayerActions {
     public static Player createPlayerFromFields(String firstName, String lastName, String nickname, String streetAddress,
                                                 String zipCode, String city, String country, String email,
                                                 String selectedGameValue, String selectedTeamValue) {
-        Player player = new Player(firstName, lastName, nickname, streetAddress, zipCode, city, country, email);
+
+        Player player = new Player(firstName, lastName, nickname, email);
+
+        if (streetAddress != null && !streetAddress.isEmpty()) {
+            player.setStreetAddress(streetAddress);
+        }
+
+        if (zipCode != null && !zipCode.isEmpty()) {
+            player.setZipCode(zipCode);
+        }
+
+        if (city != null && !city.isEmpty()) {
+            player.setCity(city);
+        }
+
+        if (country != null && !country.isEmpty()) {
+            player.setCountry(country);
+        }
 
         if (selectedGameValue != null && !selectedGameValue.isEmpty()) {
             int gameId = Integer.parseInt(selectedGameValue.split(",")[0].trim());
