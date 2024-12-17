@@ -1,6 +1,7 @@
 package com.example.piedpiperdb.DAO;
 
 import com.example.piedpiperdb.Entities.Game;
+import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
 import jakarta.persistence.*;
@@ -153,7 +154,7 @@ public class PlayerDAO {
         }
     }
 
-    //Delete
+    //Delete        Ta bort?
     public void deletePlayer(Player player) {
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
@@ -247,13 +248,13 @@ public class PlayerDAO {
                     entityManager.merge(team);
                 }
 
-/*                if (player.getMatchId() != null) {
+                if (player.getMatchId() != null) {
                     Match match = player.getMatchId();
                     System.out.println("Removing player from match" + match);
-                    //match.getListOfPlayers().remove(player);
+                    match.getPlayers().remove(player);
                     player.setMatchId(null);
                     entityManager.merge(match);
-                }*/
+                }
 
                 entityManager.merge(player);
                 transaction.commit();

@@ -38,18 +38,18 @@ public class Player {
     private String email;
 
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     private Game gameId;
 
     //GEFP-12-AA
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
     private Team teamId;
 
     //GEFP-12-AA
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "match_id")
     private Match matchId;
 

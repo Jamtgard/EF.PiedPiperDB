@@ -341,7 +341,7 @@ public class PlayerView extends AbstractScene{
 
         Button deleteButton = creatButton("Delete Player");
         deleteButton.setOnAction(event -> {
-            boolean deletePlayer = ConfirmBox.display("Delete Player", "Are you sure you want to delete" + playerToDelete.getFullName() +  "from the database?");
+            boolean deletePlayer = ConfirmBox.display("Delete Player", "Are you sure you want to delete " + playerToDelete.getFullName() + " (Nickname: " + playerToDelete.getNickname() +") from the database?");
 
             if (deletePlayer) {
                 boolean deleted = PlayerActions.deletePlayerById(playerToDelete.getId());
@@ -375,7 +375,6 @@ public class PlayerView extends AbstractScene{
 
     private static Button creatButton (String text){
         Button button = new Button(text);
-        new Button("Update Player");
         button.getStyleClass().add("standardButton");
         button.setMinSize(160,30);
         return button;
