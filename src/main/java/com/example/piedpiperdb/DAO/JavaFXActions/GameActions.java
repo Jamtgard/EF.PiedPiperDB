@@ -114,25 +114,26 @@ public class GameActions {
             AlertBox.displayAlertBox("Add game","You can't add an empty game name");
             return;
         } else {
-            String gameName = textField.getText().toLowerCase();
+            String gameNameLowerCase = textField.getText().toLowerCase();
 
             boolean gameExists = false;
             for(String game : getGamesString()){
-                if(game.toLowerCase().contains(gameName)){
+                if(game.toLowerCase().contains(gameNameLowerCase)){
                     gameExists = true;
                     break;
                 }
             }
+
             if(gameExists){
                 AlertBox.displayAlertBox("Add game","This game name is already in use");
                 return;
             }
-        }
 
-        //GEFP-22-SA
-        String gameName = textField.getText();
-        Game newGame = new Game(gameName);
-        gameDAO.saveGame(newGame);
+            //GEFP-22-SA
+            String gameName = textField.getText();
+            Game newGame = new Game(gameName);
+            gameDAO.saveGame(newGame);
+        }
 
     }
     //GEFP-22-SA
@@ -214,6 +215,25 @@ public class GameActions {
 
         }
 
+    }
+    //GEFP-34-SA
+    public static void updateGameListView(ListView gameListViewDelete){
+        gameListViewDelete.getItems().clear();
+        gameListViewDelete.getItems().addAll(GameActions.getGamesString());
+        gameListViewDelete.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    }
+    public static void updateChoiceBoxTextField(ChoiceBox<String> choiceBox) {
+        choiceBox.getItems().clear();
+        choiceBox.getItems().addAll(GameActions.getGamesString());
+        choiceBox.setValue(choiceBox.getItems().get(0));
+    }
+    public static void updateTableView(TableView<Game>tableViewGame, TableColumn<Game,String>gameId){
+        tableViewGame.getItems().clear();
+        tableViewGame.getItems().addAll(GameActions.getGames());
+        tableViewGame.getSortOrder().add(gameId);
+    }
+    public static void updateInput(TextField input){
+        input.clear();
     }
 
     //GEFP-26-SA

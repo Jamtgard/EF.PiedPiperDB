@@ -17,8 +17,8 @@ import javafx.stage.Stage;
 public class GameView extends AbstractScene{
 
     //GEFP-22-SA
-    private static ListView gameListView;
-    private static ListView gameListViewDelete;//GEFP-25-SA
+    private static ListView<String> gameListView;
+    private static ListView<String> gameListViewDelete;//GEFP-25-SA
     private static AnchorPane anchorPaneAction;
     private static Stage stage;
     private static VBox vBoxAllGames;
@@ -133,6 +133,9 @@ public class GameView extends AbstractScene{
             submitAdd.setOnAction(ev->{
                 GameActions.addGame(newGameInput);
                 ChangeSceneAction.toGameView(stage);
+                //GEFP-34-SA
+                GameActions.updateInput(newGameInput);
+                clearAnchorpane(addGameBox);
             });
         });
 
@@ -170,6 +173,9 @@ public class GameView extends AbstractScene{
             deleteGameButton.setOnAction(ev->{
                 GameActions.deleteGame(gameListViewDelete);
                 ChangeSceneAction.toGameView(stage);
+                //GEFP-34-SA
+                GameActions.updateGameListView(gameListViewDelete);
+                clearAnchorpane(vBoxDelete);
             });
         });
 
@@ -212,6 +218,10 @@ public class GameView extends AbstractScene{
                 GameActions.updateGame(updateGameInput,choiceBox);
                 GameActions.gameListView(gameListView);
                 ChangeSceneAction.toGameView(stage);
+                //GEFP-34-SA
+                GameActions.updateChoiceBoxTextField(choiceBox);
+                GameActions.updateInput(updateGameInput);
+                clearAnchorpane(updateGameBox);
             });
 
         });
@@ -219,7 +229,7 @@ public class GameView extends AbstractScene{
 
         //--------------------------------------------------------------
 
-
+        //GEFP-22-SA
         Button showGames = new Button("Show games");
         showGames.getStyleClass().add("standardButton");
         showGames.setMinSize(160, 30);
@@ -230,6 +240,7 @@ public class GameView extends AbstractScene{
         //----------------------------------------------------------------
 
 
+        //GEFP-34-SA
         VBox showGamesBox = new VBox();
         showGamesBox.setSpacing(10);
         showGamesBox.setPadding(new Insets(10,0,0,0));
@@ -239,7 +250,7 @@ public class GameView extends AbstractScene{
 
         TableColumn<Game,String>gameId = new TableColumn<>("Id");
         gameId.setCellValueFactory(new PropertyValueFactory<>("gameId"));
-        gameId.setMinWidth(30);
+        gameId.setMinWidth(60);
 
         TableColumn<Game,String>gameName = new TableColumn<>("Game Name");
         gameName.setCellValueFactory(new PropertyValueFactory<>("gameName"));
@@ -259,8 +270,10 @@ public class GameView extends AbstractScene{
         deleteById.setMinSize(70, 30);
         deleteById.setOnAction(e->{
             GameActions.deleteGameById(gameIdDeleteInput);
-            gameIdDeleteInput.clear();
             ChangeSceneAction.toGameView(stage);
+            GameActions.updateTableView(tableViewGame,gameId);
+            GameActions.updateInput(gameIdDeleteInput);
+            clearAnchorpane(showGamesBox);
         });
 
         HBox hbox = new HBox();
@@ -281,9 +294,11 @@ public class GameView extends AbstractScene{
         updateById.setMinSize(70, 30);
         updateById.setOnAction(e->{
             GameActions.updateGame(gameIdUpdateInput,newNameInput);
-            gameIdUpdateInput.clear();
-            newNameInput.clear();
             ChangeSceneAction.toGameView(stage);
+            GameActions.updateTableView(tableViewGame,gameId);
+            GameActions.updateInput(newNameInput);
+            GameActions.updateInput(gameIdUpdateInput);
+            clearAnchorpane(showGamesBox);
         });
 
         VBox textFieldsVBox = new VBox();
@@ -309,9 +324,11 @@ public class GameView extends AbstractScene{
 
         //--------------------------------------------------------------
 
+        //GEFP-22-SA
         vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame,updateDeleteId);
     }
 
+    //GEFP-26-SA
     public static void clearAnchorpane (VBox vBox){
         anchorPaneAction.getChildren().clear();
         anchorPaneAction.getChildren().addAll(vBox);

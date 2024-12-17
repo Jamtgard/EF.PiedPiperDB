@@ -86,15 +86,18 @@
 }
 .table-view-1 .column-header{
     -fx-background-color: transparent;
-    -fx-font-size: 18;
+    -fx-font-size: 16;
     -fx-font-family: "Bell MT";
+}
+.table-view-1 .filler{
+    -fx-background-color: linear-gradient(#d0e3c4 0%,#B0E3C9 100%);
 }
 .table-view-1 .table-cell{
     -fx-text-fill: #1A1F16;
     -fx-font-size: 14;
     -fx-font-family: "Bell MT";
 }
-.table-view-1 .table-row-cell-1:odd{
+.table-view-1 .table-row-cell:odd{
     -fx-background-color: #E4FFF1;
 }
 .table-view-1 .table-row-cell:even{
@@ -103,10 +106,4 @@
 .table-view-1 .table-row-cell:selected{
     -fx-background-color: #adc698;
     -fx-text-fill: #1A1F16;
-}
-.table-view-1 .column-resize-line:selected{
-    -fx-background-color: #ffffff;
-}
-.table-view-1 .filler{
-    -fx-background-color: linear-gradient(#d0e3c4 0%,#B0E3C9 100%);
 }
