@@ -133,6 +133,7 @@ public class Player {
     }
 
     //GEFP-19-AA //GEFP-36-AA uppdaterade metoden StringBuilder
+    @SuppressWarnings("unused") //Används i TableView genom reflektion och ger därför varning
     public String getFullAddress(){
         StringBuilder fullAddress = new StringBuilder();
 
