@@ -2,6 +2,7 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.MatchActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
@@ -12,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
@@ -22,6 +24,8 @@ import java.util.List;
 
 import static com.example.piedpiperdb.DAO.JavaFXActions.MatchActions.addMatch;
 
+
+//GEFP-32-AWS
 
 public class MatchView extends AbstractScene {
 
@@ -56,20 +60,22 @@ public class MatchView extends AbstractScene {
         updateMatchList();
 
         Button getAllMatchesButton = createGetAllMatches();
-        Button addMatchPvPButton = createAddMatch();
+        Button addMatchButton = createAddMatch();
 
         Button uppdateMatchButton = createUppdateMatch();
         Button deleteMatch = createDeleteMatch();
 
-        vBox.getChildren().addAll(getAllMatchesButton, addMatchPvPButton, uppdateMatchButton , deleteMatch);
+        vBox.getChildren().addAll(getAllMatchesButton, addMatchButton, uppdateMatchButton , deleteMatch);
     }
 
     private static Button createGetAllMatches(){
         Button getAllMatches = new Button("Show Matches");
         getAllMatches.getStyleClass().add("standardButton");
         getAllMatches.setMinSize(160,30);
+
         getAllMatches.setOnAction(actionEvent -> {
-            List<Match> matches = matchDAO.getAllMatches();
+            List<Match> matches = MatchActions.getAllMatches();
+
             showMatchTable(AbstractScene.anchorPane, matches);
             updateMatchList();
                 });
@@ -285,7 +291,7 @@ public class MatchView extends AbstractScene {
                 System.out.println("Match added successfully");
                 /*addMatchStage.close();*/
                 resultBox.getChildren().clear();
-                showMatchTable(AbstractScene.anchorPane, matchDAO.getAllMatches());
+                showMatchTable(AbstractScene.anchorPane, MatchActions.getAllMatches());
                 updateMatchList();
 
             });
@@ -308,7 +314,7 @@ public class MatchView extends AbstractScene {
 
             ComboBox<Match>matchComboBox = new ComboBox<>();
             matchComboBox.setPromptText("Select Match to Delete");
-            matchComboBox.getItems().addAll(matchDAO.getAllMatches());
+            matchComboBox.getItems().addAll(MatchActions.getAllMatches());
 
             matchComboBox.setCellFactory(param -> new ListCell<>(){
                 @Override
@@ -343,17 +349,17 @@ public class MatchView extends AbstractScene {
                    System.out.println("Select Match to delete.");
                    return;
                }
-               boolean success = matchDAO.deleteMatchById(selectedMatch.getMatchId());
+               boolean success = MatchActions.deleteMatchById(selectedMatch.getMatchId());
                if (success) {
                    System.out.println("Match deleted successfully from database.");
                } else {
                    System.out.println("Match could not be deleted from database.");
                }
-               matchDAO.deleteMatchById(selectedMatch.getMatchId());
+               MatchActions.deleteMatchById(selectedMatch.getMatchId());
 
                updateMatchList();
                resultBox.getChildren().clear();
-               showMatchTable(AbstractScene.anchorPane, matchDAO.getAllMatches());
+               showMatchTable(AbstractScene.anchorPane, MatchActions.getAllMatches());
 
             });
 
@@ -380,7 +386,7 @@ public class MatchView extends AbstractScene {
 
             ComboBox<Match> matchComboBox = new ComboBox<>();
             matchComboBox.setPromptText("Select Match");
-            matchComboBox.getItems().addAll(matchDAO.getAllMatches());
+            matchComboBox.getItems().addAll(MatchActions.getAllMatches());
 
             matchComboBox.setCellFactory(param -> new ListCell<>(){
                 @Override
@@ -404,7 +410,6 @@ public class MatchView extends AbstractScene {
             proceedButton.setMinSize(160,30);
 
             VBox resultBox = createResultBox();
-
             selectMatchBox.getChildren().addAll(selectMatchLabel,matchComboBox,proceedButton);
             resultBox.getChildren().addAll(selectMatchBox);
             AbstractScene.anchorPane.getChildren().add(resultBox);
@@ -495,17 +500,17 @@ public class MatchView extends AbstractScene {
                         System.out.println("Match Date is required.");
                     }
 
-                    selectedMatch.setMatchName(updateName);
+                    /*selectedMatch.setMatchName(updateName);
                     selectedMatch.setMatchType(updateMatchType);
                     selectedMatch.setGameId(updateGame);
                     selectedMatch.setMatchDate(updateMatchDate);
-                    selectedMatch.setMatchResult(updateResult);
+                    selectedMatch.setMatchResult(updateResult);*/
 
-                    matchDAO.updateMatch(selectedMatch);
+                    MatchActions.updateMatch(selectedMatch, updateName, updateMatchType, updateMatchDate, updateGame, updateResult);
                     updateMatchList();
 
                     resultBox.getChildren().clear();
-                    showMatchTable(AbstractScene.anchorPane, matchDAO.getAllMatches());
+                    showMatchTable(AbstractScene.anchorPane, MatchActions.getAllMatches());
 
 
                 });
@@ -526,6 +531,7 @@ public class MatchView extends AbstractScene {
         formContainer = createResultBox();
         formContainer.getStyleClass().add("textFieldOne");
         TableView<Match> table = createMatchTable(matches);
+        VBox.setVgrow(table, Priority.ALWAYS);
         formContainer.getChildren().addAll(table);
 
         anchorPane.getChildren().add(formContainer);
