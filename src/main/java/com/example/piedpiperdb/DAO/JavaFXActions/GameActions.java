@@ -80,6 +80,33 @@ public class GameActions {
         }
 
     }
+    //GEFP-34-SA
+    public static void deleteGameById(TextField input){
+        if(input.getText().isEmpty() ||input.getText().replaceAll("\\s+","").equals("")){
+            AlertBox.displayAlertBox("Delete game","No game selected");
+        }else {
+            try{
+                int gameId = Integer.parseInt(input.getText().trim());
+
+                if(gameDAO.getGameById(gameId) != null){
+                    System.out.println("h--------------------------------------------------------------------------------------------------");
+                    System.out.println("Deleting game with id " + gameId);
+                    gameDAO.updatePlayersBeforeDelete(gameId);
+                    gameDAO.updateMatchesBeforeDelete(gameId);
+                    gameDAO.updateTeamsBeforeDelete(gameId);
+                    gameDAO.deleteGameById(gameId);
+
+                }else {
+                    AlertBox.displayAlertBox("Delete game","No game with that Id");
+                }
+
+            }catch (NumberFormatException e){
+                AlertBox.displayAlertBox("Delete game","Not an id");
+            }
+
+        }
+    }
+
     //GEFP-22-SA
     public static void addGame(TextField textField) {
         //GEFP-34-SA
@@ -110,7 +137,6 @@ public class GameActions {
     }
     //GEFP-22-SA
     public static void updateGame(TextField textField,ChoiceBox<String> choiceBox) {
-
         //GEFP-26-SA, la till if-sats för om textfield är tomt
         if(textField.getText().isEmpty() || textField.getText().replaceAll("\\s+","").equals("")){
             AlertBox.displayAlertBox("Update game","You can't update \""+choiceBox.getValue()+"\" to an empty game name");
@@ -147,6 +173,46 @@ public class GameActions {
             }
         }
 
+
+    }
+    //GEFP-34-SA
+    public static void updateGame(TextField input,TextField newName) {
+        if(input.getText().isEmpty() || input.getText().replaceAll("\\s+","").equals("") ||newName.getText().isEmpty() || newName.getText().replaceAll("\\s+","").equals("")){
+            AlertBox.displayAlertBox("Update game","No Id or name in text field");
+            return;
+        }else {
+            try{
+                int gameId = Integer.parseInt(input.getText().trim());
+
+                if(gameDAO.getGameById(gameId) != null){
+                    System.out.println("h--------------------------------------------------------------------------------------------------");
+                    System.out.println("Updating game with id " + gameId);
+
+                    String gameName = newName.getText().toLowerCase();
+
+                    boolean gameExists = false;
+                    for(String game : getGamesString()){
+                        if(game.toLowerCase().contains(gameName)){
+                            gameExists = true;
+                            break;
+                        }
+                    }
+                    if(gameExists){
+                        AlertBox.displayAlertBox("Update game","This game name is already in use");
+                        return;
+                    }
+
+                    gameDAO.updateGame(gameDAO.getGameById(gameId), newName.getText());
+
+                }else {
+                    AlertBox.displayAlertBox("Update game","No game with that Id");
+                }
+
+            }catch (NumberFormatException e){
+                AlertBox.displayAlertBox("Update game","Not an id");
+            }
+
+        }
 
     }
 
@@ -198,35 +264,4 @@ public class GameActions {
             }
         }
     }
-
-    //GEFP-34-SA
-    public static ObservableList<Game> stringToGame(ObservableList<String>gameObservableList){
-        //Får in string med valda spel
-        //Vill få ut de spel som är valda, inte bara string, utan objektet
-        ObservableList<Game> games = getGames();
-
-        ObservableList<Game> gamesToSendBack = FXCollections.observableArrayList();
-
-        Set<Integer> gameById = new HashSet<>();
-        System.out.println("w-----------------------------------------------------------------------------------------");
-        for(String name : gameObservableList){
-            for(Game game : games){
-                if(game.getGameName().equals(name)){
-                    System.out.println("Chosen game: "+name);
-                    gameById.add(game.getGameId());
-                }
-            }
-
-        }
-
-        for(Integer gameId : gameById){
-            gamesToSendBack.add(gameDAO.getGameById(gameId));
-            System.out.println("Chosen game: "+gameId);
-        }
-
-        return gamesToSendBack;
-    }
-
-
-
 }

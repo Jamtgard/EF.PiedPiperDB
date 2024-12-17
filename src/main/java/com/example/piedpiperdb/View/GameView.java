@@ -3,14 +3,13 @@ package com.example.piedpiperdb.View;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import com.example.piedpiperdb.Entities.Game;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -67,30 +66,6 @@ public class GameView extends AbstractScene{
         buttonLabel.setText("Hold ctrl or shift to \nselect more than one game");
         buttonLabel.getStyleClass().add("standardLabelNoBorder");
 
-        //GEFP-34-SA
-
-        TableView<Game> tableView = new TableView();
-
-        TableColumn<Game,String> playerNickName = new TableColumn<>("Players");
-        playerNickName.setCellValueFactory(new PropertyValueFactory<>("playersNickNames"));
-
-/*
-        TableColumn<Game,String>matchNames = new TableColumn<>("Matches");
-        matchNames.setCellValueFactory(new PropertyValueFactory<>("matchName"));
-
-        TableColumn<Game, String>matchDates = new TableColumn<>("Match Dates");
-        matchDates.setCellValueFactory(new PropertyValueFactory<>("matchDates"));*/
-
-        ObservableList<Game> chosenGames = FXCollections.observableArrayList();
-
-
-        tableView.setItems(chosenGames);
-
-
-        tableView.getColumns().addAll(playerNickName);
-
-        AnchorPane anchorPane1 = new AnchorPane();
-        anchorPane1.getChildren().add(tableView);
 
         //GEFP-26-SA
         Button showPlayers = new Button("Show players");
@@ -98,12 +73,6 @@ public class GameView extends AbstractScene{
         showPlayers.setMinSize(160, 30);
         showPlayers.setOnAction(e->{
             GameActions.getPlayerForGame(gameListView);
-/*
-            chosenGames.addAll(GameActions.stringToGame(gameListView.getSelectionModel().getSelectedItems()));
-            System.out.println("o---------------------------------------------------------------------------------------------------------------------");
-            System.out.println("Number of games: " + chosenGames.size());
-            anchorPaneAction.getChildren().clear();
-            anchorPaneAction.getChildren().add(tableView);*/
         });
 
         Button showMatches = new Button("Show matches");
@@ -112,8 +81,6 @@ public class GameView extends AbstractScene{
         showMatches.setOnAction(e->{
             GameActions.getMatchesForGame(gameListView);
         });
-
-
 
         //SA
         vBoxAllGames.getChildren().addAll(allGames, gameListView,buttonLabel,showPlayers,showMatches);
@@ -260,10 +227,89 @@ public class GameView extends AbstractScene{
             clearAnchorpane(vBoxAllGames);
         });
 
+        //----------------------------------------------------------------
+
+
+        VBox showGamesBox = new VBox();
+        showGamesBox.setSpacing(10);
+        showGamesBox.setPadding(new Insets(10,0,0,0));
+        showGamesBox.setAlignment(Pos.CENTER);
+
+        TableView<Game> tableViewGame = new TableView();
+
+        TableColumn<Game,String>gameId = new TableColumn<>("Id");
+        gameId.setCellValueFactory(new PropertyValueFactory<>("gameId"));
+        gameId.setMinWidth(30);
+
+        TableColumn<Game,String>gameName = new TableColumn<>("Game Name");
+        gameName.setCellValueFactory(new PropertyValueFactory<>("gameName"));
+        gameName.setMinWidth(200);
+
+        tableViewGame.getItems().addAll(GameActions.getGames());
+        tableViewGame.getColumns().addAll(gameId,gameName);
+        tableViewGame.getSortOrder().add(gameId);
+        tableViewGame.getStyleClass().add("table-view-1");
+
+        TextField gameIdDeleteInput = new TextField();
+        gameIdDeleteInput.getStyleClass().add("textFieldOne");
+        gameIdDeleteInput.setPromptText("Id");
+
+        Button deleteById = new Button("Delete");
+        deleteById.getStyleClass().add("standardButton");
+        deleteById.setMinSize(70, 30);
+        deleteById.setOnAction(e->{
+            GameActions.deleteGameById(gameIdDeleteInput);
+            gameIdDeleteInput.clear();
+            ChangeSceneAction.toGameView(stage);
+        });
+
+        HBox hbox = new HBox();
+        hbox.setSpacing(10);
+        hbox.setPadding(new Insets(10,10,10,10));
+        hbox.getChildren().addAll(gameIdDeleteInput,deleteById);
+
+        TextField gameIdUpdateInput = new TextField();
+        gameIdUpdateInput.getStyleClass().add("textFieldOne");
+        gameIdUpdateInput.setPromptText("Id");
+
+        TextField newNameInput = new TextField();
+        newNameInput.getStyleClass().add("textFieldOne");
+        newNameInput.setPromptText("New name");
+
+        Button updateById = new Button("Update");
+        updateById.getStyleClass().add("standardButton");
+        updateById.setMinSize(70, 30);
+        updateById.setOnAction(e->{
+            GameActions.updateGame(gameIdUpdateInput,newNameInput);
+            gameIdUpdateInput.clear();
+            newNameInput.clear();
+            ChangeSceneAction.toGameView(stage);
+        });
+
+        VBox textFieldsVBox = new VBox();
+        textFieldsVBox.setSpacing(10);
+
+        textFieldsVBox.getChildren().addAll(gameIdUpdateInput,newNameInput);
+
+        HBox updateGameHBox = new HBox();
+        updateGameHBox.setSpacing(10);
+        updateGameHBox.setPadding(new Insets(0,10,10,10));
+        updateGameHBox.getChildren().addAll(textFieldsVBox,updateById);
+
+
+        showGamesBox.getChildren().addAll(tableViewGame,hbox,updateGameHBox);
+
+        Button updateDeleteId = new Button("Update/delete with id");
+        updateDeleteId.getStyleClass().add("standardButton");
+        updateDeleteId.setMinSize(160, 30);
+        updateDeleteId.setOnAction(e->{
+            clearAnchorpane(showGamesBox);
+        });
+
 
         //--------------------------------------------------------------
 
-        vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame);
+        vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame,updateDeleteId);
     }
 
     public static void clearAnchorpane (VBox vBox){

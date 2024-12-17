@@ -38,7 +38,6 @@ public abstract class AbstractScene {
                 createPlaceForButtons(),
                 createRectagleForActions(),
                 createBackButton(window),
-                createSearchField(),
                 createUserButton(),
                 leftVbox
         );
@@ -155,18 +154,7 @@ public abstract class AbstractScene {
 
         return back;
     }
-    //GEFP-20-SA
-    private static Node createSearchField(){
-        //GEFP-4-SA
-        TextField searchField = new TextField();
-        searchField.getStyleClass().add("textFieldOne");
-        searchField.setPromptText("Search: ");
-        searchField.setMinSize(150, 30);
-        searchField.setLayoutY(100.0);
-        searchField.setLayoutX(HelloApplication.width-215);//485.0, GEFP-25-SA, ändra storlek så den följer efter Stage storleken
 
-        return searchField;
-    }
     //GEFP-20-SA
     private static Node createUserButton(){
         //GEFP-4-SA
