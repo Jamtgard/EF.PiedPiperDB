@@ -24,7 +24,6 @@ import java.util.List;
 
 import static com.example.piedpiperdb.DAO.JavaFXActions.MatchActions.addMatch;
 
-
 //GEFP-32-AWS
 
 public class MatchView extends AbstractScene {
