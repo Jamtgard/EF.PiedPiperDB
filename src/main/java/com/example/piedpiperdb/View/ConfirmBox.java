@@ -154,24 +154,34 @@ public class ConfirmBox {
         window.showAndWait();
     }
 
-    //GEFP-26-SA
-    //GEFP-34-SA, la till playersCount
-    public static void playersOfGame(String game, ObservableList<Player> players,String playersCount){
-        Stage window = new Stage();
-        window.setTitle("Player of "+game);
+    //GEFP-34-SA
+    public static void setStyling(Stage window, VBox vBox,Label gameLabel,Button ok){
         window.initModality(Modality.APPLICATION_MODAL);
         window.setMinWidth(300);
         window.setMinHeight(150);
 
-        Label gameLabel = new Label(game);
         gameLabel.getStyleClass().add("titel");
 
-        VBox vBox = new VBox();
         vBox.setSpacing(10);
         vBox.setPadding(new Insets(20));
         vBox.setMaxWidth(100);
         vBox.setAlignment(Pos.CENTER);
         vBox.getStyleClass().add("backgroundTeaGreen");
+
+        ok.getStyleClass().add("standardButton");
+        ok.setOnAction(e -> {window.close();});
+    }
+
+    //GEFP-26-SA
+    //GEFP-34-SA, la till playersCount
+    public static void playersOfGame(String game, ObservableList<Player> players,String playersCount){
+        Stage window = new Stage();
+        window.setTitle("Player of "+game);
+        VBox vBox = new VBox();
+        Label gameLabel = new Label(game);
+        Button ok = new Button("Ok");
+
+        setStyling(window, vBox, gameLabel,ok);
 
         Label label = new Label("Players");
         label.getStyleClass().add("standardLabelNoBorder");
@@ -187,11 +197,6 @@ public class ConfirmBox {
             playersList.getItems().add(player.getNickname());
         }
 
-
-        Button ok = new Button("Ok");
-        ok.getStyleClass().add("standardButton");
-        ok.setOnAction(e -> {window.close();});
-
         vBox.getChildren().addAll(gameLabel, countLabel,label,playersList,ok);
 
         Scene scene = new Scene(vBox);
@@ -204,20 +209,12 @@ public class ConfirmBox {
     //GEFP-34-SA, la till matchesCount
     public static void matchesOfGame(String game, ObservableList<Match> matches,String matchesCount){
         Stage window = new Stage();
-        window.setTitle("Player of "+game);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setMinWidth(300);
-        window.setMinHeight(150);
-
+        window.setTitle("Matches of "+game);
         Label gameLabel = new Label(game);
-        gameLabel.getStyleClass().add("titel");
-
         VBox vBox = new VBox();
-        vBox.setSpacing(10);
-        vBox.setPadding(new Insets(20));
-        vBox.setMaxWidth(100);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.getStyleClass().add("backgroundTeaGreen");
+        Button ok = new Button("Ok");
+
+        setStyling(window,vBox, gameLabel,ok);
 
         Label label = new Label("Matches");
         label.getStyleClass().add("standardLabelNoBorder");
@@ -232,11 +229,6 @@ public class ConfirmBox {
         for(Match match : matches){
             matchesList.getItems().add(match.getMatchName());
         }
-
-
-        Button ok = new Button("Ok");
-        ok.getStyleClass().add("standardButton");
-        ok.setOnAction(e -> {window.close();});
 
         vBox.getChildren().addAll(gameLabel, countLabel,label,matchesList,ok);
 

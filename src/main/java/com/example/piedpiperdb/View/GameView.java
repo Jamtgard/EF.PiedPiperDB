@@ -58,7 +58,7 @@ public class GameView extends AbstractScene{
         allGames.getStyleClass().add("titel");
 
         gameListView = new ListView();
-        gameListView = GameActions.gameListView(gameListView);
+        GameActions.gameListView(gameListView);
         gameListView.getStyleClass().add("list-cell");
 
 
@@ -101,6 +101,17 @@ public class GameView extends AbstractScene{
         //GEFP-22-SA
 
         addCustomComponents(anchorPane);
+
+        //--------------------------------------------------------------
+
+        //GEFP-22-SA
+        Button showGames = new Button("Show games");
+        showGames.getStyleClass().add("standardButton");
+        showGames.setMinSize(160, 30);
+        showGames.setOnAction(e->{
+            clearAnchorpane(vBoxAllGames);
+        });
+
         //--------------------------------------------------------------------
 
         VBox addGameBox = new VBox();
@@ -136,46 +147,6 @@ public class GameView extends AbstractScene{
                 //GEFP-34-SA
                 GameActions.updateInput(newGameInput);
                 clearAnchorpane(addGameBox);
-            });
-        });
-
-//------------------------------------------------------------------
-
-        Button deleteGame = new Button("Delete game");
-        deleteGame.getStyleClass().add("standardButton");
-        deleteGame.setMinSize(160, 30);
-
-        VBox vBoxDelete = new VBox();
-        vBoxDelete.setSpacing(10);
-        vBoxDelete.setAlignment(Pos.CENTER);
-
-        Label deleteGameLabel = new Label("Delete game");
-        deleteGameLabel.getStyleClass().add("titel");
-
-        gameListViewDelete = new ListView();//GEFP-25-SA
-        gameListViewDelete = GameActions.gameListView(gameListViewDelete);
-        gameListViewDelete.getStyleClass().add("list-cell");
-
-        Label buttonLabel = new Label();
-        buttonLabel.setText("Hold ctrl or shift to \nselect more than one game");
-        buttonLabel.getStyleClass().add("standardLabelNoBorder");
-
-        Button deleteGameButton = new Button();//GEFP-25-SA
-        deleteGameButton.setText("Delete");
-        deleteGameButton.getStyleClass().add("standardButton");
-        deleteGameButton.setMinSize(160, 30);
-
-        vBoxDelete.getChildren().addAll(deleteGameLabel,gameListViewDelete,buttonLabel,deleteGameButton);
-
-        deleteGame.setOnAction(e->{
-            clearAnchorpane(vBoxDelete);
-
-            deleteGameButton.setOnAction(ev->{
-                GameActions.deleteGame(gameListViewDelete);
-                ChangeSceneAction.toGameView(stage);
-                //GEFP-34-SA
-                GameActions.updateGameListView(gameListViewDelete);
-                clearAnchorpane(vBoxDelete);
             });
         });
 
@@ -226,16 +197,47 @@ public class GameView extends AbstractScene{
 
         });
 
+        //------------------------------------------------------------------
 
-        //--------------------------------------------------------------
+        Button deleteGame = new Button("Delete game");
+        deleteGame.getStyleClass().add("standardButton");
+        deleteGame.setMinSize(160, 30);
 
-        //GEFP-22-SA
-        Button showGames = new Button("Show games");
-        showGames.getStyleClass().add("standardButton");
-        showGames.setMinSize(160, 30);
-        showGames.setOnAction(e->{
-            clearAnchorpane(vBoxAllGames);
+        VBox vBoxDelete = new VBox();
+        vBoxDelete.setSpacing(10);
+        vBoxDelete.setAlignment(Pos.CENTER);
+
+        Label deleteGameLabel = new Label("Delete game");
+        deleteGameLabel.getStyleClass().add("titel");
+
+        gameListViewDelete = new ListView();//GEFP-25-SA
+        GameActions.gameListView(gameListViewDelete);
+        gameListViewDelete.getStyleClass().add("list-cell");
+
+        Label buttonLabel = new Label();
+        buttonLabel.setText("Hold ctrl or shift to \nselect more than one game");
+        buttonLabel.getStyleClass().add("standardLabelNoBorder");
+
+        Button deleteGameButton = new Button();//GEFP-25-SA
+        deleteGameButton.setText("Delete");
+        deleteGameButton.getStyleClass().add("standardButton");
+        deleteGameButton.setMinSize(160, 30);
+
+        vBoxDelete.getChildren().addAll(deleteGameLabel,gameListViewDelete,buttonLabel,deleteGameButton);
+
+        deleteGame.setOnAction(e->{
+            clearAnchorpane(vBoxDelete);
+
+            deleteGameButton.setOnAction(ev->{
+                GameActions.deleteGame(gameListViewDelete);
+                ChangeSceneAction.toGameView(stage);
+                //GEFP-34-SA
+                GameActions.updateGameListView(gameListViewDelete);
+                clearAnchorpane(vBoxDelete);
+            });
         });
+
+
 
         //----------------------------------------------------------------
 

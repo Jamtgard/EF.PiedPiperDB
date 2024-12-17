@@ -18,7 +18,8 @@ public class Game {
     private int gameId;//GEFP-22-SA, bytte namn på variablerna till gameId och gameName
 
     //GEFP-18-SA, satte längre längd på namnet
-    @Column(name = "game_name",length = 70,nullable = false,unique = true)//GEFP-25-SA, la till unique så inte samma spelnamn längs in två gånger
+    //GEFP-34-SA, lenght 70 till 120
+    @Column(name = "game_name",length = 120, nullable = false,unique = true)//GEFP-25-SA, la till unique så inte samma spelnamn längs in två gånger
     private String gameName;
 
 
@@ -35,27 +36,6 @@ public class Game {
 
     @OneToMany(mappedBy = "gameId", orphanRemoval = false,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<Team> teams = new ArrayList<>();
-
-    //GEFP-34-SA
-    /*
-    @ElementCollection
-    @CollectionTable(name = "game_players",joinColumns = @JoinColumn(name = "game_id"))
-    @Column(name = "player_nickname")
-    private List<String> playersNickNames = new ArrayList<>();
-
-    @ElementCollection
-    @CollectionTable(name = "game_matches",joinColumns = @JoinColumn(name = "game_id"))
-    @Column(name = "match_name")
-    private List<String> matchDates = new ArrayList<>();
-
-    @ElementCollection
-    @CollectionTable(name = "game_match_dates",joinColumns = @JoinColumn(name = "game_id"))
-    @Column(name = "match_date")
-    private List<String> matchNames = new ArrayList<>();
-
-    @ElementCollection
-    private List<LocalDate> matchDates2 = new ArrayList<>();//Istället för String? Testa
-    */
 
     //GEFP-18-SA
     public Game() {

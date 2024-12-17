@@ -5,7 +5,6 @@
 }
 .backgroundTeaGreen{
     -fx-background-color: #d0e3c4;
-    opacity: 0.5
 }
 .backgroundOlivine{
     -fx-background-color: #ADC698;
@@ -78,14 +77,8 @@
 .table-view-1{
     -fx-background-color: transparent;
 }
-.table-view-1:focused{
-    -fx-background-color: transparent;
-}
-.table-view-1 .column-header-background{
-    -fx-background-color: linear-gradient(#d0e3c4 0%,#B0E3C9 100%);
-}
 .table-view-1 .column-header{
-    -fx-background-color: transparent;
+    -fx-background-color: linear-gradient(#d0e3c4 0%,#B0E3C9 100%);
     -fx-font-size: 16;
     -fx-font-family: "Bell MT";
 }
