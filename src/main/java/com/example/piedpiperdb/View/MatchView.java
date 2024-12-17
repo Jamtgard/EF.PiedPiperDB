@@ -2,6 +2,7 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.MatchActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
@@ -12,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
@@ -22,11 +24,13 @@ import java.util.List;
 
 import static com.example.piedpiperdb.DAO.JavaFXActions.MatchActions.addMatch;
 
+//GEFP-32-AWS
 
 public class MatchView extends AbstractScene {
 
     private static ListView matchListView;
     private static MatchDAO matchDAO = new MatchDAO();
+    private static GameDAO gameDAO = new GameDAO();
     private static Stage stage;
     private static VBox formContainer;
 
@@ -55,20 +59,22 @@ public class MatchView extends AbstractScene {
         updateMatchList();
 
         Button getAllMatchesButton = createGetAllMatches();
-        Button addMatchPvPButton = createAddMatch();
+        Button addMatchButton = createAddMatch();
 
         Button uppdateMatchButton = createUppdateMatch();
         Button deleteMatch = createDeleteMatch();
 
-        vBox.getChildren().addAll(getAllMatchesButton, addMatchPvPButton, uppdateMatchButton , deleteMatch);
+        vBox.getChildren().addAll(getAllMatchesButton, addMatchButton, uppdateMatchButton , deleteMatch);
     }
 
     private static Button createGetAllMatches(){
         Button getAllMatches = new Button("Show Matches");
         getAllMatches.getStyleClass().add("standardButton");
         getAllMatches.setMinSize(160,30);
+
         getAllMatches.setOnAction(actionEvent -> {
-            List<Match> matches = matchDAO.getAllMatches();
+            List<Match> matches = MatchActions.getAllMatches();
+
             showMatchTable(AbstractScene.anchorPane, matches);
             updateMatchList();
                 });
@@ -173,12 +179,6 @@ public class MatchView extends AbstractScene {
                     firstParticipantComboBox.setValue("Team 1");
                     secondParticipantComboBox.setValue("Team 2");
 
-                   /* TeamDAO teamDAO = new TeamDAO();
-                    List<Team> teams = teamDAO.getAllTeams();
-                    for(Team team : teams){
-                        firstParticipantComboBox.getItems().add(team.getTeamName());
-                        secondParticipantComboBox.getItems().add(team.getTeamName());
-                    }*/
                 }else if (selectedMatchType == MatchType.PLAYER_VS_PLAYER) {
                     participantLabel.setText("Select Players");
                     firstParticipantComboBox.getItems().addAll(
@@ -245,12 +245,16 @@ public class MatchView extends AbstractScene {
 
             addMatchBox.getChildren().addAll(addMatchLabel,matchTypeComboBox,  gameComboBox, matchDatePicker,firstParticipantComboBox,secondParticipantComboBox, submitButton);
 
-            //skapar scene och visar formulär
+            VBox resultBox = createResultBox();
+            resultBox.getChildren().add(addMatchBox);
+            AbstractScene.anchorPane.getChildren().add(resultBox);
+
+            /*//skapar scene och visar formulär
             Scene addMatchScene = new Scene(addMatchBox, 400, 300);
             Stage addMatchStage = new Stage();
             addMatchStage.setTitle("Add Match");
             addMatchStage.setScene(addMatchScene);
-            addMatchStage.show();
+            addMatchStage.show();*/
 
             // lägger till matchen
             submitButton.setOnAction(event -> {
@@ -284,30 +288,80 @@ public class MatchView extends AbstractScene {
 
                 addMatch(matchName, selectedMatchType, matchDate, selectedGame);
                 System.out.println("Match added successfully");
-                addMatchStage.close();
+                /*addMatchStage.close();*/
+                resultBox.getChildren().clear();
+                showMatchTable(AbstractScene.anchorPane, MatchActions.getAllMatches());
                 updateMatchList();
+
             });
         });
         return addMatch;
     }
 
     private static Button createDeleteMatch(){
-        Button deleteMatch = new Button("Delete Selected Match");
+        Button deleteMatch = new Button("Delete Match");
         deleteMatch.getStyleClass().add("standardButton");
         deleteMatch.setMinSize(160,30);
         deleteMatch.setOnAction(actionEvent -> {
-            Match selectedMatch = (Match) matchListView.getSelectionModel().getSelectedItem();
-            if(selectedMatch != null){
-                boolean success = matchDAO.deleteMatchById(selectedMatch.getMatchId());
-                if(success){
-                    System.out.println("Match deleted successfully");
-                    updateMatchList();
-                } else {
-                    System.out.println("Failed to delete match");
+            VBox deleteMatchBox = new VBox();
+            deleteMatchBox.setSpacing(10);
+            deleteMatchBox.setPadding(new Insets(10,10,10,10));
+            deleteMatchBox.setAlignment(Pos.CENTER);
+
+            Label deleteMatchLabel = new Label("Delete Match");
+            deleteMatchLabel.getStyleClass().add("titel");
+
+            ComboBox<Match>matchComboBox = new ComboBox<>();
+            matchComboBox.setPromptText("Select Match to Delete");
+            matchComboBox.getItems().addAll(MatchActions.getAllMatches());
+
+            matchComboBox.setCellFactory(param -> new ListCell<>(){
+                @Override
+                protected void updateItem(Match match, boolean empty) {
+                    super.updateItem(match, empty);
+                    setText(empty || match == null ? null : match.getMatchName());
                 }
-            } else {
-                System.out.println("No match selected.");
-            }
+            });
+
+            matchComboBox.setButtonCell(new ListCell<>(){
+                @Override
+                protected void updateItem(Match match, boolean empty) {
+                    super.updateItem(match, empty);
+                    setText(empty || match == null ? null : match.getMatchName());
+                }
+            });
+
+            Button confirmDeletButton = new Button("Delete Match");
+            confirmDeletButton.getStyleClass().add("standardButton");
+            confirmDeletButton.setMinSize(160,30);
+
+            deleteMatchBox.getChildren().addAll(deleteMatchLabel, matchComboBox, confirmDeletButton);
+
+            VBox resultBox = createResultBox();
+            resultBox.getChildren().add(deleteMatchBox);
+            AbstractScene.anchorPane.getChildren().add(resultBox);
+
+            confirmDeletButton.setOnAction(event -> {
+               Match selectedMatch = matchComboBox.getValue();
+
+               if(selectedMatch == null){
+                   System.out.println("Select Match to delete.");
+                   return;
+               }
+               boolean success = MatchActions.deleteMatchById(selectedMatch.getMatchId());
+               if (success) {
+                   System.out.println("Match deleted successfully from database.");
+               } else {
+                   System.out.println("Match could not be deleted from database.");
+               }
+               MatchActions.deleteMatchById(selectedMatch.getMatchId());
+
+               updateMatchList();
+               resultBox.getChildren().clear();
+               showMatchTable(AbstractScene.anchorPane, MatchActions.getAllMatches());
+
+            });
+
         });
         return deleteMatch;
     }
@@ -316,27 +370,174 @@ public class MatchView extends AbstractScene {
         Button updateMatch = new Button("Update Match");
         updateMatch.getStyleClass().add("standardButton");
         updateMatch.setMinSize(160,30);
+
         updateMatch.setOnAction(actionEvent -> {
+            // uppdaterings formulär
+
+            VBox selectMatchBox = new VBox();
+            selectMatchBox.setSpacing(10);
+            selectMatchBox.setPadding(new Insets(10,10,10,10));
+            selectMatchBox.setAlignment(Pos.CENTER);
+
+
+            Label selectMatchLabel = new Label("Update Match");
+            selectMatchLabel.getStyleClass().add("titel");
+
+            ComboBox<Match> matchComboBox = new ComboBox<>();
+            matchComboBox.setPromptText("Select Match");
+            matchComboBox.getItems().addAll(MatchActions.getAllMatches());
+
+            matchComboBox.setCellFactory(param -> new ListCell<>(){
+                @Override
+                protected void updateItem(Match match, boolean empty) {
+                    super.updateItem(match, empty);
+                    setText(empty || match == null ? null : match.getMatchName());
+                }
+            });
+
+            matchComboBox.setButtonCell(new ListCell<>(){
+                @Override
+                protected void updateItem(Match match, boolean empty) {
+                    super.updateItem(match, empty);
+                    setText(empty || match == null ? null : match.getMatchName());
+                }
+            });
+
+            // för att gå vidare till updateforumlär
+            Button proceedButton = new Button("Next");
+            proceedButton.getStyleClass().add("standardButton");
+            proceedButton.setMinSize(160,30);
+
+            VBox resultBox = createResultBox();
+            selectMatchBox.getChildren().addAll(selectMatchLabel,matchComboBox,proceedButton);
+            resultBox.getChildren().addAll(selectMatchBox);
+            AbstractScene.anchorPane.getChildren().add(resultBox);
+
+            proceedButton.setOnAction(event -> {
+                Match selectedMatch = matchComboBox.getValue();
+
+                if(selectedMatch == null){
+                    System.out.println("No match selected.");
+                    return;
+                }
+                // updateformulär
+                VBox updateForm = new VBox();
+                updateForm.setSpacing(10);
+                updateForm.setPadding(new Insets(10,10,10,10));
+                updateForm.setAlignment(Pos.CENTER);
+
+                Label updateLabel = new Label("Update Match");
+                updateLabel.getStyleClass().add("titel");
+
+                TextField matchNameField = new TextField(selectedMatch.getMatchName());
+                matchNameField.setPromptText("Match Name");
+                matchNameField.setMaxWidth(400);
+                matchNameField.setAlignment(Pos.CENTER);
+
+                ComboBox<MatchType> matchTypeComboBox = new ComboBox<>();
+                matchTypeComboBox.getItems().addAll(MatchType.values());
+                matchTypeComboBox.setValue(selectedMatch.getMatchType());
+
+                // hämtar spel ifrån databas
+                ComboBox<Game> gameComboBox = new ComboBox<>();
+                gameComboBox.setPromptText(selectedMatch.getGameName());
+                gameComboBox.getItems().addAll(gameDAO.getAllGames());
+
+                gameComboBox.setCellFactory(param -> new ListCell<>(){
+                    @Override
+                    protected void updateItem(Game game, boolean empty) {
+                        super.updateItem(game, empty);
+                        setText(empty || game == null ? null : game.getGameName());
+                    }
+                });
+
+                gameComboBox.setButtonCell(new ListCell<>(){
+                    @Override
+                    protected void updateItem(Game game, boolean empty) {
+                        super.updateItem(game, empty);
+                        setText(empty || game == null ? null : game.getGameName());
+                    }
+                });
+
+                DatePicker matchDatePicker = new DatePicker(selectedMatch.getMatchDate());
+
+                TextField resultField = new TextField(selectedMatch.getMatchResult());
+                resultField. setPromptText("Match Result");
+                resultField.setMaxWidth(200);
+                resultField.setAlignment(Pos.CENTER);
+
+                Button updateButton = new Button("Update Match");
+                updateButton.getStyleClass().add("standardButton");
+                updateButton.setMinSize(160,30);
+
+                updateForm.getChildren().addAll(updateLabel, matchNameField, matchTypeComboBox, gameComboBox, matchDatePicker, resultField, updateButton);
+
+                resultBox.getChildren().clear();
+                resultBox.getChildren().add(updateForm);
+
+                //updaterar och validerar
+                updateButton.setOnAction(updateEvent ->{
+                    String updateName = matchNameField.getText();
+                    MatchType updateMatchType = matchTypeComboBox.getValue();
+                    Game updateGame = gameComboBox.getValue();
+                    LocalDate updateMatchDate = matchDatePicker.getValue();
+                    String updateResult = resultField.getText();
+
+                    if(updateName == null || updateName.isEmpty()){
+                        System.out.println("Match Name is required.");
+                        return;
+                    }
+                    if(updateMatchType == null){
+                        System.out.println("Match Type is required.");
+                        return;
+                    }
+                    if(updateGame == null){
+                        System.out.println("Game is required.");
+                        return;
+                    }
+                    if (updateMatchDate == null){
+                        System.out.println("Match Date is required.");
+                    }
+
+                    /*selectedMatch.setMatchName(updateName);
+                    selectedMatch.setMatchType(updateMatchType);
+                    selectedMatch.setGameId(updateGame);
+                    selectedMatch.setMatchDate(updateMatchDate);
+                    selectedMatch.setMatchResult(updateResult);*/
+
+                    MatchActions.updateMatch(selectedMatch, updateName, updateMatchType, updateMatchDate, updateGame, updateResult);
+                    updateMatchList();
+
+                    resultBox.getChildren().clear();
+                    showMatchTable(AbstractScene.anchorPane, MatchActions.getAllMatches());
+
+
+                });
+            });
         });
         return updateMatch;
     }
 
     private static void updateMatchList(){
+         // hämtar uppdaterad lista med matcher
         List<Match> matches = matchDAO.getAllMatches();
         matchListView.getItems().clear();
         matchListView.getItems().addAll(matches);
     }
 
     public static void showMatchTable(AnchorPane anchorPane, List<Match> matches){
+        // visar tabel
         formContainer = createResultBox();
         formContainer.getStyleClass().add("textFieldOne");
         TableView<Match> table = createMatchTable(matches);
+        VBox.setVgrow(table, Priority.ALWAYS);
         formContainer.getChildren().addAll(table);
 
         anchorPane.getChildren().add(formContainer);
     }
 
     public static TableView<Match> createMatchTable(List<Match> matches){
+        // Skapar tabell
         ObservableList<Match> observableList = FXCollections.observableList(matches);
         TableView<Match> table = new TableView<>();
 
