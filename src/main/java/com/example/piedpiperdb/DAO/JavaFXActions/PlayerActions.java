@@ -125,8 +125,8 @@ public class PlayerActions {
         return teamDAO.getTeamsByGame(List.of(gameId));
     }
 
-    public static void savePlayer(Player player) {
-        playerDAO.savePlayer(player);
+    public static boolean savePlayer(Player player) {
+       return playerDAO.savePlayer(player);
     }
 
     public static Player createPlayerFromFields(String firstName, String lastName, String nickname, String streetAddress,
@@ -184,8 +184,8 @@ public class PlayerActions {
         return playerDAO.getPlayer(playerId);
     }
 
-    public static void updatePlayer(Player player) {
-        playerDAO.updatePlayer(player);
+    public static boolean updatePlayer(Player player) {
+        return playerDAO.updatePlayer(player);
     }
 
     public static boolean deletePlayerById(int playerId) {

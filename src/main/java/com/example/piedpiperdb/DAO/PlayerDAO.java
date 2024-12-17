@@ -126,7 +126,7 @@ public class PlayerDAO {
     }
 
     //Update
-    public void updatePlayer(Player playerToUpdate) {
+    public boolean updatePlayer(Player playerToUpdate) {
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
 
@@ -144,11 +144,13 @@ public class PlayerDAO {
             }
             entityManager.merge(playerToUpdate);
             transaction.commit();
+            return  true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             if (entityManager != null && transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
+            return false;
         } finally {
             entityManager.close();
         }

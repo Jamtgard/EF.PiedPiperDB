@@ -94,51 +94,61 @@ public class PlayerView extends AbstractScene{
     }
 
     public static void showAddPlayerForm(AnchorPane anchorPane) {
-        initializeTextFieldsPlayerInfo();
+        try {
+            initializeTextFieldsPlayerInfo();
 
-        resultBox = createResultBox();
+            resultBox = createResultBox();
 
-        resultBox.getChildren().addAll(
-                createResultBoxContentBox("First Name*", "First Name", firstNameField, false),
-                createResultBoxContentBox("Last Name*", "Last Name", lastNameField, false),
-                createResultBoxContentBox("Nickname*", "Nickname", nicknameField, false),
-                createResultBoxContentBox("Street Address", "Street Address", streetAddressField, false),
-                createResultBoxContentBox("Zip Code", "Zip Code", zipCodeField, false),
-                createResultBoxContentBox("City", "City", cityField, false),
-                createResultBoxContentBox("Country", "Country", countryField, false),
-                createResultBoxContentBox("E-mail*", "E-mail", emailField, false)
-        );
-        List<Game> games = PlayerActions.getAllGames();
-        resultBox.getChildren().add(createResultBoxContentBoxComboBox(
-                "Game", "Select Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName()
-        ));
+            resultBox.getChildren().addAll(
+                    createResultBoxContentBox("First Name*", "First Name", firstNameField, false),
+                    createResultBoxContentBox("Last Name*", "Last Name", lastNameField, false),
+                    createResultBoxContentBox("Nickname*", "Nickname", nicknameField, false),
+                    createResultBoxContentBox("Street Address", "Street Address", streetAddressField, false),
+                    createResultBoxContentBox("Zip Code", "Zip Code", zipCodeField, false),
+                    createResultBoxContentBox("City", "City", cityField, false),
+                    createResultBoxContentBox("Country", "Country", countryField, false),
+                    createResultBoxContentBox("E-mail*", "E-mail", emailField, false)
+            );
+            List<Game> games = PlayerActions.getAllGames();
+            resultBox.getChildren().add(createResultBoxContentBoxComboBox(
+                    "Game", "Select Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName()
+            ));
 
-        List<Team> teams = new ArrayList<>();
-        resultBox.getChildren().add(createResultBoxContentBoxComboBox(
-                "Team", "Select Team", teamField, teams, team -> team.getTeamId() + ", " + team.getTeamName()
-        ));
+            List<Team> teams = new ArrayList<>();
+            resultBox.getChildren().add(createResultBoxContentBoxComboBox(
+                    "Team", "Select Team", teamField, teams, team -> team.getTeamId() + ", " + team.getTeamName()
+            ));
 
-        addGameFieldListener(gameField, teamField);
+            addGameFieldListener(gameField, teamField);
 
-        Button saveButton = creatButton("Save Player");
-        saveButton.setOnAction(event -> {
-            if (validateInputNewPlayer(
-                    firstNameField.getText(), lastNameField.getText(), nicknameField.getText(), emailField.getText())) {
+            Button saveButton = creatButton("Save Player");
+            saveButton.setOnAction(event -> {
+                if (validateInputNewPlayer(
+                        firstNameField.getText(), lastNameField.getText(), nicknameField.getText(), emailField.getText())) {
 
-                Player player = PlayerActions.createPlayerFromFields(
-                        firstNameField.getText(), lastNameField.getText(), nicknameField.getText(),
-                        streetAddressField.getText(), zipCodeField.getText(), cityField.getText(),
-                        countryField.getText(), emailField.getText(),
-                        gameField.getValue(), teamField.getValue()
-                );
+                    Player player = PlayerActions.createPlayerFromFields(
+                            firstNameField.getText(), lastNameField.getText(), nicknameField.getText(),
+                            streetAddressField.getText(), zipCodeField.getText(), cityField.getText(),
+                            countryField.getText(), emailField.getText(),
+                            gameField.getValue(), teamField.getValue()
+                    );
 
-                PlayerActions.savePlayer(player);
-                Label labelSaved = creatLabel(" Player saved and updated in the database! ");
-                resultBox.getChildren().add(labelSaved);
-            }
-        });
-        resultBox.getChildren().add(saveButton);
-        anchorPane.getChildren().add(resultBox);
+                    boolean saved = PlayerActions.savePlayer(player);
+                    if (saved) {
+                        Label labelSaved = creatLabel(" Player saved and updated in the database! ");
+                        resultBox.getChildren().add(labelSaved);
+                    } else {
+                        AlertBox.displayAlertBox("Error", "An error occurred while saving the player to the database. Player not Saved!");
+                    }
+
+                }
+            });
+            resultBox.getChildren().add(saveButton);
+            anchorPane.getChildren().add(resultBox);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            AlertBox.displayAlertBox("Error", "An error occurred while saving the player to the database.");
+        }
     }
 
     //GEFP-31-AA
@@ -253,9 +263,14 @@ public class PlayerView extends AbstractScene{
                             .filter(t -> t.getTeamId() == teamId).findFirst().orElse(null));
                 }
 
-                PlayerActions.updatePlayer(playerToUpdate);
-                Label labelUpdated = creatLabel("Player updated in the database!");
-                resultBox.getChildren().add(labelUpdated);
+                boolean updated = PlayerActions.updatePlayer(playerToUpdate);
+                if (updated) {
+                    Label labelUpdated = creatLabel("Player updated in the database!");
+                    resultBox.getChildren().add(labelUpdated);
+                } else {
+                    AlertBox.displayAlertBox("Error", "An error occurred while updating the player in the database. Update not saved!");
+                }
+
             } catch (Exception ex) {
                 AlertBox.displayAlertBox("Error", "An error occurred while updating the player.");
             }
