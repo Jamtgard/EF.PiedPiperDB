@@ -176,8 +176,10 @@ public class TeamView extends AbstractScene{
 
     private static void showAddTeamForm(AnchorPane anchorPane){
 
-        TextField gameField = new TextField();
+        //TextField gameField = new TextField();
         TextField playerField = new TextField();
+
+        ComboBox gameField = new ComboBox();
 
         VBox formContainer = new VBox();
         formContainer.setPadding(new Insets(20));
@@ -196,14 +198,14 @@ public class TeamView extends AbstractScene{
         teamNamefield.setPromptText("First name");
         teamNameBox.getChildren().addAll(teamName, teamNamefield);
 
-        // FIXA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        /*
+        // FIXA
+
         List<Game> games = gameDAO.getAllGames();
         HBox gameBox = createResultBoxContentBox(
                 " Game ", "Select Game",gameField, games, game -> game.getGameId() + ", " + game.getGameName()
         );
 
-         */
+
 
 
 
@@ -426,6 +428,8 @@ public class TeamView extends AbstractScene{
         vBox.getStyleClass().add("backgroundTeaGreen");
         return vBox;
     }
+
+
 
     private static <T> HBox createResultBoxContentBox (String label, String prompt, ComboBox<String> comboBox, List<T> items, Function<T, String> itemMapper){
 
