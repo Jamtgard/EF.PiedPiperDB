@@ -54,6 +54,8 @@ public class PlayerView extends AbstractScene{
             getAllPlayers.setOnAction(event -> {
                  clearResultBox(resultBox, getIdBox);
                  resultBox = createResultBox();
+                 Label title = createTitleLabel("All Players");
+                 resultBox.getChildren().add(title);
                  resultBox = PlayerActions.getTableViewAllPlayers(resultBox);
                  anchorPane.getChildren().add(resultBox);
             });
@@ -64,6 +66,8 @@ public class PlayerView extends AbstractScene{
             selectedPlayers.setOnAction(actionEvent -> {
                 clearResultBox(getIdBox, resultBox);
                 resultBox = createResultBox();
+                Label title = createTitleLabel("Players from selected game or games");
+                resultBox.getChildren().add(title);
                 List<CheckBox> checkBoxes = PlayerActions.gameCheckBoxes();
                 List<String> selections = ConfirmBox.displayCheckBoxOptions("Select game or games", checkBoxes);
                 resultBox = PlayerActions.getTableViewSelectedPlayers(resultBox, selections);
@@ -96,6 +100,8 @@ public class PlayerView extends AbstractScene{
             initializeTextFieldsPlayerInfo();
 
             resultBox = createResultBox();
+            Label title = createTitleLabel("Add new player");
+            resultBox.getChildren().add(title);
 
             resultBox.getChildren().addAll(
                     createResultBoxContentBox("First Name*", "First Name", firstNameField, false),
@@ -191,7 +197,11 @@ public class PlayerView extends AbstractScene{
             }
         });
         getIdBox = createResultBox();
+
+        Label title = createTitleLabel("Update player");
+
         getIdBox.getChildren().addAll(
+                title,
                 createResultBoxContentBox("Player ID", "Enter Player ID", playerIdField, false),
                 getPlayerButton
         );
@@ -213,7 +223,7 @@ public class PlayerView extends AbstractScene{
         Game game = playerToUpdate.getGameId();
         String selectedGameValue = game != null ? game.getGameId() + ", " + game.getGameName() : null;
 
-        List<Team> teams = PlayerActions.getTeamsByGame(game != null ? game.getGameId() : 0);
+        List<Team> teams = PlayerActions.getTeamsByGame(game.getGameId()/*game != null ? game.getGameId() : 0*/);
         Team team = playerToUpdate.getTeamId();
         String selectedTeamValue = team != null ? team.getTeamId() + ", " + team.getTeamName() : null;
 
@@ -306,6 +316,10 @@ public class PlayerView extends AbstractScene{
 
     private static void showDeletePlayerForm(AnchorPane anchorPane){
         getIdBox = createResultBox();
+
+        Label title = createTitleLabel("Delete Player");
+        getIdBox.getChildren().add(title);
+
         TextField playerIdField = new TextField();
         HBox playerIdBox = createResultBoxContentBox("Enter Player ID: ", "Player ID", playerIdField, false);
 
@@ -391,6 +405,13 @@ public class PlayerView extends AbstractScene{
         button.getStyleClass().add("standardButton");
         button.setMinSize(160,30);
         return button;
+    }
+
+    private static Label createTitleLabel (String text){
+        Label label = new Label();
+        label.setText(text);
+        label.getStyleClass().add("titel");
+        return label;
     }
 
     private static Label creatLabel (String text){
