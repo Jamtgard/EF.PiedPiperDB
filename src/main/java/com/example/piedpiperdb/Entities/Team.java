@@ -71,10 +71,9 @@ public class Team {
 
     // Match
 
-    /* - SJ: Behövs en List?
     public List<Match> getMatchesInTeam() {return matchesInTeam;}
     public void setMatchesInTeam(List<Match> matchesInTeam) {this.matchesInTeam = matchesInTeam;}
-     */
+
 
     public Match getMatchId() { return matchId; }
 

@@ -135,7 +135,8 @@ public class TeamView extends AbstractScene{
         TableView<Team> table = createTeamTable(players);
 
         table.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        // Korrigerar bredden - Ej önskvärt utan mer utfyllnad.
+        //table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         VBox.setVgrow(table, Priority.ALWAYS);
 
         vBox.getChildren().add(table);
@@ -148,8 +149,9 @@ public class TeamView extends AbstractScene{
 
         TableView<Team> tableView = new TableView<>();
 
-        TableColumn<Team, String> team_id = new TableColumn<>("Team Name");
+        TableColumn<Team, String> team_id = new TableColumn<>("Team ID");
         team_id.setCellValueFactory(new PropertyValueFactory<>("teamId"));
+
 
         TableColumn<Team, String> team_name = new TableColumn<>("Team Name");
         team_name.setCellValueFactory(new PropertyValueFactory<>("teamName"));
@@ -205,12 +207,8 @@ public class TeamView extends AbstractScene{
                 " Game ", "Select Game",gameField, games, game -> game.getGameId() + ", " + game.getGameName()
         );
 
-
-
-
-
         //Korrigera nedan:
-        formContainer.getChildren().add(teamNameBox);
+        formContainer.getChildren().addAll(teamNameBox, gameBox);
 
         Button saveTeamButton = new Button("Save Team");
         saveTeamButton.getStyleClass().add("standardButton");
@@ -426,6 +424,12 @@ public class TeamView extends AbstractScene{
         vBox.setPadding(new Insets(20));
         vBox.setSpacing(10);
         vBox.getStyleClass().add("backgroundTeaGreen");
+
+        AnchorPane.setTopAnchor(vBox, 140.0);
+        AnchorPane.setLeftAnchor(vBox, 210.0);
+        AnchorPane.setRightAnchor(vBox, anchorPane.getWidth() - 210.0 - (HelloApplication.width - 235));
+        AnchorPane.setBottomAnchor(vBox, anchorPane.getHeight() - 140 - (HelloApplication.height - 160));
+
         return vBox;
     }
 
