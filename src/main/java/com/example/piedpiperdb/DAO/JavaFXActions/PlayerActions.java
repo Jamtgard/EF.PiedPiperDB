@@ -16,6 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -110,7 +111,8 @@ public class PlayerActions {
         TableColumn<Player, String> match = new TableColumn<>("Match");
         match.setCellValueFactory(new PropertyValueFactory<>("matchInfo"));
 
-        table.getColumns().addAll(player_id, nickname, fullName, address, country, email, game_name, team_name, match);
+        List<TableColumn<Player, ?>> columns = List.of(player_id, nickname, fullName, address, country, email, game_name, team_name, match);
+        table.getColumns().addAll(columns);
         table.setItems(observableList);
         return table;
     }
@@ -121,6 +123,9 @@ public class PlayerActions {
 
 
     public static List<Team> getTeamsByGame(int gameId) {
+        if (gameId == 0) {
+            return Collections.emptyList(); // Returnera tom lista om gameId är 0 (alltså null)
+        }
         return TEAM_DAO.getTeamsByGame(List.of(gameId));
     }
 

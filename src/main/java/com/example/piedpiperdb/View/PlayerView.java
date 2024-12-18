@@ -41,9 +41,7 @@ public class PlayerView extends AbstractScene{
 
         VBox vBox = AbstractScene.leftVbox;
 
-        AbstractScene.back.setOnAction(e->{
-            ChangeSceneAction.toStartPage(window);
-        });
+        AbstractScene.back.setOnAction(e-> ChangeSceneAction.toStartPage(window));
 
         addCustomComponents(vBox);
 
@@ -215,7 +213,7 @@ public class PlayerView extends AbstractScene{
         Game game = playerToUpdate.getGameId();
         String selectedGameValue = game != null ? game.getGameId() + ", " + game.getGameName() : null;
 
-        List<Team> teams = PlayerActions.getTeamsByGame(game.getGameId());
+        List<Team> teams = PlayerActions.getTeamsByGame(game != null ? game.getGameId() : 0);
         Team team = playerToUpdate.getTeamId();
         String selectedTeamValue = team != null ? team.getTeamId() + ", " + team.getTeamName() : null;
 
