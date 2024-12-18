@@ -168,7 +168,7 @@ UPDATE players SET match_id = 24 WHERE nickname = 'AstridMagic';
 UPDATE players SET match_id = 25 WHERE nickname = 'EllaPower';
 UPDATE players SET match_id = 25 WHERE nickname = 'SebStar';
 
-
+--GEFP-39-SA
 INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (1,1);
 INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (2,1);
 INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (3,2);
