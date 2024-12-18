@@ -104,6 +104,7 @@ public class GameView extends AbstractScene{
 
         //--------------------------------------------------------------
 
+        //Show games
         //GEFP-22-SA
         Button showGames = new Button("Show games");
         showGames.getStyleClass().add("standardButton");
@@ -327,6 +328,7 @@ public class GameView extends AbstractScene{
 
         //--------------------------------------------------------------
 
+        //Buttons vBox getChildren
         //GEFP-22-SA
         vBox.getChildren().addAll(showGames,addGame,updateGame,deleteGame,updateDeleteId);
     }
