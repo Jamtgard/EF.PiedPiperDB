@@ -36,15 +36,16 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
 
         //GEFP-18-SA testar
+        //GEFP-34-SA, detta måste vara med för att ladda in databasen innan gui startar
         PlayerDAO playerDAO = new PlayerDAO();
         MatchDAO matchDAO = new MatchDAO();
         GameDAO gameDAO = new GameDAO();
         TeamDAO teamDAO = new TeamDAO();
-
+/*
         Player player = new Player();
         Match match = new Match();
         Game game = new Game();
-        Team team = new Team();
+        Team team = new Team();*/
 
 
 

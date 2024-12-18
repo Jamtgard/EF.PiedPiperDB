@@ -127,6 +127,7 @@ INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,cit
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Lova', 'Hansson', 'LovaLicious', 'Havsvägen 2', '65892', 'Östersund', 'Sweden', 'lova.hansson@example.se', 9, 18);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Alfred', 'Nyström', 'AlfieChampion', 'Blomstervägen 16', '84765', 'Nyköping', 'Sweden', 'alfred.nystrom@example.se', 9, 18);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Freja', 'Möller', 'FrejaDream', 'Västra Vägen 23', '54312', 'Karlskrona', 'Sweden', 'freja.moller@example.se', 9, 18);
+
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Nils', 'Johansson', 'NilsPlay', 'Södra Gatan 12', '34321', 'Malmö', 'Sweden', 'nils.johansson@example.se', 10, 19);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Emilia', 'Lindqvist', 'EmiliaVibes', 'Kungsgatan 45', '21145', 'Stockholm', 'Sweden', 'emilia.lindqvist@example.se', 10, 19);
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Axel', 'Andersson', 'AxelForce', 'Lilla Torg 8', '22113', 'Lund', 'Sweden', 'axel.andersson@example.se', 10, 19);
@@ -168,29 +169,25 @@ UPDATE players SET match_id = 24 WHERE nickname = 'AstridMagic';
 UPDATE players SET match_id = 25 WHERE nickname = 'EllaPower';
 UPDATE players SET match_id = 25 WHERE nickname = 'SebStar';
 
-
---GEFP-26-SA
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (1,1);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (2,1);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (3,2);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (4,2);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (5,3);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (6,3);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (7,4);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (8,4);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (9,5);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (10,5);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (11,6);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (12,6);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (13,7);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (14,7);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (15,8);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (16,8);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (17,9);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (18,9);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (19,10);
-INSERT INTO teams_matches(Team_team_id, matchesInTeam_match_id) VALUES (20,10);
-
---GEFP-26-SA, lägga in hur?
-INSERT INTO matches_teams(Match_match_id,teams_ORDER,teams_team_id) VALUES (1,1,1);
+--GEFP-39-SA
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (1,1);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (1,2);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (2,3);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (2,4);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (3,5);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (3,6);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (4,7);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (4,8);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (5,9);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (5,10);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (6,11);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (6,12);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (7,13);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (7,14);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (8,15);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (8,16);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (9,17);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (9,18);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (10,19);
+INSERT INTO teams_matches(matchesInTeam_match_id, teams_team_id) VALUES (10,20);
 

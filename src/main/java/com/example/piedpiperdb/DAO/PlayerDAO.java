@@ -1,6 +1,7 @@
 package com.example.piedpiperdb.DAO;
 
 import com.example.piedpiperdb.Entities.Game;
+import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
 import jakarta.persistence.*;
@@ -38,43 +39,29 @@ public class PlayerDAO {
     }
 
     public boolean isNicknameUnique(String nickname) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        String q = "SELECT COUNT(*) FROM Player p WHERE p.nickname = :nickname";
 
-        try {
+        try (EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager()) {
+            String q = "SELECT COUNT(p) FROM Player p WHERE p.nickname = :nickname";
             TypedQuery<Long> query = entityManager.createQuery(q, Long.class);
             query.setParameter("nickname", nickname);
             Long count = query.getSingleResult();
             return count == 0;
         } catch (Exception e) {
             e.printStackTrace();
-            if (entityManager != null && transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
             return false;
-        } finally {
-            entityManager.close();
         }
     }
     public boolean isEmailUnique(String email) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        String q = "SELECT COUNT(*) FROM Player p WHERE p.email = :email";
 
-        try {
+        try (EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager()) {
+            String q = "SELECT COUNT(p) FROM Player p WHERE p.email = :email";
             TypedQuery<Long> query = entityManager.createQuery(q, Long.class);
             query.setParameter("email", email);
             Long count = query.getSingleResult();
             return count == 0;
         } catch (Exception e) {
             e.printStackTrace();
-            if (entityManager != null && transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
             return false;
-        } finally {
-            entityManager.close();
         }
     }
 
@@ -89,25 +76,19 @@ public class PlayerDAO {
 
     public List<Player> getAllPlayers() {
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-
-        transaction = entityManager.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
-        List<Player> listToReturn = new ArrayList<>();
         TypedQuery<Player> query = entityManager.createQuery("FROM Player", Player.class);
-        listToReturn.addAll(query.getResultList());
-        return listToReturn;
+        return new ArrayList<>(query.getResultList());
     }
 
     //GEFP-19-AA
     public List<Player> getAllPlayersFromSelectedGame(List<Integer> gameIds) {
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        List<Player> listToReturn = new ArrayList<>();
-
-        transaction = entityManager.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
+        List<Player> listToReturn = new ArrayList<>();
         try {
             TypedQuery<Player> query = entityManager.createQuery(
                     "SELECT p FROM Player p WHERE p.gameId.gameId IN : gameIds", Player.class);
@@ -115,9 +96,6 @@ public class PlayerDAO {
             listToReturn.addAll(query.getResultList());
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            if (entityManager != null && transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
         } finally {
             entityManager.close();
         }
@@ -125,7 +103,7 @@ public class PlayerDAO {
     }
 
     //Update
-    public void updatePlayer(Player playerToUpdate) {
+    public boolean updatePlayer(Player playerToUpdate) {
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
 
@@ -143,32 +121,13 @@ public class PlayerDAO {
             }
             entityManager.merge(playerToUpdate);
             transaction.commit();
+            return  true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             if (entityManager != null && transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    //Delete
-    public void deletePlayer(Player player) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-
-        try{
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.remove(entityManager.contains(player) ? player : entityManager.merge(player));
-            transaction.commit();
-            System.out.println("Player deleted from DB");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            if (entityManager != null && transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            return false;
         } finally {
             entityManager.close();
         }
@@ -201,7 +160,7 @@ public class PlayerDAO {
                 System.out.println("Player deleted from DB");
                 return true;
             } else {
-                System.out.println("Player still exist in DB" + playerToDelete.toString());
+                System.out.println("Player still exist in DB" + playerToDelete);
                 return false;
             }
 
@@ -247,13 +206,13 @@ public class PlayerDAO {
                     entityManager.merge(team);
                 }
 
-/*                if (player.getMatchId() != null) {
+                if (player.getMatchId() != null) {
                     Match match = player.getMatchId();
                     System.out.println("Removing player from match" + match);
-                    //match.getListOfPlayers().remove(player);
+                    match.getPlayers().remove(player);
                     player.setMatchId(null);
                     entityManager.merge(match);
-                }*/
+                }
 
                 entityManager.merge(player);
                 transaction.commit();
