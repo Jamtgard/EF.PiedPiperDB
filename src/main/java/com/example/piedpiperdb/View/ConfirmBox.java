@@ -169,7 +169,6 @@ public class ConfirmBox {
         vBox.getStyleClass().add("backgroundTeaGreen");
 
         ok.getStyleClass().add("standardButton");
-        ok.setOnAction(e -> {window.close();});
     }
 
     //GEFP-26-SA
@@ -180,6 +179,7 @@ public class ConfirmBox {
         VBox vBox = new VBox();
         Label gameLabel = new Label(game);
         Button ok = new Button("Ok");
+        ok.setOnAction(e -> {window.close();});
 
         setStyling(window, vBox, gameLabel,ok);
 
@@ -213,6 +213,7 @@ public class ConfirmBox {
         Label gameLabel = new Label(game);
         VBox vBox = new VBox();
         Button ok = new Button("Ok");
+        ok.setOnAction(e -> {window.close();});
 
         setStyling(window,vBox, gameLabel,ok);
 

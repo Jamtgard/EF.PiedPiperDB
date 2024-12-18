@@ -109,6 +109,7 @@ public class GameView extends AbstractScene{
         showGames.getStyleClass().add("standardButton");
         showGames.setMinSize(160, 30);
         showGames.setOnAction(e->{
+            GameActions.updateGameListView(gameListView);
             clearAnchorpane(vBoxAllGames);
         });
 
@@ -143,7 +144,6 @@ public class GameView extends AbstractScene{
 
             submitAdd.setOnAction(ev->{
                 GameActions.addGame(newGameInput);
-                ChangeSceneAction.toGameView(stage);
                 //GEFP-34-SA
                 GameActions.updateInput(newGameInput);
                 clearAnchorpane(addGameBox);
@@ -183,12 +183,12 @@ public class GameView extends AbstractScene{
         updateGameBox.getChildren().addAll(chooseToUpdate,choiceBox,updateGameInput,submitUpdate);
 
         updateGame.setOnAction(e->{
+            GameActions.updateChoiceBoxTextField(choiceBox);
             clearAnchorpane(updateGameBox);
 
             submitUpdate.setOnAction(ev->{
                 GameActions.updateGame(updateGameInput,choiceBox);
                 GameActions.gameListView(gameListView);
-                ChangeSceneAction.toGameView(stage);
                 //GEFP-34-SA
                 GameActions.updateChoiceBoxTextField(choiceBox);
                 GameActions.updateInput(updateGameInput);
@@ -226,11 +226,11 @@ public class GameView extends AbstractScene{
         vBoxDelete.getChildren().addAll(deleteGameLabel,gameListViewDelete,buttonLabel,deleteGameButton);
 
         deleteGame.setOnAction(e->{
+            GameActions.updateGameListView(gameListViewDelete);
             clearAnchorpane(vBoxDelete);
 
             deleteGameButton.setOnAction(ev->{
                 GameActions.deleteGame(gameListViewDelete);
-                ChangeSceneAction.toGameView(stage);
                 //GEFP-34-SA
                 GameActions.updateGameListView(gameListViewDelete);
                 clearAnchorpane(vBoxDelete);
@@ -272,7 +272,6 @@ public class GameView extends AbstractScene{
         deleteById.setMinSize(70, 30);
         deleteById.setOnAction(e->{
             GameActions.deleteGameById(gameIdDeleteInput);
-            ChangeSceneAction.toGameView(stage);
             GameActions.updateTableView(tableViewGame,gameId);
             GameActions.updateInput(gameIdDeleteInput);
             clearAnchorpane(showGamesBox);
@@ -296,7 +295,6 @@ public class GameView extends AbstractScene{
         updateById.setMinSize(70, 30);
         updateById.setOnAction(e->{
             GameActions.updateGame(gameIdUpdateInput,newNameInput);
-            ChangeSceneAction.toGameView(stage);
             GameActions.updateTableView(tableViewGame,gameId);
             GameActions.updateInput(newNameInput);
             GameActions.updateInput(gameIdUpdateInput);
@@ -320,6 +318,7 @@ public class GameView extends AbstractScene{
         updateDeleteId.getStyleClass().add("standardButton");
         updateDeleteId.setMinSize(160, 30);
         updateDeleteId.setOnAction(e->{
+            GameActions.updateTableView(tableViewGame,gameId);
             clearAnchorpane(showGamesBox);
         });
 
