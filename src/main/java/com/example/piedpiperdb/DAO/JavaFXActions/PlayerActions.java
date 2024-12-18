@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 //GEFP-31-AA
 public class PlayerActions {
     private static final PlayerDAO PLAYER_DAO = new PlayerDAO();
@@ -123,9 +122,9 @@ public class PlayerActions {
 
 
     public static List<Team> getTeamsByGame(int gameId) {
-  /*      if (gameId == 0) {
+        if (gameId == 0) {
             return Collections.emptyList(); // Returnera tom lista om gameId är 0 (alltså null)
-        }*/
+        }
         return TEAM_DAO.getTeamsByGame(List.of(gameId));
     }
 

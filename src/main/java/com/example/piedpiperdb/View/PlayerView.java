@@ -223,7 +223,7 @@ public class PlayerView extends AbstractScene{
         Game game = playerToUpdate.getGameId();
         String selectedGameValue = game != null ? game.getGameId() + ", " + game.getGameName() : null;
 
-        List<Team> teams = PlayerActions.getTeamsByGame(/*game != null ? */game.getGameId()/* : 0*/);
+        List<Team> teams = PlayerActions.getTeamsByGame(game != null ? game.getGameId() : 0);
         Team team = playerToUpdate.getTeamId();
         String selectedTeamValue = team != null ? team.getTeamId() + ", " + team.getTeamName() : null;
 
