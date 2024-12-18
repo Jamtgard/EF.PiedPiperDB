@@ -4,39 +4,40 @@ import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 //GEFP-4-SA
-public class StartPage extends AbstractScene{
+public class StartPage extends AbstractScene {
 
     //GEFP-20-SA
-    public static Scene startScene(Stage window){//Denna metod är den som kallas när man klickar på Login button i HelloApplication
+    public static Scene startScene(Stage window) {//Denna metod är den som kallas när man klickar på Login button i HelloApplication
         Scene baseScene = AbstractScene.getScene(window);
-
-        AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
-        HelloApplication helloApp = new HelloApplication();
-        AbstractScene.back.setOnAction(e->{
+        //GEFP-29-AWS kommenterar ut lite
+        /*HelloApplication helloApp = new HelloApplication();*/
+
+        AbstractScene.back.setOnAction(e -> {
             ChangeSceneAction.toLoginPage(window);//GEFP-22-SA
         });
 
-        addCustomComponents(anchorPane,window);
-        addCustomComponents(vBox,window);
+        //GEFP-29-AWS kommenterar ut lite
+        /*addCustomComponents(anchorPane,window);*/
 
+        addCustomComponents(vBox, window);
         baseScene.getStylesheets().add("EscortFlasher.css");
-
-
 
         return baseScene;
     }
 
-
+    //GEFP-29-AWS kommenterar ut lite
     //GEFP-20-SA
-    protected static void addCustomComponents(AnchorPane anchorPane,Stage window){
+     /*  protected static void addCustomComponents(AnchorPane anchorPane,Stage window){
 
         Button button = new Button("Start1");
         button.setLayoutX(10);
@@ -53,22 +54,23 @@ public class StartPage extends AbstractScene{
         hBox.getChildren().add(button2);
 
         anchorPane.getChildren().addAll(button,hBox);
-    }
+    }*/
 
     //GEFP-20-SA
-    protected static void addCustomComponents(VBox vBox,Stage window){
+    protected static void addCustomComponents(VBox vBox, Stage window) {
         System.out.println("I StartPage addCustomComponents");
 
-        Button button = new Button("Start3");
+        //GEFP-29-AWS kommenterar ut lite
+        /*Button button = new Button("Start3");
         button.getStyleClass().add("standardButton");
         button.setMinSize(160, 30);
-        /*vBox.getChildren().add(button);*/
+        vBox.getChildren().add(button);*/
 
         Button gameViewButton = new Button("Games");
         gameViewButton.getStyleClass().add("standardButton");
         gameViewButton.setMinSize(160, 30);
 
-        gameViewButton.setOnAction(e->{
+        gameViewButton.setOnAction(e -> {
             ChangeSceneAction.toGameView(window);//GEFP-22-SA
         });
 
@@ -76,22 +78,20 @@ public class StartPage extends AbstractScene{
         Button matchViewButton = new Button("Matches");
         matchViewButton.getStyleClass().add("standardButton");
         matchViewButton.setMinSize(160, 30);
-        matchViewButton.setOnAction(e->{
+        matchViewButton.setOnAction(e -> {
             ChangeSceneAction.toMatchView(window);
         });
 
         //GEFP-19-AA
-        Button playerViewButton= new Button("Players");
+        Button playerViewButton = new Button("Players");
         playerViewButton.getStyleClass().add("standardButton");
         playerViewButton.setMinSize(160, 30);
 
-        playerViewButton.setOnAction(e->{
+        playerViewButton.setOnAction(e -> {
             ChangeSceneAction.toPlayerView(window);
         });
 
-        vBox.getChildren().addAll(button,gameViewButton,matchViewButton, playerViewButton);
+        vBox.getChildren().addAll(gameViewButton, matchViewButton, playerViewButton);
     }
-
-
 
 }

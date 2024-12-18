@@ -77,6 +77,18 @@ INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (13
 INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (14, 'LillyLegend vs EthanElite', '2024-12-24', 'PLAYER_VS_PLAYER', 4);
 INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (15, 'OliverOmega vs SophiaSpark', '2024-12-25', 'PLAYER_VS_PLAYER', 5);
 
+-- GEFP-35-AA Lägger in matcher på redan existerande spelare - spelare vs spelare
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (16, 'AmazingAlma vs EagleErik', '2024-12-31', 'PLAYER_VS_PLAYER', 1);
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (17, 'SwiftSaga vs JollyJohan', '2025-01-01', 'PLAYER_VS_PLAYER', 2);
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (18, 'MightyMaria vs LuckyOskar', '2025-01-02', 'PLAYER_VS_PLAYER', 2);
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (19, 'EliteEmma vs LiamMaster', '2025-01-03', 'PLAYER_VS_PLAYER', 3);
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (20, 'EmmaPongQueen vs SuperMaja', '2025-01-04', 'PLAYER_VS_PLAYER', 4);
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (21, 'LiamTheLion vs JuJu', '2025-01-05', 'PLAYER_VS_PLAYER', 5);
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (22, 'MaxPower vs FrejTheBest', '2025-01-06', 'PLAYER_VS_PLAYER', 6);
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (23, 'TheoMaster vs CharmingAlice', '2025-01-07', 'PLAYER_VS_PLAYER', 6);
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (24, 'HugoHero vs AstridMagic', '2025-01-08', 'PLAYER_VS_PLAYER', 7);
+INSERT INTO matches (match_id, match_name, date, match_type, game_id) VALUES (25, 'EllaPower vs SebStar', '2025-01-09', 'PLAYER_VS_PLAYER', 8);
+
 -- GEFP-18-SA, ändrade stavfelet på street_address
 --GEFP-28-AWS
 INSERT INTO players (first_name, last_name, nickname,street_address,zip_code,city,country,email,game_id,team_id) VALUES ('Alma', 'Johansson', 'AmazingAlma', 'Blomvägen 10', '54321', 'Linköping', 'Sweden', 'alma.johansson@example.se', 1,1);
@@ -133,6 +145,28 @@ INSERT INTO players (player_id, first_name, last_name, nickname, street_address,
 INSERT INTO players (player_id, first_name, last_name, nickname, street_address, zip_code, city, country, email, game_id, match_id) VALUES (48, 'Ethan', 'Nyström', 'EthanElite', 'Highland Road 6', '88990', 'Helsingborg', 'Sweden', 'ethan.nystrom@example.se', 4, 14);
 INSERT INTO players (player_id, first_name, last_name, nickname, street_address, zip_code, city, country, email, game_id, match_id) VALUES (49, 'Oliver', 'Johansson', 'OliverOmega', 'Bridge Avenue 4', '99001', 'Karlstad', 'Sweden', 'oliver.johansson@example.se', 5, 15);
 INSERT INTO players (player_id, first_name, last_name, nickname, street_address, zip_code, city, country, email, game_id, match_id) VALUES (50, 'Sophia', 'Eriksson', 'SophiaSpark', 'Mountain Lane 8', '10112', 'Linköping', 'Sweden', 'sophia.eriksson@example.se', 5, 15);
+
+-- GEFP-35-AA Uppdaterar redan existerande spelare med match_id för individuella matcher
+UPDATE players SET match_id = 16 WHERE nickname = 'AmazingAlma';
+UPDATE players SET match_id = 16 WHERE nickname = 'EagleErik';
+UPDATE players SET match_id = 17 WHERE nickname = 'SwiftSaga';
+UPDATE players SET match_id = 17 WHERE nickname = 'JollyJohan';
+UPDATE players SET match_id = 18 WHERE nickname = 'MightyMaria';
+UPDATE players SET match_id = 18 WHERE nickname = 'LuckyOskar';
+UPDATE players SET match_id = 19 WHERE nickname = 'EliteEmma';
+UPDATE players SET match_id = 19 WHERE nickname = 'LiamMaster';
+UPDATE players SET match_id = 20 WHERE nickname = 'EmmaPongQueen';
+UPDATE players SET match_id = 20 WHERE nickname = 'SuperMaja';
+UPDATE players SET match_id = 21 WHERE nickname = 'LiamTheLion';
+UPDATE players SET match_id = 21 WHERE nickname = 'JuJu';
+UPDATE players SET match_id = 22 WHERE nickname = 'MaxPower';
+UPDATE players SET match_id = 22 WHERE nickname = 'FrejTheBest';
+UPDATE players SET match_id = 23 WHERE nickname = 'TheoMaster';
+UPDATE players SET match_id = 23 WHERE nickname = 'CharmingAlice';
+UPDATE players SET match_id = 24 WHERE nickname = 'HugoHero';
+UPDATE players SET match_id = 24 WHERE nickname = 'AstridMagic';
+UPDATE players SET match_id = 25 WHERE nickname = 'EllaPower';
+UPDATE players SET match_id = 25 WHERE nickname = 'SebStar';
 
 
 --GEFP-26-SA

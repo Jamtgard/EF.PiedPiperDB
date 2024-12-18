@@ -37,13 +37,14 @@ public class Match {
     private Game gameId;//GEFP-22-SA, bytte namn från "game" till "gameId"
 
     // ref till player
-    @OneToMany (mappedBy = "matchId", cascade = CascadeType.ALL) //GEFP-33-AA Tog bort joinColumn då det skapade en CONSTRAINT till player_id
-    // @JoinColumn(name = "player_id", nullable = true)
+    @OneToMany (mappedBy = "matchId", cascade = CascadeType.ALL, orphanRemoval = false)
+    //@JoinColumn(name = "player_id", nullable = true)
     private List <Player> players = new ArrayList<>();
 
     //GEFP-22-SA
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @OrderColumn
+    /*@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OrderColumn*/
+    @ManyToMany (fetch = FetchType.LAZY, mappedBy = "matchesInTeam")
     private List<Team> teams = new ArrayList<>();
 
     public Match() {
@@ -115,5 +116,4 @@ public class Match {
     public void setMatchName(String matchName) {
         this.matchName = matchName;
     }
-
 }
