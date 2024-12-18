@@ -17,18 +17,22 @@ public class TeamDAO {
     public boolean createTeam(Team team){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
+
         try {
             transaction = entityManager.getTransaction();
             transaction.begin();
             entityManager.persist(team);
             transaction.commit();
+            System.out.println("Team created successfully");
             return true;
+
         } catch (Exception e) {
             System.out.println("Error creating Team: " + team.getTeamName() + " Message: " + e.getMessage());
             if (entityManager != null && transaction != null && transaction.isActive()){
                 transaction.rollback();
             }
             return false;
+
         } finally {
             entityManager.close();
         }
@@ -154,6 +158,28 @@ public class TeamDAO {
             return true;
         } catch (Exception e) {
             System.out.println("Error deleting team by ID. Message: " + e.getMessage());
+            if (entityManager != null && transaction != null && transaction.isActive()){
+                transaction.rollback();
+            }
+            return false;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    public boolean isTeamNameUnique(String teamName){
+
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+        String query = "SELECT COUNT(*) FROM Team t WHERE t.teamName = :teamName";
+
+        try {
+            TypedQuery<Long> result = entityManager.createQuery(query, Long.class);
+            result.setParameter("teamName", teamName);
+            Long count = result.getSingleResult();
+            return count == 0;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             if (entityManager != null && transaction != null && transaction.isActive()){
                 transaction.rollback();
             }

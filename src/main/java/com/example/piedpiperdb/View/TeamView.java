@@ -2,6 +2,7 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
@@ -18,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -25,6 +27,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 //GEFP-21-SJ
@@ -34,18 +37,20 @@ public class TeamView extends AbstractScene{
     private static GameDAO gameDAO = new GameDAO();
     private static TeamDAO teamDAO = new TeamDAO();
     private static MatchDAO matchDAO = new MatchDAO();
+    //private static TeamActions teamActions = new TeamActions(teamDAO);
+
+    private static VBox idBox;
+    private static VBox vBox;
+
 
     public static Scene startTeamScene(Stage window){
 
         Scene baseScene = AbstractScene.getScene(window);
         VBox vBox = AbstractScene.leftVbox;
 
-        AbstractScene.back.setOnAction(e->{
-            ChangeSceneAction.toStartPage(window);
-        });
+        AbstractScene.back.setOnAction(e->{ ChangeSceneAction.toStartPage(window); });
 
         addCustomComponents(vBox);
-
         return baseScene;
     }
 
@@ -70,28 +75,33 @@ public class TeamView extends AbstractScene{
             showTable(anchorPane, listOfAllTeams);
         });
 
+        Button teamsByGameSelectionButton = new Button("Show Teams By Game");
+        teamsByGameSelectionButton.getStyleClass().add("standardButton");
+        teamsByGameSelectionButton.setMinSize(160, 30);
+        teamsByGameSelectionButton.setOnAction(event -> {
 
-/*        Button selectedTeamButton = new Button("Show Teams from \nselected Game \\ Games");
-        selectedTeamButton.getStyleClass().add("standardButton");
-        selectedTeamButton.setMinSize(160, 30);
-        selectedTeamButton.setOnAction(event -> {
-            List<String> listSelection = ConfirmBox.displayCheckBoxOptions("Select Team \\ Teams", listOfCheckboxes);
-            List<Integer> ids = new ArrayList<>();
-            for (String selection : listSelection) {
+            clearResultBox(idBox, TeamView.vBox);
+
+            List<String> selectedGameNames = ConfirmBox.displayCheckBoxOptions("Select game or games", listOfCheckboxes);
+            List<Integer> selectedGamesIds = new ArrayList<>();
+
+            for (String gameName : selectedGameNames) {
                 try {
-                    String[] parts = selection.split(" ");
-                    String lastPart = parts[parts.length - 1];
-                    int SelectionId = Integer.parseInt(lastPart);
-                    ids.add(SelectionId);
+
+                    String[] parts = gameName.split(" ");
+                    String lastPart  = parts[parts.length - 1];
+                    int id = Integer.parseInt(lastPart);
+                    selectedGamesIds.add(id);
+                    //System.out.println("Accepted parse of ID: " + id);
+
                 } catch (NumberFormatException e) {
                     System.out.println(e.getMessage());
-                    System.out.println("Error parsing selection: " + selection);
+                    System.out.println("Error while parse ID: " + selectedGamesIds);
                 }
             }
-            List<Team> teams = teamDAO.getTeamsByGame(ids);
+            List<Team> teams = teamDAO.getTeamsByGame(selectedGamesIds);
             showTable(anchorPane, teams);
-        });*/
-
+        });
 
         Button addNewTeamButton = new Button("Add New Team");
         addNewTeamButton.getStyleClass().add("standardButton");
@@ -114,21 +124,23 @@ public class TeamView extends AbstractScene{
             showDeleteTeamForm(anchorPane);
         });
 
-        vbox.getChildren().addAll(getAllTeamsButton, addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
+        vbox.getChildren().addAll(getAllTeamsButton, teamsByGameSelectionButton,addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
     }
 
     public static void showTable(AnchorPane anchorPane, List<Team> players){
+
+        vBox = createResultBox();
+        vBox.getStyleClass().add("textFieldOne");
+
         TableView<Team> table = createTeamTable(players);
 
-        AnchorPane.setTopAnchor(table, 150.0);
-        AnchorPane.setLeftAnchor(table, 220.0);
-        AnchorPane.setRightAnchor(table, 30.0);
-        AnchorPane.setBottomAnchor(table, 30.0);
-        anchorPane.getStyleClass().add("backgroundTeaGreen");
-        anchorPane.getStyleClass().add("standardLabel");
+        table.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        VBox.setVgrow(table, Priority.ALWAYS);
 
-        anchorPane.getStyleClass().add("columnV");
-        anchorPane.getChildren().addAll(table);
+        vBox.getChildren().add(table);
+        anchorPane.getChildren().add(vBox);
+
     }
 
     private static TableView<Team> createTeamTable(List<Team> teamMembers){
@@ -159,7 +171,14 @@ public class TeamView extends AbstractScene{
         return tableView;
     }
 
+// CRUD TeamForms
+//----------------------------------------------------------------------------------------------------------------------
+
     private static void showAddTeamForm(AnchorPane anchorPane){
+
+        TextField gameField = new TextField();
+        TextField playerField = new TextField();
+
         VBox formContainer = new VBox();
         formContainer.setPadding(new Insets(20));
         formContainer.setSpacing(10);
@@ -177,6 +196,15 @@ public class TeamView extends AbstractScene{
         teamNamefield.setPromptText("First name");
         teamNameBox.getChildren().addAll(teamName, teamNamefield);
 
+        // FIXA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        /*
+        List<Game> games = gameDAO.getAllGames();
+        HBox gameBox = createResultBoxContentBox(
+                " Game ", "Select Game",gameField, games, game -> game.getGameId() + ", " + game.getGameName()
+        );
+
+         */
+
 
 
         //Korrigera nedan:
@@ -186,7 +214,37 @@ public class TeamView extends AbstractScene{
         saveTeamButton.getStyleClass().add("standardButton");
         saveTeamButton.setMinSize(160, 30);
 
+        saveTeamButton.setOnAction(event -> {
+            Team team = null;
 
+            try {
+                if (teamNamefield.getText().isEmpty() || teamNamefield.getText().trim().isEmpty()) {
+                    AlertBox.displayAlertBox("Error", "Please fill in all mandatory fields. Fields marked with \"*\".");
+                    return;
+                } else if (!teamDAO.isTeamNameUnique(teamNamefield.getText())) {
+                    AlertBox.displayAlertBox("Error", "Team name already taken. \nPlease try again.");
+                    return;
+                } else {
+                    try {
+                        team = new Team(teamNamefield.getText());
+
+                        Label savedLabel = new Label("Team has been saved to the database.");
+                        savedLabel.getStyleClass().add("standardLabel");
+                        vBox.getChildren().add(savedLabel);
+                        //anchorPane.getChildren().add(savedLabel);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+
+                teamDAO.createTeam(team);
+
+            } catch (Exception e) {
+                AlertBox.displayAlertBox("Error", "Error while saving team.");
+            }
+        });
+
+        /*
         saveTeamButton.setOnAction(event -> {
             try {
                 // Lägg in kontroll för annat än isEmpty.. t.ex (contains " ". elr möjligen fula ord.)
@@ -197,7 +255,8 @@ public class TeamView extends AbstractScene{
                 Team team = new Team(teamNamefield.getText());
                 Label savedLabel = new Label("Team has successfully been saved to the database.");
                 savedLabel.getStyleClass().add("standardLabel");
-                formContainer.getChildren().add(savedLabel);
+                //formContainer.getChildren().add(savedLabel);
+                leftVbox.getChildren().add(savedLabel);
 
             } catch (IllegalArgumentException e) {
                 AlertBox.displayAlertBox("Error", "Please fill in mandatory fields marked with \"*\".");
@@ -205,6 +264,10 @@ public class TeamView extends AbstractScene{
                 System.out.println(e.getMessage());
             }
         });
+
+         */
+
+
 
         formContainer.getChildren().add(saveTeamButton);
         anchorPane.getChildren().add(formContainer);
@@ -351,6 +414,57 @@ public class TeamView extends AbstractScene{
 
         getIdBox.getChildren().addAll(getButton, teamIdBox);
         anchorPane.getChildren().addAll(getIdBox, formContainer);
+    }
+
+// CRUD ResultBox
+//----------------------------------------------------------------------------------------------------------------------
+
+    private static VBox createResultBox(){
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(20));
+        vBox.setSpacing(10);
+        vBox.getStyleClass().add("backgroundTeaGreen");
+        return vBox;
+    }
+
+    private static <T> HBox createResultBoxContentBox (String label, String prompt, ComboBox<String> comboBox, List<T> items, Function<T, String> itemMapper){
+
+        HBox hBox = new HBox(5);
+        Label localLabel = new Label(label);
+        localLabel.getStyleClass().add("standardLabel");
+        comboBox.setPromptText(prompt);
+        comboBox.getStyleClass().add("textFieldOne");
+
+        for (T item : items) {
+            comboBox.getItems().add(itemMapper.apply(item));
+        }
+
+        hBox.getChildren().addAll(localLabel, comboBox);
+        return hBox;
+    }
+
+    private static HBox createContentBox(String label, String prompt, TextField field, boolean update){
+
+        HBox hBox = new HBox(5);
+        Label localLabel = new Label(label);
+        field.getStyleClass().add("textFieldOne");
+
+        if(update){
+            field.setText(prompt);
+        } else {
+            field.setPromptText(prompt);
+        }
+        hBox.getChildren().addAll(localLabel, field);
+        return hBox;
+    }
+
+    private static void clearResultBox(VBox vBoxOne, VBox vBoxTwo){
+        if (vBoxOne != null && !vBoxOne.getChildren().isEmpty()) {
+            vBoxOne.getChildren().clear();
+        }
+        if (vBoxTwo != null && !vBoxTwo.getChildren().isEmpty()) {
+            vBoxTwo.getChildren().clear();
+        }
     }
 
 
