@@ -115,6 +115,7 @@ public class GameView extends AbstractScene{
 
         //--------------------------------------------------------------------
 
+        //Add game
         VBox addGameBox = new VBox();
         addGameBox.setSpacing(10);
         addGameBox.setPadding(new Insets(10,10,10,10));
@@ -153,6 +154,7 @@ public class GameView extends AbstractScene{
 
 //------------------------------------------------------------------
 
+        //Update game
         VBox updateGameBox = new VBox();
         updateGameBox.setSpacing(10);
         updateGameBox.setPadding(new Insets(10,10,10,10));
@@ -199,6 +201,7 @@ public class GameView extends AbstractScene{
 
         //------------------------------------------------------------------
 
+        //Delete game
         Button deleteGame = new Button("Delete game");
         deleteGame.getStyleClass().add("standardButton");
         deleteGame.setMinSize(160, 30);
@@ -241,7 +244,7 @@ public class GameView extends AbstractScene{
 
         //----------------------------------------------------------------
 
-
+        //Update/delete with id
         //GEFP-34-SA
         VBox showGamesBox = new VBox();
         showGamesBox.setSpacing(10);
@@ -261,7 +264,6 @@ public class GameView extends AbstractScene{
         tableViewGame.getItems().addAll(GameActions.getGames());
         tableViewGame.getColumns().addAll(gameId,gameName);
         tableViewGame.getSortOrder().add(gameId);
-        tableViewGame.getStyleClass().add("table-view-1");
 
         TextField gameIdDeleteInput = new TextField();
         gameIdDeleteInput.getStyleClass().add("textFieldOne");

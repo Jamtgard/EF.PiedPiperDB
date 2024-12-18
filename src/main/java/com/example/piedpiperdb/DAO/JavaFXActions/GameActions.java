@@ -23,9 +23,8 @@ public class GameActions {
     //GEFP-22-SA
     public static void addGame(TextField textField) {
         //GEFP-34-SA
-        if(textField.getText().isEmpty() || textField.getText().replaceAll("\\s+","").equals("")){
+        if(textField.getText().isEmpty() || textField.getText().replaceAll("\\s+", "").isEmpty()){
             AlertBox.displayAlertBox("Add game","You can't add an empty game name");
-            return;
         } else {
             String gameNameLowerCase = textField.getText().toLowerCase();
 
@@ -253,7 +252,7 @@ public class GameActions {
         gameDAO.deleteGameById(gameId);
     }
     //GEFP-22-SA
-    public static void deleteGame(ListView gameListView) {
+    public static void deleteGame(ListView<String> gameListView) {
         if(gameListView.getSelectionModel().getSelectedItems().size() == gameListView.getItems().size()) {
             AlertBox.displayAlertBox("Delete game","You can't delete all games");
         }else {
@@ -269,7 +268,7 @@ public class GameActions {
     }
     //GEFP-34-SA
     public static void deleteGameById(TextField input){
-        if(input.getText().isEmpty() ||input.getText().replaceAll("\\s+","").equals("")){
+        if(input.getText().isEmpty() || input.getText().replaceAll("\\s+", "").isEmpty()){
             AlertBox.displayAlertBox("Delete game","No game selected");
         }else {
             try{

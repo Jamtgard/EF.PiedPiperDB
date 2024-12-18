@@ -15,7 +15,7 @@ public class GameDAO {
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("myconfig");
 
     //Create
-    public boolean saveGame(Game game){
+    public void saveGame(Game game){
         EntityManager em = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction tx = null;
         try{
@@ -23,13 +23,11 @@ public class GameDAO {
             tx.begin();
             em.persist(game);
             tx.commit();
-            return true;
         }catch (Exception e){
             System.out.println(e.getMessage());
             if(em != null && tx != null && tx.isActive()){
                 tx.rollback();
             }
-            return false;
         }
     }
 
@@ -72,6 +70,7 @@ public class GameDAO {
 
             if(entityManager.contains(gameToUpdate)){
                 System.out.println("Game exists in the pool");
+                gameToUpdate.setGameName(newName);
                 entityManager.merge(gameToUpdate);
 
 
@@ -199,7 +198,7 @@ public class GameDAO {
 
 
             for(Team team : teamsToRemove){
-                gameToDelete.getMatches().remove(team);
+                gameToDelete.getTeams().remove(team);
                 team.setGameId(null);
                 entityManager.merge(team);
             }
@@ -222,7 +221,7 @@ public class GameDAO {
 
     //Delete
     //GEFP-22-SA, ändra mellan begin och commit, det gamla ligger inom /**/
-    public boolean deleteGameById(int id){
+    public void deleteGameById(int id){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
         System.out.println("deleteGameById id: " + id);
@@ -236,14 +235,11 @@ public class GameDAO {
 
 
             transaction.commit();
-            return true;
         }catch (Exception e){
             System.out.println(e.getMessage());
-            System.out.println("b-----------------------------------------------------------------------------------------------------------------------");
             if(entityManager != null && transaction != null && transaction.isActive()){
                 transaction.rollback();
             }
-            return false;
         }
         finally {
             entityManager.close();
