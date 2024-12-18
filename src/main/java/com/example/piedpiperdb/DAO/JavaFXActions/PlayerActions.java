@@ -123,7 +123,7 @@ public class PlayerActions {
 
 
     public static List<Team> getTeamsByGame(int gameId) {
-/*        if (gameId == 0) {
+  /*      if (gameId == 0) {
             return Collections.emptyList(); // Returnera tom lista om gameId är 0 (alltså null)
         }*/
         return TEAM_DAO.getTeamsByGame(List.of(gameId));

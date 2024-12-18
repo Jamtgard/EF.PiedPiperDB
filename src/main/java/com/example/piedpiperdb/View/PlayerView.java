@@ -177,7 +177,7 @@ public class PlayerView extends AbstractScene{
     public static void showUpdatePlayerForm(AnchorPane anchorPane) {
         initializeTextFieldsPlayerInfo();
 
-        resultBox = createResultBox(230.0);
+        resultBox = createResultBox(260.0);
 
         TextField playerIdField = new TextField();
         Button getPlayerButton = creatButton("Get Player");
@@ -223,7 +223,7 @@ public class PlayerView extends AbstractScene{
         Game game = playerToUpdate.getGameId();
         String selectedGameValue = game != null ? game.getGameId() + ", " + game.getGameName() : null;
 
-        List<Team> teams = PlayerActions.getTeamsByGame(game.getGameId()/*game != null ? game.getGameId() : 0*/);
+        List<Team> teams = PlayerActions.getTeamsByGame(/*game != null ? */game.getGameId()/* : 0*/);
         Team team = playerToUpdate.getTeamId();
         String selectedTeamValue = team != null ? team.getTeamId() + ", " + team.getTeamName() : null;
 
@@ -285,7 +285,9 @@ public class PlayerView extends AbstractScene{
         });
 
         resultBox.getChildren().clear();
+        Label titel = createTitleLabel("Player: ");
         resultBox.getChildren().addAll(
+                titel,
                 createResultBoxContentBox("First Name*", playerToUpdate.getFirstName(), firstNameField, true),
                 createResultBoxContentBox("Last Name*", playerToUpdate.getLastName(), lastNameField, true),
                 createResultBoxContentBox("Nickname*", playerToUpdate.getNickname(), nicknameField, true),
@@ -323,7 +325,7 @@ public class PlayerView extends AbstractScene{
         TextField playerIdField = new TextField();
         HBox playerIdBox = createResultBoxContentBox("Enter Player ID: ", "Player ID", playerIdField, false);
 
-        resultBox = createResultBox(250.0);
+        resultBox = createResultBox(260.0);
         Label labelNoPlayerFound = new Label(" No player found! Enter a different ID (only numbers allowed). ");
         labelNoPlayerFound.getStyleClass().add("standardLabel");
 
@@ -352,6 +354,8 @@ public class PlayerView extends AbstractScene{
 
     private static void showPlayerInfoForPlayerToDelete(Player playerToDelete) {
         clearResultBox(resultBox);
+        Label underTitle = createTitleLabel("Player: ");
+        resultBox.getChildren().add(underTitle);
         Label playerInfo = creatLabel(
                         "\tName: " + playerToDelete.getFullName() + "\n" +
                         "\tNickname: " + playerToDelete.getNickname() + "\n" +

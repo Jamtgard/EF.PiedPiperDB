@@ -31,6 +31,11 @@ public class Team {
     private Game gameId;//GEFP-22-SA, ändra från game till gameId
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "teams_matches",
+            joinColumns = @JoinColumn(name = "Teams_team_id"), // Namn som matchar databasen
+            inverseJoinColumns = @JoinColumn(name = "matchesInTeam_match_id") // Namn som matchar databasen
+    )
     private List<Match>matchesInTeam = new ArrayList<>();
 
 
