@@ -37,7 +37,7 @@ public class Match {
     private Game gameId;//GEFP-22-SA, bytte namn från "game" till "gameId"
 
     // ref till player
-    @OneToMany (mappedBy = "matchId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany (mappedBy = "matchId", cascade = CascadeType.ALL, orphanRemoval = false) //GEFP-36-AA ändrade orphanRemoval till false
     //@JoinColumn(name = "player_id", nullable = true)
     private List <Player> players = new ArrayList<>();
 

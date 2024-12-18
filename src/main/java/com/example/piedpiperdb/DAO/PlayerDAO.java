@@ -156,27 +156,6 @@ public class PlayerDAO {
         }
     }
 
-    //Delete        Ta bort?
-    public void deletePlayer(Player player) {
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-
-        try{
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.remove(entityManager.contains(player) ? player : entityManager.merge(player));
-            transaction.commit();
-            System.out.println("Player deleted from DB");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            if (entityManager != null && transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-        } finally {
-            entityManager.close();
-        }
-    }
-
     public boolean deletePlayerById(int id) {
         if (!removePlayerRelations(id)){
             System.out.println("Could not remove player relations. Player is not deleted.");

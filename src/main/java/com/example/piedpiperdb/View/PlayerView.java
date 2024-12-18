@@ -54,8 +54,8 @@ public class PlayerView extends AbstractScene{
 
             Button getAllPlayers = creatButton("Show all players");
             getAllPlayers.setOnAction(event -> {
-                clearResultBox(resultBox, getIdBox);
-                 VBox resultBox = createResultBox();
+                 clearResultBox(resultBox, getIdBox);
+                 resultBox = createResultBox();
                  resultBox = PlayerActions.getTableViewAllPlayers(resultBox);
                  anchorPane.getChildren().add(resultBox);
             });
@@ -65,7 +65,7 @@ public class PlayerView extends AbstractScene{
             selectedPlayers.setMinSize(160, 50);
             selectedPlayers.setOnAction(actionEvent -> {
                 clearResultBox(getIdBox, resultBox);
-                VBox resultBox = createResultBox();
+                resultBox = createResultBox();
                 List<CheckBox> checkBoxes = PlayerActions.gameCheckBoxes();
                 List<String> selections = ConfirmBox.displayCheckBoxOptions("Select game or games", checkBoxes);
                 resultBox = PlayerActions.getTableViewSelectedPlayers(resultBox, selections);
@@ -339,7 +339,7 @@ public class PlayerView extends AbstractScene{
     }
 
     private static void showPlayerInfoForPlayerToDelete(Player playerToDelete) {
-        resultBox.getChildren().clear();
+        clearResultBox(resultBox);
         Label playerInfo = creatLabel(
                         "\tName: " + playerToDelete.getFullName() + "\n" +
                         "\tNickname: " + playerToDelete.getNickname() + "\n" +
@@ -405,7 +405,8 @@ public class PlayerView extends AbstractScene{
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20));
         vBox.setSpacing(10);
-        vBox.getStyleClass().add("backgroundTeaGreen");
+
+        //vBox.getStyleClass().add("backgroundTeaGreen");
         AnchorPane.setTopAnchor(vBox, 140.0); // Y för toppen
         AnchorPane.setLeftAnchor(vBox, 210.0); // X för vänster
         AnchorPane.setRightAnchor(vBox, anchorPane.getWidth() - 210.0 - (HelloApplication.width - 235)); // Höger
@@ -417,7 +418,7 @@ public class PlayerView extends AbstractScene{
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20));
         vBox.setSpacing(10);
-        vBox.getStyleClass().add("backgroundTeaGreen");
+        //vBox.getStyleClass().add("backgroundTeaGreen");
         AnchorPane.setTopAnchor(vBox, topAnchor);
         AnchorPane.setLeftAnchor(vBox, 220.0);
         AnchorPane.setRightAnchor(vBox, 30.0);
@@ -481,6 +482,12 @@ public class PlayerView extends AbstractScene{
 
         box.getChildren().addAll(l, comboBox);
         return box;
+    }
+
+    private static void clearResultBox(VBox a){
+        if (a != null && !a.getChildren().isEmpty()) {
+            a.getChildren().clear();
+        }
     }
 
     private static void clearResultBox(VBox a, VBox b){
