@@ -1,7 +1,6 @@
 package com.example.piedpiperdb.DAO.JavaFXActions;
 
 import com.example.piedpiperdb.DAO.GameDAO;
-import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
@@ -17,18 +16,17 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
 
 //GEFP-31-AA
 public class PlayerActions {
-    private static PlayerDAO playerDAO = new PlayerDAO();
-    private static GameDAO gameDAO = new GameDAO();
-    private static TeamDAO teamDAO = new TeamDAO();
-    private static MatchDAO matchDAO = new MatchDAO();
+    private static final PlayerDAO PLAYER_DAO = new PlayerDAO();
+    private static final GameDAO GAME_DAO = new GameDAO();
+    private static final TeamDAO TEAM_DAO = new TeamDAO();
 
     public static VBox getTableViewAllPlayers(VBox vBox) {
-        List<Player> players = playerDAO.getAllPlayers();
+        List<Player> players = PLAYER_DAO.getAllPlayers();
         System.out.println(players.size());
         return showTable(vBox, players );
     }
@@ -48,13 +46,13 @@ public class PlayerActions {
             }
             System.out.println("IDs to query: " + ids);
         }
-        List<Player> players = playerDAO.getAllPlayersFromSelectedGame(ids);
+        List<Player> players = PLAYER_DAO.getAllPlayersFromSelectedGame(ids);
         System.out.println(players.size());
         return showTable(vBox, players );
     }
 
     public static List<CheckBox> gameCheckBoxes(){
-        List<Game> games = gameDAO.getAllGames();
+        List<Game> games = GAME_DAO.getAllGames();
         List<CheckBox> checkBoxes = new ArrayList<>();
 
         for (Game game : games) {
@@ -79,11 +77,7 @@ public class PlayerActions {
     }
 
     private static TableView<Player> createPlayerTable(List<Player> players){
-        players.forEach(player -> {
-            System.out.println("Player: " + player.getNickname());
-            System.out.println("Match Type: " + (player.getMatchId() != null ? player.getMatchId().getMatchType() : "No Match"));
-            System.out.println("Match Info: " + player.getMatchInfo());
-        });
+
 
         ObservableList<Player> observableList = FXCollections.observableList(players);
 
@@ -116,38 +110,59 @@ public class PlayerActions {
         TableColumn<Player, String> match = new TableColumn<>("Match");
         match.setCellValueFactory(new PropertyValueFactory<>("matchInfo"));
 
-        table.getColumns().addAll(player_id, nickname, fullName, address, country, email, game_name, team_name, match);
+        List<TableColumn<Player, ?>> columns = List.of(player_id, nickname, fullName, address, country, email, game_name, team_name, match);
+        table.getColumns().addAll(columns);
         table.setItems(observableList);
         return table;
     }
 
     public static List<Game> getAllGames() {
-        return gameDAO.getAllGames();
+        return GAME_DAO.getAllGames();
     }
 
 
     public static List<Team> getTeamsByGame(int gameId) {
-        return teamDAO.getTeamsByGame(List.of(gameId));
+        if (gameId == 0) {
+            return Collections.emptyList(); // Returnera tom lista om gameId är 0 (alltså null)
+        }
+        return TEAM_DAO.getTeamsByGame(List.of(gameId));
     }
 
-    public static void savePlayer(Player player) {
-        playerDAO.savePlayer(player);
+    public static boolean savePlayer(Player player) {
+       return PLAYER_DAO.savePlayer(player);
     }
 
     public static Player createPlayerFromFields(String firstName, String lastName, String nickname, String streetAddress,
                                                 String zipCode, String city, String country, String email,
                                                 String selectedGameValue, String selectedTeamValue) {
-        Player player = new Player(firstName, lastName, nickname, streetAddress, zipCode, city, country, email);
+
+        Player player = new Player(firstName, lastName, nickname, email);
+
+        if (streetAddress != null && !streetAddress.isEmpty()) {
+            player.setStreetAddress(streetAddress);
+        }
+
+        if (zipCode != null && !zipCode.isEmpty()) {
+            player.setZipCode(zipCode);
+        }
+
+        if (city != null && !city.isEmpty()) {
+            player.setCity(city);
+        }
+
+        if (country != null && !country.isEmpty()) {
+            player.setCountry(country);
+        }
 
         if (selectedGameValue != null && !selectedGameValue.isEmpty()) {
             int gameId = Integer.parseInt(selectedGameValue.split(",")[0].trim());
-            Game selectedGame = gameDAO.getGameById(gameId);
+            Game selectedGame = GAME_DAO.getGameById(gameId);
             player.setGameId(selectedGame);
         }
 
         if (selectedTeamValue != null && !selectedTeamValue.isEmpty()) {
             int teamId = Integer.parseInt(selectedTeamValue.split(",")[0].trim());
-            Team selectedTeam = teamDAO.getTeamById(teamId);
+            Team selectedTeam = TEAM_DAO.getTeamById(teamId);
             player.setTeamId(selectedTeam);
         }
 
@@ -160,23 +175,23 @@ public class PlayerActions {
 
     // Kontrollera om nickname är unikt
     public static boolean isNicknameUnique(String nickname) {
-        return playerDAO.isNicknameUnique(nickname);
+        return PLAYER_DAO.isNicknameUnique(nickname);
     }
 
     // Kontrollera om e-mail är unik
     public static boolean isEmailUnique(String email) {
-        return playerDAO.isEmailUnique(email);
+        return PLAYER_DAO.isEmailUnique(email);
     }
 
     public static Player getPlayerById(int playerId) {
-        return playerDAO.getPlayer(playerId);
+        return PLAYER_DAO.getPlayer(playerId);
     }
 
-    public static void updatePlayer(Player player) {
-        playerDAO.updatePlayer(player);
+    public static boolean updatePlayer(Player player) {
+        return PLAYER_DAO.updatePlayer(player);
     }
 
     public static boolean deletePlayerById(int playerId) {
-        return playerDAO.deletePlayerById(playerId);
+        return PLAYER_DAO.deletePlayerById(playerId);
     }
 }

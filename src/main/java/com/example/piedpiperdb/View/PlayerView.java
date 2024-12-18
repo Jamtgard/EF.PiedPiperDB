@@ -41,9 +41,7 @@ public class PlayerView extends AbstractScene{
 
         VBox vBox = AbstractScene.leftVbox;
 
-        AbstractScene.back.setOnAction(e->{
-            ChangeSceneAction.toStartPage(window);
-        });
+        AbstractScene.back.setOnAction(e-> ChangeSceneAction.toStartPage(window));
 
         addCustomComponents(vBox);
 
@@ -54,8 +52,10 @@ public class PlayerView extends AbstractScene{
 
             Button getAllPlayers = creatButton("Show all players");
             getAllPlayers.setOnAction(event -> {
-                clearResultBox(resultBox, getIdBox);
-                 VBox resultBox = createResultBox();
+                 clearResultBox(resultBox, getIdBox);
+                 resultBox = createResultBox();
+                 Label title = createTitleLabel("All Players");
+                 resultBox.getChildren().add(title);
                  resultBox = PlayerActions.getTableViewAllPlayers(resultBox);
                  anchorPane.getChildren().add(resultBox);
             });
@@ -65,7 +65,9 @@ public class PlayerView extends AbstractScene{
             selectedPlayers.setMinSize(160, 50);
             selectedPlayers.setOnAction(actionEvent -> {
                 clearResultBox(getIdBox, resultBox);
-                VBox resultBox = createResultBox();
+                resultBox = createResultBox();
+                Label title = createTitleLabel("Players from selected game or games");
+                resultBox.getChildren().add(title);
                 List<CheckBox> checkBoxes = PlayerActions.gameCheckBoxes();
                 List<String> selections = ConfirmBox.displayCheckBoxOptions("Select game or games", checkBoxes);
                 resultBox = PlayerActions.getTableViewSelectedPlayers(resultBox, selections);
@@ -94,51 +96,63 @@ public class PlayerView extends AbstractScene{
     }
 
     public static void showAddPlayerForm(AnchorPane anchorPane) {
-        initializeTextFieldsPlayerInfo();
+        try {
+            initializeTextFieldsPlayerInfo();
 
-        resultBox = createResultBox();
+            resultBox = createResultBox();
+            Label title = createTitleLabel("Add new player");
+            resultBox.getChildren().add(title);
 
-        resultBox.getChildren().addAll(
-                createResultBoxContentBox("First Name*", "First Name", firstNameField, false),
-                createResultBoxContentBox("Last Name*", "Last Name", lastNameField, false),
-                createResultBoxContentBox("Nickname*", "Nickname", nicknameField, false),
-                createResultBoxContentBox("Street Address", "Street Address", streetAddressField, false),
-                createResultBoxContentBox("Zip Code", "Zip Code", zipCodeField, false),
-                createResultBoxContentBox("City", "City", cityField, false),
-                createResultBoxContentBox("Country", "Country", countryField, false),
-                createResultBoxContentBox("E-mail*", "E-mail", emailField, false)
-        );
-        List<Game> games = PlayerActions.getAllGames();
-        resultBox.getChildren().add(createResultBoxContentBoxComboBox(
-                "Game", "Select Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName()
-        ));
+            resultBox.getChildren().addAll(
+                    createResultBoxContentBox("First Name*", "First Name", firstNameField, false),
+                    createResultBoxContentBox("Last Name*", "Last Name", lastNameField, false),
+                    createResultBoxContentBox("Nickname*", "Nickname", nicknameField, false),
+                    createResultBoxContentBox("Street Address", "Street Address", streetAddressField, false),
+                    createResultBoxContentBox("Zip Code", "Zip Code", zipCodeField, false),
+                    createResultBoxContentBox("City", "City", cityField, false),
+                    createResultBoxContentBox("Country", "Country", countryField, false),
+                    createResultBoxContentBox("E-mail*", "E-mail", emailField, false)
+            );
+            List<Game> games = PlayerActions.getAllGames();
+            resultBox.getChildren().add(createResultBoxContentBoxComboBox(
+                    "Game", "Select Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName()
+            ));
 
-        List<Team> teams = new ArrayList<>();
-        resultBox.getChildren().add(createResultBoxContentBoxComboBox(
-                "Team", "Select Team", teamField, teams, team -> team.getTeamId() + ", " + team.getTeamName()
-        ));
+            List<Team> teams = new ArrayList<>();
+            resultBox.getChildren().add(createResultBoxContentBoxComboBox(
+                    "Team", "Select Team", teamField, teams, team -> team.getTeamId() + ", " + team.getTeamName()
+            ));
 
-        addGameFieldListener(gameField, teamField);
+            addGameFieldListener(gameField, teamField);
 
-        Button saveButton = creatButton("Save Player");
-        saveButton.setOnAction(event -> {
-            if (validateInputNewPlayer(
-                    firstNameField.getText(), lastNameField.getText(), nicknameField.getText(), emailField.getText())) {
+            Button saveButton = creatButton("Save Player");
+            saveButton.setOnAction(event -> {
+                if (validateInputNewPlayer(
+                        firstNameField.getText(), lastNameField.getText(), nicknameField.getText(), emailField.getText())) {
 
-                Player player = PlayerActions.createPlayerFromFields(
-                        firstNameField.getText(), lastNameField.getText(), nicknameField.getText(),
-                        streetAddressField.getText(), zipCodeField.getText(), cityField.getText(),
-                        countryField.getText(), emailField.getText(),
-                        gameField.getValue(), teamField.getValue()
-                );
+                    Player player = PlayerActions.createPlayerFromFields(
+                            firstNameField.getText(), lastNameField.getText(), nicknameField.getText(),
+                            streetAddressField.getText(), zipCodeField.getText(), cityField.getText(),
+                            countryField.getText(), emailField.getText(),
+                            gameField.getValue(), teamField.getValue()
+                    );
 
-                PlayerActions.savePlayer(player);
-                Label labelSaved = creatLabel(" Player saved and updated in the database! ");
-                resultBox.getChildren().add(labelSaved);
-            }
-        });
-        resultBox.getChildren().add(saveButton);
-        anchorPane.getChildren().add(resultBox);
+                    boolean saved = PlayerActions.savePlayer(player);
+                    if (saved) {
+                        Label labelSaved = creatLabel(" Player saved and updated in the database! ");
+                        resultBox.getChildren().add(labelSaved);
+                    } else {
+                        AlertBox.displayAlertBox("Error", "An error occurred while saving the player to the database. Player not Saved!");
+                    }
+
+                }
+            });
+            resultBox.getChildren().add(saveButton);
+            anchorPane.getChildren().add(resultBox);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            AlertBox.displayAlertBox("Error", "An error occurred while saving the player to the database.");
+        }
     }
 
     //GEFP-31-AA
@@ -163,7 +177,7 @@ public class PlayerView extends AbstractScene{
     public static void showUpdatePlayerForm(AnchorPane anchorPane) {
         initializeTextFieldsPlayerInfo();
 
-        resultBox = createResultBox(230.0);
+        resultBox = createResultBox(260.0);
 
         TextField playerIdField = new TextField();
         Button getPlayerButton = creatButton("Get Player");
@@ -183,7 +197,11 @@ public class PlayerView extends AbstractScene{
             }
         });
         getIdBox = createResultBox();
+
+        Label title = createTitleLabel("Update player");
+
         getIdBox.getChildren().addAll(
+                title,
                 createResultBoxContentBox("Player ID", "Enter Player ID", playerIdField, false),
                 getPlayerButton
         );
@@ -205,7 +223,7 @@ public class PlayerView extends AbstractScene{
         Game game = playerToUpdate.getGameId();
         String selectedGameValue = game != null ? game.getGameId() + ", " + game.getGameName() : null;
 
-        List<Team> teams = PlayerActions.getTeamsByGame(game.getGameId());
+        List<Team> teams = PlayerActions.getTeamsByGame(game != null ? game.getGameId() : 0);
         Team team = playerToUpdate.getTeamId();
         String selectedTeamValue = team != null ? team.getTeamId() + ", " + team.getTeamName() : null;
 
@@ -253,16 +271,23 @@ public class PlayerView extends AbstractScene{
                             .filter(t -> t.getTeamId() == teamId).findFirst().orElse(null));
                 }
 
-                PlayerActions.updatePlayer(playerToUpdate);
-                Label labelUpdated = creatLabel("Player updated in the database!");
-                resultBox.getChildren().add(labelUpdated);
+                boolean updated = PlayerActions.updatePlayer(playerToUpdate);
+                if (updated) {
+                    Label labelUpdated = creatLabel("Player updated in the database!");
+                    resultBox.getChildren().add(labelUpdated);
+                } else {
+                    AlertBox.displayAlertBox("Error", "An error occurred while updating the player in the database. Update not saved!");
+                }
+
             } catch (Exception ex) {
                 AlertBox.displayAlertBox("Error", "An error occurred while updating the player.");
             }
         });
 
         resultBox.getChildren().clear();
+        Label titel = createTitleLabel("Player: ");
         resultBox.getChildren().addAll(
+                titel,
                 createResultBoxContentBox("First Name*", playerToUpdate.getFirstName(), firstNameField, true),
                 createResultBoxContentBox("Last Name*", playerToUpdate.getLastName(), lastNameField, true),
                 createResultBoxContentBox("Nickname*", playerToUpdate.getNickname(), nicknameField, true),
@@ -293,10 +318,14 @@ public class PlayerView extends AbstractScene{
 
     private static void showDeletePlayerForm(AnchorPane anchorPane){
         getIdBox = createResultBox();
+
+        Label title = createTitleLabel("Delete Player");
+        getIdBox.getChildren().add(title);
+
         TextField playerIdField = new TextField();
         HBox playerIdBox = createResultBoxContentBox("Enter Player ID: ", "Player ID", playerIdField, false);
 
-        resultBox = createResultBox(250.0);
+        resultBox = createResultBox(260.0);
         Label labelNoPlayerFound = new Label(" No player found! Enter a different ID (only numbers allowed). ");
         labelNoPlayerFound.getStyleClass().add("standardLabel");
 
@@ -324,7 +353,9 @@ public class PlayerView extends AbstractScene{
     }
 
     private static void showPlayerInfoForPlayerToDelete(Player playerToDelete) {
-        resultBox.getChildren().clear();
+        clearResultBox(resultBox);
+        Label underTitle = createTitleLabel("Player: ");
+        resultBox.getChildren().add(underTitle);
         Label playerInfo = creatLabel(
                         "\tName: " + playerToDelete.getFullName() + "\n" +
                         "\tNickname: " + playerToDelete.getNickname() + "\n" +
@@ -341,7 +372,7 @@ public class PlayerView extends AbstractScene{
 
         Button deleteButton = creatButton("Delete Player");
         deleteButton.setOnAction(event -> {
-            boolean deletePlayer = ConfirmBox.display("Delete Player", "Are you sure you want to delete" + playerToDelete.getFullName() +  "from the database?");
+            boolean deletePlayer = ConfirmBox.display("Delete Player", "Are you sure you want to delete " + playerToDelete.getFullName() + " (Nickname: " + playerToDelete.getNickname() +") from the database?");
 
             if (deletePlayer) {
                 boolean deleted = PlayerActions.deletePlayerById(playerToDelete.getId());
@@ -375,10 +406,16 @@ public class PlayerView extends AbstractScene{
 
     private static Button creatButton (String text){
         Button button = new Button(text);
-        new Button("Update Player");
         button.getStyleClass().add("standardButton");
         button.setMinSize(160,30);
         return button;
+    }
+
+    private static Label createTitleLabel (String text){
+        Label label = new Label();
+        label.setText(text);
+        label.getStyleClass().add("titel");
+        return label;
     }
 
     private static Label creatLabel (String text){
@@ -391,7 +428,8 @@ public class PlayerView extends AbstractScene{
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20));
         vBox.setSpacing(10);
-        vBox.getStyleClass().add("backgroundTeaGreen");
+
+        //vBox.getStyleClass().add("backgroundTeaGreen");
         AnchorPane.setTopAnchor(vBox, 140.0); // Y för toppen
         AnchorPane.setLeftAnchor(vBox, 210.0); // X för vänster
         AnchorPane.setRightAnchor(vBox, anchorPane.getWidth() - 210.0 - (HelloApplication.width - 235)); // Höger
@@ -403,7 +441,7 @@ public class PlayerView extends AbstractScene{
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20));
         vBox.setSpacing(10);
-        vBox.getStyleClass().add("backgroundTeaGreen");
+        //vBox.getStyleClass().add("backgroundTeaGreen");
         AnchorPane.setTopAnchor(vBox, topAnchor);
         AnchorPane.setLeftAnchor(vBox, 220.0);
         AnchorPane.setRightAnchor(vBox, 30.0);
@@ -467,6 +505,12 @@ public class PlayerView extends AbstractScene{
 
         box.getChildren().addAll(l, comboBox);
         return box;
+    }
+
+    private static void clearResultBox(VBox a){
+        if (a != null && !a.getChildren().isEmpty()) {
+            a.getChildren().clear();
+        }
     }
 
     private static void clearResultBox(VBox a, VBox b){
