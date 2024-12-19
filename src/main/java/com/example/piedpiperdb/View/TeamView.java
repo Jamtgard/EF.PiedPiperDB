@@ -10,6 +10,7 @@ import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -124,7 +125,7 @@ public class TeamView extends AbstractScene{
 
             Button saveButton = createButton("Save Team");
             saveButton.setOnAction(event -> {
-                if (validateInputTeamName(teamNameField.getText())) {
+                if (validateCreateTeamName(teamNameField.getText())) {
                     Team team = createTeamFromFields(teamNameField.getText(), gameField.getValue(), playerField.getValue());
                     boolean saved = TeamActions.createTeam(team);
                     if (saved) {
@@ -187,7 +188,7 @@ public class TeamView extends AbstractScene{
                     AlertBox.displayAlertBox("Error", "Team does not exist");
                     return;
                 }
-                populateUpdateTeamFormFields(teamToUpdate);
+                populateUpdateTeamFormFields(teamToUpdate, teamId);
             } catch (NumberFormatException e) {
                 AlertBox.displayAlertBox("Error", "Invalid Team ID");
             }
@@ -201,7 +202,7 @@ public class TeamView extends AbstractScene{
         anchorPane.getChildren().addAll(getIdBox, resultBox);
     }
 
-    private static void populateUpdateTeamFormFields(Team teamToUpdate){
+    private static void populateUpdateTeamFormFields(Team teamToUpdate, int teamId) {
         teamNameField.setText(teamToUpdate.getTeamName());
 
         List<Game> games = TeamActions.getAllGames();
@@ -242,7 +243,13 @@ public class TeamView extends AbstractScene{
 
     }
 
-    private static void showDeleteTeamForm(AnchorPane anchorPane){
+    /*private static void showDeleteTeamForm(AnchorPane anchorPane){
+
+        anchorPane.getChildren().clear();
+
+        VBox formBox = new VBox(10);
+        formBox.setPadding(new Insets(10));
+        formBox.setAlignment(Pos.CENTER);
 
 
         getIdBox = createResultBox();
@@ -270,9 +277,77 @@ public class TeamView extends AbstractScene{
             }
         });
 
+    }*/
+
+    private static void showDeleteTeamForm(AnchorPane anchorPane) {
+
+        Label title = createTitleLabel("Delete Team");
+
+        TextField teamIdField = new TextField();
+        HBox teamIdBox = createResultBoxContentBox("Enter Team ID: ", "Team ID", teamIdField, false);
+
+        resultBox = createResultBox();
+        resultBox.getChildren().addAll(title,teamIdBox);
+
+        Button getButton = createButton("Get Team");
+        getButton.setOnAction(event -> {
+            try {
+                int teamId = Integer.parseInt(teamIdField.getText());
+                Team teamToDelete = TeamActions.getTeamById(teamId);
+
+                //clearResultBox(resultBox);
+
+                if (teamToDelete == null) {
+                    AlertBox.displayAlertBox("Error", "Team does not exist");
+                    return;
+                }
+
+                showTeamInfoForDeletion(teamToDelete);
+
+            } catch (NumberFormatException e) {
+                AlertBox.displayAlertBox("Error", "Invalid Team ID format.");
+            } catch (Exception e) {
+                AlertBox.displayAlertBox("Error", "An error occurred while fetching the team.");
+            }
+        });
+        resultBox.getChildren().add(getButton);
+        anchorPane.getChildren().add(resultBox);
     }
 
-    private static void showTeamInfoForDeletion (Team team){
+
+    private static void showTeamInfoForDeletion(Team team) {
+        clearResultBox(resultBox);
+
+        Label title = createTitleLabel("Team info:");
+        //resultBox.getChildren().add(title);
+
+        Label teamInfo = createLabel(
+                "\tTeam Name: " + team.getTeamName() + "\n" +
+                        "\tGame: " + team.getGameName() + "\n" +
+                        "\tPlayers: " + TeamActions.getPlayersInTeam(team)
+        );
+        resultBox.getChildren().addAll(title, teamInfo);
+
+        Button deleteTeamButton = createButton("Delete Team");
+        deleteTeamButton.setOnAction(event -> {
+            boolean confirmDelete = ConfirmBox.display("Delete Team", "Are you sure you want to delete " + team.getTeamName() + "?");
+
+            if (confirmDelete) {
+                boolean deleted = TeamActions.deleteTeamById(team.getTeamId());
+                clearResultBox(resultBox);
+
+                if (deleted) {
+                    Label deletedLabel = createLabel("Team successfully deleted.");
+                    resultBox.getChildren().add(deletedLabel);
+                } else {
+                    AlertBox.displayAlertBox("Error", "Error while deleting the team.");
+                }
+            }
+        });
+        resultBox.getChildren().add(deleteTeamButton);
+    }
+
+/*    private static void showTeamInfoForDeletion (Team team){
         clearResultBox(resultBox);
         Label title = createTitleLabel("Team: ");
         resultBox.getChildren().add(title);
@@ -301,7 +376,7 @@ public class TeamView extends AbstractScene{
                 AlertBox.displayAlertBox("Error", "Error while deleting Team");
             }
         });
-    }
+    }*/
 
 // ResultBox
 //----------------------------------------------------------------------------------------------------------------------
@@ -424,16 +499,35 @@ public class TeamView extends AbstractScene{
         playerField = new ComboBox<>();
     }
 
-    //Ändra kanske sen för att kunna Applicera på flera
     private static boolean validateInputTeamName (String teamName) {
-        List<Team> allOtherTeams = allOtherTeams(teamName);
+
+        //Usage: Creation of new Team
+
+        if (teamName == null || teamName.isEmpty()) {
+            AlertBox.displayAlertBox("Error", "Team name is required.");
+            return false;
+        }
+        if (TeamActions.isTeamNameUnique(teamName)) {
+            AlertBox.displayAlertBox("Error", "Team name already exists. Choose another.");
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean validateCreateTeamName (String teamName) {
+
+        //Usage: Updating excisting Team without having to change name.
+
+        List<Team> allOtherTeams = TeamActions.getAllOtherTeamsExcluding(teamName);
+
+        System.out.println(allOtherTeams.size());
 
         for (Team team : allOtherTeams) {
             if (teamName == null || teamName.isEmpty()) {
                 AlertBox.displayAlertBox("Error", "Team name is required.");
                 return false;
             }
-            if (!TeamActions.isTeamNameUnique(teamName)) {
+            if (team.getTeamName().equals(teamName)) {
                 AlertBox.displayAlertBox("Error", "Team name already exists. Choose another.");
                 return false;
             }
@@ -441,13 +535,4 @@ public class TeamView extends AbstractScene{
         return true;
     }
 
-    private static List<Team> allOtherTeams(String teamName){
-        List<Team> allTeams = TeamActions.getAllTeams();
-
-        List<Team> allOtherTeams = allTeams.stream()
-                .filter(team -> !team.getTeamName().equalsIgnoreCase(teamName))
-                .toList();
-
-        return allOtherTeams;
-    }
 }

@@ -193,6 +193,7 @@ public class TeamDAO {
         }
     }
 
+
     private static boolean validateInputTeamName (String teamName) {
         List<Team> allOtherTeams = allOtherTeams(teamName);
 

@@ -185,6 +185,18 @@ public class TeamActions {
     }
 
     public static List<Team> getAllTeams(){return teamDAO.getAllTeams();}
+    //public static Team getTeamByName(String teamName){}
 
+    public static List<Team> getAllOtherTeamsExcluding (String teamName) {
+        List<Team> allTeams = teamDAO.getAllTeams();
+        //System.out.println(allTeams.size());
+
+        List<Team> allOtherTeams = allTeams.stream()
+                .filter(team -> !team.getTeamName().equalsIgnoreCase(teamName))
+                .toList();
+
+        return allOtherTeams;
+
+    }
 
 }
