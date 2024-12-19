@@ -8,7 +8,6 @@ import com.example.piedpiperdb.Entities.*;
 import java.time.LocalDate;
 import java.util.List;
 
-
 //GEFP-32-AWS
 public class MatchActions {
     private static MatchDAO matchDAO = new MatchDAO();
