@@ -79,7 +79,7 @@
 }
 .table-view .column-header{
     -fx-background-color: linear-gradient(#d0e3c4 0%,#B0E3C9 100%);
-    -fx-font-size: 16;
+    -fx-font-size: 14.5;
     -fx-font-family: "Bell MT";
 }
 .table-view .filler{
@@ -98,5 +98,5 @@
 }
 .table-row-cell:selected{
     -fx-background-color: #adc698;
-    -fx-text-fill: #1A1F16;
+
 }
