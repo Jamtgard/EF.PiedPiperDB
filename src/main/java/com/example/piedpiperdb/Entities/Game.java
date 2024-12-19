@@ -42,6 +42,12 @@ public class Game {
 
     }
 
+    //GEFP-41-AWS
+    @Override
+    public String toString() {
+        return this.getGameName();
+    }
+
     public Game(String gameName) {
         this.gameName = gameName;
     }
