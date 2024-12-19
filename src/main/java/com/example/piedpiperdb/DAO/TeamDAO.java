@@ -1,6 +1,8 @@
 
 package com.example.piedpiperdb.DAO;
 
+import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
+import com.example.piedpiperdb.View.AlertBox;
 import jakarta.persistence.*;
 import com.example.piedpiperdb.Entities.Team;
 
@@ -93,7 +95,7 @@ public class TeamDAO {
 
     // Update Team
 
-    public void updateTeam(Team team){
+    public boolean updateTeam(Team team){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
 
@@ -107,11 +109,13 @@ public class TeamDAO {
             }
             entityManager.merge(team);
             transaction.commit();
+            return true;
         } catch (Exception e) {
             System.out.println("Error updating Team " + team.getTeamName() + " Message: " + e.getMessage());
             if (entityManager != null && transaction != null && transaction.isActive()){
                 transaction.rollback();
             }
+            return false;
         } finally {
             entityManager.close();
         }
@@ -187,6 +191,32 @@ public class TeamDAO {
         } finally {
             entityManager.close();
         }
+    }
+
+    private static boolean validateInputTeamName (String teamName) {
+        List<Team> allOtherTeams = allOtherTeams(teamName);
+
+        for (Team team : allOtherTeams) {
+            if (teamName == null || teamName.isEmpty()) {
+                AlertBox.displayAlertBox("Error", "Team name is required.");
+                return false;
+            }
+            if (!TeamActions.isTeamNameUnique(teamName)) {
+                AlertBox.displayAlertBox("Error", "Team name already exists. Choose another.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static List<Team> allOtherTeams(String teamName){
+        List<Team> allTeams = TeamActions.getAllTeams();
+
+        List<Team> allOtherTeams = allTeams.stream()
+                .filter(team -> !team.getTeamName().equalsIgnoreCase(teamName))
+                .toList();
+
+        return allOtherTeams;
     }
 }
 

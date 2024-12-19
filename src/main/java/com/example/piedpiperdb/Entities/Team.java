@@ -86,8 +86,6 @@ public class Team {
     }
 
     // ToString
-
-
     @Override
     public String toString() {
         return "Team{" +

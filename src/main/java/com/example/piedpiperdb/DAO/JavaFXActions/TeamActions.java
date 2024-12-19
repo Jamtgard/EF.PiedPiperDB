@@ -122,10 +122,23 @@ public class TeamActions {
 //----------------------------------------------------------------------------------------------------------------------
 
     //Create
-    public  static void createTeam(Team team){teamDAO.createTeam(team);}
-    public static Team createTeamFromFieldsInput (String teamName){
-        // WIP - add funtion to add game and players
+    public static boolean createTeam(Team team){return teamDAO.createTeam(team);}
+    public static Team createTeamFromFieldsInput (String teamName, String selectedGameValue, String selectedPlayerValue){
+
         Team team = new Team(teamName);
+
+        if (selectedGameValue != null && !selectedGameValue.isEmpty()) {
+            int gameId = Integer.parseInt(selectedGameValue.split(",")[0].trim());
+            Game selectedGame = gameDAO.getGameById(gameId);
+            team.setGameId(selectedGame);
+        }
+
+        if (selectedPlayerValue != null && !selectedPlayerValue.isEmpty()) {
+
+            //WIP
+        }
+
+
         return team;
     }
 
@@ -136,7 +149,7 @@ public class TeamActions {
     }
 
     //Update
-    public static void updateTeam(Team team){teamDAO.updateTeam(team);}
+    public static boolean updateTeam(Team team){ return teamDAO.updateTeam(team);}
 
     //Delete
     public static void deleteTeam(Team team){teamDAO.deleteTeam(team);}
@@ -149,11 +162,29 @@ public class TeamActions {
 // Get Actions
 //----------------------------------------------------------------------------------------------------------------------
 
+    public static Game getGameById(int gameId){return gameDAO.getGameById(gameId);}
     public static List<Game> getAllGames(){return gameDAO.getAllGames();}
 
+    public static Player getPlayerById(int playerId){return playerDAO.getPlayer(playerId);}
+    public static List<Player> getAllPlayers(){return playerDAO.getAllPlayers();}
+    public static List<Player> getAllAvailablePlayers(){
 
+        List<Player> listOfAllPlayers = getAllPlayers();
+        List<Player> availablePlayers = new ArrayList<>();
 
+        for (Player player : listOfAllPlayers) {
+            if (player.getTeamId() == null){
+                availablePlayers.add(player);
+            }
+        }
 
+        return availablePlayers;
+    }
+    public static List<Player> getPlayersInTeam(Team team){
+        return team.getListOfPlayersInTeam();
+    }
+
+    public static List<Team> getAllTeams(){return teamDAO.getAllTeams();}
 
 
 }
