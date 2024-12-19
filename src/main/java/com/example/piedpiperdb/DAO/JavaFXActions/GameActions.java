@@ -43,7 +43,7 @@ public class GameActions {
 
             //GEFP-22-SA
             String gameName = textField.getText();
-            Game newGame = new Game(gameName);
+            Game newGame = new Game(firstLetterCap(gameName));
             gameDAO.saveGame(newGame);
         }
 
@@ -163,6 +163,14 @@ public class GameActions {
         return false;
     }
 
+    //GEFP-39-SA
+    public static String firstLetterCap(String gameName){
+        String caps = gameName.toUpperCase();
+        String withCap = caps.charAt(0) + gameName.substring(1);
+        System.out.println(withCap);
+        return withCap;
+    }
+
     //GEFP-22-SA
     public static void updateGame(TextField textField,ChoiceBox<String> choiceBox) {
         //GEFP-26-SA, la till if-sats för om textfield är tomt
@@ -187,7 +195,7 @@ public class GameActions {
             if (game.get(i).getGameName().equals(selectedGame)) {
                 Game oldGame = game.get(i);
                 System.out.println(oldGame.getGameName());
-                gameDAO.updateGame(oldGame, newGameName);
+                gameDAO.updateGame(oldGame, firstLetterCap(newGameName));
             }
         }
 
