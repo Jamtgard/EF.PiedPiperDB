@@ -38,18 +38,18 @@ public class Player {
     private String email;
 
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     private Game gameId;
 
     //GEFP-12-AA
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "team_id")
     private Team teamId;
 
     //GEFP-12-AA
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "match_id")
     private Match matchId;
 
@@ -60,75 +60,12 @@ public class Player {
 
     }
 
-    public Player(String firstName, String lastName, String nickname) {
+    //GEFP-36-AA Tog bort flera konstruktorer och la till endast den med obligatoriska fält.
+    public Player(String firstName, String lastName, String nickname, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.nickname = nickname;
-    }
-
-    //GEFP-19-AA
-
-
-    public Player(String firstName, String lastName, String nickname, String streetAddress) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nickname = nickname;
-        this.streetAddress = streetAddress;
-    }
-
-    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nickname = nickname;
-        this.streetAddress = streetAddress;
-        this.zipCode = zipCode;
-    }
-
-    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nickname = nickname;
-        this.streetAddress = streetAddress;
-        this.zipCode = zipCode;
-        this.city = city;
-    }
-
-    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nickname = nickname;
-        this.streetAddress = streetAddress;
-        this.zipCode = zipCode;
-        this.city = city;
-        this.country = country;
-    }
-
-
-
-    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nickname = nickname;
-        this.streetAddress = streetAddress;
-        this.zipCode = zipCode;
-        this.city = city;
-        this.country = country;
         this.email = email;
-    }
-
-    //GEFP-12-AA
-    public Player(String firstName, String lastName, String nickname, String streetAddress, String zipCode, String city, String country, String email, Game gameId, Team teamId, Match matchId) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.nickname = nickname;
-        this.streetAddress = streetAddress;
-        this.zipCode = zipCode;
-        this.city = city;
-        this.country = country;
-        this.email = email;
-        this.gameId = gameId;
-        this.teamId = teamId;
-        /*this.matchId = matchId;*/
     }
 
 //------------------------------------------------------
@@ -195,12 +132,36 @@ public class Player {
         this.city = city;
     }
 
-    //GEFP-19-AA
+    //GEFP-19-AA //GEFP-36-AA uppdaterade metoden StringBuilder
+    @SuppressWarnings("unused") //Används i TableView genom reflektion och ger därför varning
     public String getFullAddress(){
-        return streetAddress + "\n" + zipCode + "\n" + city;
+        StringBuilder fullAddress = new StringBuilder();
+
+        if (streetAddress != null && !streetAddress.isEmpty()){
+            fullAddress.append(streetAddress).append("\n");
+        }
+
+        if (zipCode != null && !zipCode.isEmpty()){
+            fullAddress.append(zipCode).append("\n");
+        }
+
+        if (city != null && !city.isEmpty()){
+            fullAddress.append(city);
+        }
+
+        if (fullAddress.length() > 0){
+            return fullAddress.toString();
+        } else {
+            return "No address registered";
+        }
     }
 
+
+    //GEFP-36-AA la till if-satsen för tydlighet i tabellen i view
     public String getCountry() {
+        if (country == null || country.isEmpty()){
+            return "No country registered";
+        }
         return country;
     }
 

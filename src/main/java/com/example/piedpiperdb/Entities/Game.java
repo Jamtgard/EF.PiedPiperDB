@@ -1,7 +1,10 @@
 package com.example.piedpiperdb.Entities;
 
 import jakarta.persistence.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,8 @@ public class Game {
     private int gameId;//GEFP-22-SA, bytte namn på variablerna till gameId och gameName
 
     //GEFP-18-SA, satte längre längd på namnet
-    @Column(name = "game_name",length = 70,nullable = false,unique = true)//GEFP-25-SA, la till unique så inte samma spelnamn längs in två gånger
+    //GEFP-34-SA, lenght 70 till 120
+    @Column(name = "game_name",length = 120, nullable = false,unique = true)//GEFP-25-SA, la till unique så inte samma spelnamn längs in två gånger
     private String gameName;
 
 
@@ -33,6 +37,7 @@ public class Game {
     @OneToMany(mappedBy = "gameId", orphanRemoval = false,fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<Team> teams = new ArrayList<>();
 
+    //GEFP-18-SA
     public Game() {
 
     }
@@ -60,6 +65,5 @@ public class Game {
     public int getGameId() {return gameId;}
 
     public void setGameId(int game_id) {this.gameId = game_id;}
-
 
 }
