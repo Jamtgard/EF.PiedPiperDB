@@ -24,7 +24,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -40,7 +39,7 @@ public class TeamView extends AbstractScene{
     //private static TeamActions teamActions = new TeamActions(teamDAO);
 
     private static VBox idBox;
-    private static VBox vBox;
+    private static VBox resultBox;
 
 
     public static Scene startTeamScene(Stage window){
@@ -70,37 +69,31 @@ public class TeamView extends AbstractScene{
         getAllTeamsButton.getStyleClass().add("standardButton");
         getAllTeamsButton.setMinSize(160, 30);
         getAllTeamsButton.setOnAction(event -> {
-            List<Team> listOfAllTeams = teamDAO.getAllTeams();
-            System.out.println(listOfAllTeams.size());
-            showTable(anchorPane, listOfAllTeams);
+
+            clearResultBox(resultBox, idBox);
+            resultBox = createResultBox();
+            resultBox = TeamActions.getTableViewAllTeams(resultBox);
+            anchorPane.getChildren().add(resultBox);
+
         });
 
         Button teamsByGameSelectionButton = new Button("Show Teams By Game");
         teamsByGameSelectionButton.getStyleClass().add("standardButton");
         teamsByGameSelectionButton.setMinSize(160, 30);
+
         teamsByGameSelectionButton.setOnAction(event -> {
+            clearResultBox(resultBox, idBox);
 
-            clearResultBox(idBox, TeamView.vBox);
+            resultBox = createResultBox();
+            Label titel = new Label("Teams from selected game or games");
+            titel.getStyleClass().add("standardLabel");
+            resultBox.getChildren().add(titel);
 
-            List<String> selectedGameNames = ConfirmBox.displayCheckBoxOptions("Select game or games", listOfCheckboxes);
-            List<Integer> selectedGamesIds = new ArrayList<>();
+            List<CheckBox> checkBoxes = TeamActions.gameCheckBoxes();
+            List<String> selections = ConfirmBox.displayCheckBoxOptions("Selected game or games", checkBoxes);
+            resultBox = TeamActions.getTableViewSelectedTeams(resultBox, selections);
 
-            for (String gameName : selectedGameNames) {
-                try {
-
-                    String[] parts = gameName.split(" ");
-                    String lastPart  = parts[parts.length - 1];
-                    int id = Integer.parseInt(lastPart);
-                    selectedGamesIds.add(id);
-                    //System.out.println("Accepted parse of ID: " + id);
-
-                } catch (NumberFormatException e) {
-                    System.out.println(e.getMessage());
-                    System.out.println("Error while parse ID: " + selectedGamesIds);
-                }
-            }
-            List<Team> teams = teamDAO.getTeamsByGame(selectedGamesIds);
-            showTable(anchorPane, teams);
+            anchorPane.getChildren().add(resultBox);
         });
 
         Button addNewTeamButton = new Button("Add New Team");
@@ -127,59 +120,13 @@ public class TeamView extends AbstractScene{
         vbox.getChildren().addAll(getAllTeamsButton, teamsByGameSelectionButton,addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
     }
 
-    public static void showTable(AnchorPane anchorPane, List<Team> players){
-
-        vBox = createResultBox();
-        vBox.getStyleClass().add("textFieldOne");
-
-        TableView<Team> table = createTeamTable(players);
-
-        table.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        // Korrigerar bredden - Ej önskvärt utan mer utfyllnad.
-        //table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        VBox.setVgrow(table, Priority.ALWAYS);
-
-        vBox.getChildren().add(table);
-        anchorPane.getChildren().add(vBox);
-
-    }
-
-    private static TableView<Team> createTeamTable(List<Team> teamMembers){
-        ObservableList<Team> teamsObservableList = FXCollections.observableArrayList(teamMembers);
-
-        TableView<Team> tableView = new TableView<>();
-
-        TableColumn<Team, String> team_id = new TableColumn<>("Team ID");
-        team_id.setCellValueFactory(new PropertyValueFactory<>("teamId"));
-
-
-        TableColumn<Team, String> team_name = new TableColumn<>("Team Name");
-        team_name.setCellValueFactory(new PropertyValueFactory<>("teamName"));
-
-        TableColumn<Team, String> game_name = new TableColumn<>("Game");
-        game_name.setCellValueFactory(new PropertyValueFactory<>("gameName"));
-
-        TableColumn<Team, String> player_nickname = new TableColumn<>("Players");
-        player_nickname.setCellValueFactory(cellData ->{
-            Team team = cellData.getValue();
-            String Nicknames = team.getListOfPlayersInTeam().stream()
-                    .map(Player::getNickname)
-                    .collect(Collectors.joining("\n"));
-            return new SimpleStringProperty(Nicknames);
-        });
-
-        tableView.getColumns().addAll(team_id, team_name, game_name, player_nickname);
-        tableView.setItems(teamsObservableList);
-        return tableView;
-    }
-
 // CRUD TeamForms
 //----------------------------------------------------------------------------------------------------------------------
 
     private static void showAddTeamForm(AnchorPane anchorPane){
 
         //TextField gameField = new TextField();
-        TextField playerField = new TextField();
+        //TextField playerField = new TextField();
 
         ComboBox gameField = new ComboBox();
 
@@ -225,22 +172,29 @@ public class TeamView extends AbstractScene{
                     AlertBox.displayAlertBox("Error", "Team name already taken. \nPlease try again.");
                     return;
                 } else {
+
+                    Game selectedGame = (Game) gameField.getValue();
+
                     try {
                         team = new Team(teamNamefield.getText());
+                        team.setGameId(selectedGame);
 
                         Label savedLabel = new Label("Team has been saved to the database.");
                         savedLabel.getStyleClass().add("standardLabel");
-                        vBox.getChildren().add(savedLabel);
-                        //anchorPane.getChildren().add(savedLabel);
+                        resultBox.getChildren().add(savedLabel);
+                        anchorPane.getChildren().add(savedLabel);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
+
+
                 }
 
-                teamDAO.createTeam(team);
+                TeamActions.createTeam(team);
 
             } catch (Exception e) {
                 AlertBox.displayAlertBox("Error", "Error while saving team.");
+                System.out.println(e.getMessage());
             }
         });
 
@@ -301,7 +255,7 @@ public class TeamView extends AbstractScene{
         AnchorPane.setRightAnchor(formContainer, 30.0);
         AnchorPane.setBottomAnchor(formContainer, 30.0);
 
-        Button getButton = new Button("Get Team  to Update from database");
+        Button getButton = new Button("Get Team to Update");
         getButton.getStyleClass().add("standardButton");
         //getButton.set
 
@@ -423,7 +377,7 @@ public class TeamView extends AbstractScene{
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20));
         vBox.setSpacing(10);
-        vBox.getStyleClass().add("backgroundTeaGreen");
+
 
         AnchorPane.setTopAnchor(vBox, 140.0);
         AnchorPane.setLeftAnchor(vBox, 210.0);
@@ -432,8 +386,6 @@ public class TeamView extends AbstractScene{
 
         return vBox;
     }
-
-
 
     private static <T> HBox createResultBoxContentBox (String label, String prompt, ComboBox<String> comboBox, List<T> items, Function<T, String> itemMapper){
 

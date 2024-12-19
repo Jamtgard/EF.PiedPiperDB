@@ -4,6 +4,7 @@ import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
+import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
 import com.example.piedpiperdb.View.AlertBox;
@@ -12,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -30,7 +32,7 @@ public class TeamActions {
     //public TeamActions(TeamDAO teamDAO) {this.teamDAO = teamDAO;}
 
 
-// get TableView
+//TableView
 //----------------------------------------------------------------------------------------------------------------------
 
     public static VBox getTableViewAllTeams(VBox vBox) {
@@ -59,31 +61,42 @@ public class TeamActions {
         return showTable(vBox, teams);
     }
 
-// Create TableView
+    public static List<CheckBox> gameCheckBoxes (){
+        List<Game> games = gameDAO.getAllGames();
+        List<CheckBox> checkBoxes = new ArrayList<>();
+
+        for (Game game : games) {
+            String gameName = game.getGameName();
+            int gameId = game.getGameId();
+
+            CheckBox checkBox = new CheckBox(gameName + ", Game ID: " + gameId);
+            checkBoxes.add(checkBox);
+        }
+        return checkBoxes;
+    }
+
+// Show Table & Create Team Table
 //----------------------------------------------------------------------------------------------------------------------
 
-    public static VBox showTable (VBox vBox, List<Team> teams){
+    public static VBox showTable(VBox vBox, List<Team> teams){
 
         vBox.getStyleClass().add("textFieldOne");
-
-        TableView<Team> tableView = createTeamTable(teams);
-
-        tableView.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        VBox.setVgrow(tableView, Priority.ALWAYS);
-        vBox.getChildren().add(tableView);
-
+        TableView<Team> table = createTeamTable(teams);
+        table.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        VBox.setVgrow(table, Priority.ALWAYS);
+        vBox.getChildren().add(table);
         return vBox;
+
     }
 
     private static TableView<Team> createTeamTable(List<Team> teams){
-
         ObservableList<Team> teamsObservableList = FXCollections.observableArrayList(teams);
 
         TableView<Team> tableView = new TableView<>();
 
-        TableColumn<Team, String> team_id = new TableColumn<>("Team Name");
+        TableColumn<Team, String> team_id = new TableColumn<>("Team ID");
         team_id.setCellValueFactory(new PropertyValueFactory<>("teamId"));
+
 
         TableColumn<Team, String> team_name = new TableColumn<>("Team Name");
         team_name.setCellValueFactory(new PropertyValueFactory<>("teamName"));
@@ -108,6 +121,7 @@ public class TeamActions {
 // CRUDs (Team Actions for FX)
 //----------------------------------------------------------------------------------------------------------------------
 
+    //Create
     public  static void createTeam(Team team){teamDAO.createTeam(team);}
     public static Team createTeamFromFieldsInput (String teamName){
         // WIP - add funtion to add game and players
@@ -115,13 +129,16 @@ public class TeamActions {
         return team;
     }
 
+    //Read
     public static Team getTeamById(int teamId){return teamDAO.getTeamById(teamId);}
     public static List<Team> getTeamsByGame (int gameId){
         return teamDAO.getTeamsByGame(List.of(gameId));
     }
 
+    //Update
     public static void updateTeam(Team team){teamDAO.updateTeam(team);}
 
+    //Delete
     public static void deleteTeam(Team team){teamDAO.deleteTeam(team);}
     public static boolean deleteTeamById(int teamId){return teamDAO.deleteTeamById(teamId);}
 
@@ -129,6 +146,10 @@ public class TeamActions {
     public static boolean isTeamNameUnique(String teamName){return teamDAO.isTeamNameUnique(teamName);}
     public static boolean isFieldEmpty(String teamName){return teamName.isEmpty();}
 
+// Get Actions
+//----------------------------------------------------------------------------------------------------------------------
+
+    public static List<Game> getAllGames(){return gameDAO.getAllGames();}
 
 
 
