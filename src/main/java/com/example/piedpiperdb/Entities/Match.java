@@ -3,6 +3,7 @@ package com.example.piedpiperdb.Entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //AWS GEFP-3
@@ -61,6 +62,13 @@ public class Match {
         this.matchDate = matchDate;
 
     }
+    public String getGameName() {
+        return gameId !=null ? gameId.getGameName() : "No Game Registered";
+    }
+
+    public boolean isMatchDecided(){
+        return this.matchResult != null && !this.matchResult.isEmpty();
+    }
 
     // ------------------------------- GETTERS AND SETTERS --------------------------------------
 
@@ -89,9 +97,6 @@ public class Match {
     public void setMatchResult(String result) {
         this.matchResult = result;
     }
-    public String getGameName() {
-        return gameId !=null ? gameId.getGameName() : "No Game Registered";
-    }
     public Game getGameId() {
         return gameId;
     }
@@ -116,4 +121,5 @@ public class Match {
     public void setMatchName(String matchName) {
         this.matchName = matchName;
     }
+
 }

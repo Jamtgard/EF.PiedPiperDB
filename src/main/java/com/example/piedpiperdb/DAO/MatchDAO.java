@@ -37,13 +37,7 @@ public class MatchDAO {
             }
         }
     //AWS GEFP-13
-            // hämta en match       Read One/All
-        public Match getMatchById(int id) {
-            EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-            Match matchToReturn = entityManager.find(Match.class, id);
-            entityManager.close();
-            return matchToReturn;
-        }
+            // Read One/All
             // hämta lista med matcher
         public static List<Match> getAllMatches() {
             EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
@@ -80,28 +74,6 @@ public class MatchDAO {
         }
     //AWS GEFP-13
     // Delete
-        public void deleteMatch(Match matchToDelete) {
-            EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-            EntityTransaction transaction = null;
-            try{
-                transaction = entityManager.getTransaction();
-                transaction.begin();
-                if(!entityManager.contains(matchToDelete)) {
-                    matchToDelete = entityManager.merge(matchToDelete);
-                }
-                entityManager.remove(matchToDelete);
-                transaction.commit();
-            } catch (Exception e) {
-                System.out.println("Error while deleting match: " + e.getMessage());
-                if(entityManager != null && transaction != null && transaction.isActive()) {
-                    transaction.rollback();
-                }
-            }
-            finally {
-                entityManager.close();
-            }
-        }
-        //
         public boolean deleteMatchById(int id) {
             EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
             EntityTransaction transaction = null;
@@ -208,4 +180,5 @@ public class MatchDAO {
                 entityManager.close();
             }
         }
+
 }
