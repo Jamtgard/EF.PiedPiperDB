@@ -19,7 +19,6 @@ public class StartPage extends AbstractScene{
         AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
-        HelloApplication helloApp = new HelloApplication();
         AbstractScene.back.setOnAction(e->{
             ChangeSceneAction.toLoginPage(window);//GEFP-22-SA
         });
@@ -30,39 +29,18 @@ public class StartPage extends AbstractScene{
         baseScene.getStylesheets().add("EscortFlasher.css");
 
 
-
         return baseScene;
     }
 
 
     //GEFP-20-SA
     protected static void addCustomComponents(AnchorPane anchorPane,Stage window){
-
-        Button button = new Button("Start1");
-        button.setLayoutX(10);
-        button.setLayoutY(50);
-
-        HBox hBox = new HBox();
-        hBox.setSpacing(10);
-        hBox.getStyleClass().add("columnV");
-        hBox.setLayoutY(100);
-        hBox.setLayoutX(100);
-        hBox.setMinSize(200, 200);
-        Button button2 = new Button("Start2");
-
-        hBox.getChildren().add(button2);
-
-        anchorPane.getChildren().addAll(button,hBox);
+        //GEFP-43-SA, tog bort example hBox o knappar
     }
 
     //GEFP-20-SA
     protected static void addCustomComponents(VBox vBox,Stage window){
         System.out.println("I StartPage addCustomComponents");
-
-        Button button = new Button("Start3");
-        button.getStyleClass().add("standardButton");
-        button.setMinSize(160, 30);
-        /*vBox.getChildren().add(button);*/
 
         Button gameViewButton = new Button("Games");
         gameViewButton.getStyleClass().add("standardButton");
@@ -98,7 +76,7 @@ public class StartPage extends AbstractScene{
             ChangeSceneAction.toTeamView(window);
         });
 
-        vBox.getChildren().addAll(button,gameViewButton,matchViewButton, playerViewButton, teamViewButton);
+        vBox.getChildren().addAll(gameViewButton,matchViewButton, playerViewButton, teamViewButton);
     }
 
 

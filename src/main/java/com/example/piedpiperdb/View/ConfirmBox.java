@@ -154,84 +154,52 @@ public class ConfirmBox {
         window.showAndWait();
     }
 
-    //GEFP-34-SA
-    public static void setStyling(Stage window, VBox vBox,Label gameLabel,Button ok){
+    //GEFP-26-SA
+    //GEFP-34-SA, la till playersCount
+    //GEFP-43-SA, ändra om från två olika med Player och Match till en
+    public static <T> void displayItemsOnList(String game, ObservableList<T> items, String itemsCount, String type){
+        Stage window = new Stage();
+        window.setTitle(type+" of "+game);
         window.initModality(Modality.APPLICATION_MODAL);
         window.setMinWidth(300);
         window.setMinHeight(150);
 
+        Label gameLabel = new Label(game);
         gameLabel.getStyleClass().add("titel");
 
+        VBox vBox = new VBox();
         vBox.setSpacing(10);
         vBox.setPadding(new Insets(20));
         vBox.setMaxWidth(100);
         vBox.setAlignment(Pos.CENTER);
         vBox.getStyleClass().add("backgroundTeaGreen");
 
+        Button ok = new Button("Ok");
         ok.getStyleClass().add("standardButton");
-    }
-
-    //GEFP-26-SA
-    //GEFP-34-SA, la till playersCount
-    public static void playersOfGame(String game, ObservableList<Player> players,String playersCount){
-        Stage window = new Stage();
-        window.setTitle("Player of "+game);
-        VBox vBox = new VBox();
-        Label gameLabel = new Label(game);
-        Button ok = new Button("Ok");
         ok.setOnAction(e -> {window.close();});
 
-        setStyling(window, vBox, gameLabel,ok);
-
-        Label label = new Label("Players");
+        Label label = new Label(type);
         label.getStyleClass().add("standardLabelNoBorder");
 
-        Label countLabel = new Label("Number of players: "+playersCount);
+        Label countLabel = new Label("Number of "+type.toLowerCase()+": "+itemsCount);
         countLabel.getStyleClass().add("standardLabelNoBorder");
 
-        ListView<String>playersList = new ListView<>();
-        playersList.getStyleClass().add("list-cell");
-        playersList.setMinWidth(100);
-        playersList.setMinHeight(50);
-        for(Player player : players){
-            playersList.getItems().add(player.getNickname());
+        ListView<String>itemsList = new ListView<>();
+        itemsList.getStyleClass().add("list-cell");
+        itemsList.setMinWidth(100);
+        itemsList.setMinHeight(50);
+
+        for(T item : items){//GEFP-43-SA, använder instanceof
+            if(item instanceof Match){
+                Match match = (Match) item;
+                itemsList.getItems().add(match.getMatchName());
+            } else if (item instanceof Player) {
+                Player player = (Player) item;
+                itemsList.getItems().add(player.getNickname());
+            }
         }
 
-        vBox.getChildren().addAll(gameLabel, countLabel,label,playersList,ok);
-
-        Scene scene = new Scene(vBox);
-        scene.getStylesheets().add("EscortFlasher.css");
-        window.setScene(scene);
-        window.showAndWait();
-    }
-
-    //GEFP-26-SA
-    //GEFP-34-SA, la till matchesCount
-    public static void matchesOfGame(String game, ObservableList<Match> matches,String matchesCount){
-        Stage window = new Stage();
-        window.setTitle("Matches of "+game);
-        Label gameLabel = new Label(game);
-        VBox vBox = new VBox();
-        Button ok = new Button("Ok");
-        ok.setOnAction(e -> {window.close();});
-
-        setStyling(window,vBox, gameLabel,ok);
-
-        Label label = new Label("Matches");
-        label.getStyleClass().add("standardLabelNoBorder");
-
-        Label countLabel = new Label("Number of matches: "+matchesCount);
-        countLabel.getStyleClass().add("standardLabelNoBorder");
-
-        ListView<String>matchesList = new ListView<>();
-        matchesList.getStyleClass().add("list-cell");
-        matchesList.setMinWidth(100);
-        matchesList.setMinHeight(50);
-        for(Match match : matches){
-            matchesList.getItems().add(match.getMatchName());
-        }
-
-        vBox.getChildren().addAll(gameLabel, countLabel,label,matchesList,ok);
+        vBox.getChildren().addAll(gameLabel, countLabel,label,itemsList,ok);
 
         Scene scene = new Scene(vBox);
         scene.getStylesheets().add("EscortFlasher.css");

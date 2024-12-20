@@ -71,8 +71,6 @@ public class GameDAO {
             if(entityManager.contains(gameToUpdate)){
                 System.out.println("Game exists in the pool");
                 gameToUpdate.setGameName(newName);
-                entityManager.merge(gameToUpdate);
-
 
             } else {
                 System.out.println("Game doesn't exists in the pool");
@@ -82,7 +80,6 @@ public class GameDAO {
                 System.out.println(revivedGame.getGameName() + " is alive");
 
             }
-            entityManager.merge(gameToUpdate);
             transaction.commit();
         } catch (Exception e){
             System.out.println(e.getMessage());
