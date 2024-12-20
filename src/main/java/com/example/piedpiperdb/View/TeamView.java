@@ -2,7 +2,6 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
-import com.example.piedpiperdb.DAO.JavaFXActions.PlayerActions;
 import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
@@ -115,13 +114,10 @@ public class TeamView extends AbstractScene{
             List<Game> games = TeamActions.getAllGames();
             resultBox.getChildren().add(createResultBoxContentBoxComboBox("Game", "Select Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName()));
 
+            /*
             List<Player> players = TeamActions.getAllAvailablePlayers();
             resultBox.getChildren().add(createResultBoxContentBoxComboBox("Players", "Select players", playerField, players, player -> player.getId() + ", " + player.getNickname()));
-
-            playerListView = new ListView<>();
-
-
-
+             */
 
             addGameFieldListener(gameField, playerField);
 
@@ -307,7 +303,7 @@ public class TeamView extends AbstractScene{
         Label teamInfo = createLabel(
                 "\tTeam Name: " + team.getTeamName() + "\n" +
                         "\tGame: " + team.getGameName() + "\n" +
-                        "\tPlayers: " + TeamActions.getPlayersInTeam(team)
+                        "\tPlayers: " + TeamActions.getPlayerNicknames(TeamActions.getPlayersInTeam(team))
         );
         resultBox.getChildren().addAll(title, teamInfo);
 

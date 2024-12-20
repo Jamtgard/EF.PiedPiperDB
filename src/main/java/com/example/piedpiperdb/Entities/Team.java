@@ -101,12 +101,12 @@ public class Team {
 // To String
 //----------------------------------------------------------------------------------------------------------------------
 
+
     @Override
     public String toString() {
         return "Team{" +
                 "teamId=" + teamId +
                 ", teamName='" + teamName + '\'' +
-                ", listOfPlayersInTeam=" + listOfPlayersInTeam +
                 ", gameId=" + gameId +
                 ", matchId=" + matchId +
                 ", matchesInTeam=" + matchesInTeam +

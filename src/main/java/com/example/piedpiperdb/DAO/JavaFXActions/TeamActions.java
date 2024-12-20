@@ -184,35 +184,14 @@ public class TeamActions {
         List<Player> listOfAllPlayers = getAllPlayers();
         List<Player> availablePlayers = new ArrayList<>();
 
-       /* for (Player player: listOfAllPlayers){
-            if(player.getGameId() == )
-        }*/
-
         for (Player player : listOfAllPlayers) {
             if (player.getTeamId() == null){
                 availablePlayers.add(player);
             }
         }
 
-
         return availablePlayers;
     }
-
-/*    public static ObservableList<String> getPlayerNames(){
-        ObservableList<Player> players = (ObservableList)
-
-       // players.addAll(getAllAvailablePlayers());
-
-        ObservableList<String> playerNames = FXCollections.observableArrayList();
-        for (Player player : players) {
-            playerNames.add(player.getNickname());
-        }
-        return playerNames;
-    }
-
-    public static ListView<String> playerListView(ListView<String> playerListView){
-        playerListView.getItems().addAll();
-    }*/
 
     public static List<Player> getPlayersByGame(int gameId) {
         if (gameId == 0) {
@@ -224,4 +203,28 @@ public class TeamActions {
         return team.getListOfPlayersInTeam();
     }
 
+    public static String getPlayerNicknames (List<Player> listOfPlayers ){
+        String nicknames = "";
+
+        for (Player player : listOfPlayers) {
+            nicknames = nicknames + player.getNickname() + ", ";
+        }
+
+        return nicknames;
+    }
+
+    // WIPS
+    public static List<Player> getAllAvailablePlayersByGameId(int gameId){
+
+        List<Player> listOfAllPlayers = getAllPlayers();
+        List<Player> availablePlayers = new ArrayList<>();
+
+        for (Player player : listOfAllPlayers) {
+            if (player.getTeamId() == null && player.getGameId().equals(gameId)) {
+                availablePlayers.add(player);
+            }
+        }
+
+        return availablePlayers;
+    }
 }
