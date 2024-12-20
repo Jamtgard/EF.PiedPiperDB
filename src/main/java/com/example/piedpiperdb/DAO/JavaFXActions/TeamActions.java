@@ -184,35 +184,29 @@ public class TeamActions {
         List<Player> listOfAllPlayers = getAllPlayers();
         List<Player> availablePlayers = new ArrayList<>();
 
-       /* for (Player player: listOfAllPlayers){
-            if(player.getGameId() == )
-        }*/
-
         for (Player player : listOfAllPlayers) {
             if (player.getTeamId() == null){
                 availablePlayers.add(player);
             }
         }
 
-
         return availablePlayers;
     }
 
-/*    public static ObservableList<String> getPlayerNames(){
-        ObservableList<Player> players = (ObservableList)
+    // WIPS
+    public static List<Player> getAllAvailablePlayersByGameId(int gameId){
 
-       // players.addAll(getAllAvailablePlayers());
+        List<Player> listOfAllPlayers = getAllPlayers();
+        List<Player> availablePlayers = new ArrayList<>();
 
-        ObservableList<String> playerNames = FXCollections.observableArrayList();
-        for (Player player : players) {
-            playerNames.add(player.getNickname());
+        for (Player player : listOfAllPlayers) {
+            if (player.getTeamId() == null && player.getGameId().equals(gameId)) {
+                availablePlayers.add(player);
+            }
         }
-        return playerNames;
-    }
 
-    public static ListView<String> playerListView(ListView<String> playerListView){
-        playerListView.getItems().addAll();
-    }*/
+        return availablePlayers;
+    }
 
     public static List<Player> getPlayersByGame(int gameId) {
         if (gameId == 0) {

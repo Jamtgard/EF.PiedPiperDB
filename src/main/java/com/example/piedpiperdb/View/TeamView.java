@@ -115,13 +115,10 @@ public class TeamView extends AbstractScene{
             List<Game> games = TeamActions.getAllGames();
             resultBox.getChildren().add(createResultBoxContentBoxComboBox("Game", "Select Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName()));
 
+            /*
             List<Player> players = TeamActions.getAllAvailablePlayers();
             resultBox.getChildren().add(createResultBoxContentBoxComboBox("Players", "Select players", playerField, players, player -> player.getId() + ", " + player.getNickname()));
-
-            playerListView = new ListView<>();
-
-
-
+             */
 
             addGameFieldListener(gameField, playerField);
 
