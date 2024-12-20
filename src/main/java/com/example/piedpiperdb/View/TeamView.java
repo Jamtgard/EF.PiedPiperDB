@@ -2,7 +2,6 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
-import com.example.piedpiperdb.DAO.JavaFXActions.PlayerActions;
 import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
@@ -304,7 +303,7 @@ public class TeamView extends AbstractScene{
         Label teamInfo = createLabel(
                 "\tTeam Name: " + team.getTeamName() + "\n" +
                         "\tGame: " + team.getGameName() + "\n" +
-                        "\tPlayers: " + TeamActions.getPlayersInTeam(team)
+                        "\tPlayers: " + TeamActions.getPlayerNicknames(TeamActions.getPlayersInTeam(team))
         );
         resultBox.getChildren().addAll(title, teamInfo);
 

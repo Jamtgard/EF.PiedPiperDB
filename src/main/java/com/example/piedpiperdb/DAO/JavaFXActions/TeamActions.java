@@ -193,6 +193,26 @@ public class TeamActions {
         return availablePlayers;
     }
 
+    public static List<Player> getPlayersByGame(int gameId) {
+        if (gameId == 0) {
+            return Collections.emptyList();
+        }
+        return PLAYER_DAO.getAllPlayersFromSelectedGame(List.of(gameId));
+    }
+    public static List<Player> getPlayersInTeam(Team team){
+        return team.getListOfPlayersInTeam();
+    }
+
+    public static String getPlayerNicknames (List<Player> listOfPlayers ){
+        String nicknames = "";
+
+        for (Player player : listOfPlayers) {
+            nicknames = nicknames + player.getNickname() + ", ";
+        }
+
+        return nicknames;
+    }
+
     // WIPS
     public static List<Player> getAllAvailablePlayersByGameId(int gameId){
 
@@ -207,15 +227,4 @@ public class TeamActions {
 
         return availablePlayers;
     }
-
-    public static List<Player> getPlayersByGame(int gameId) {
-        if (gameId == 0) {
-            return Collections.emptyList();
-        }
-        return PLAYER_DAO.getAllPlayersFromSelectedGame(List.of(gameId));
-    }
-    public static List<Player> getPlayersInTeam(Team team){
-        return team.getListOfPlayersInTeam();
-    }
-
 }
