@@ -464,6 +464,11 @@ public class MatchView extends AbstractScene {
                 gameComboBox.setPromptText(selectedMatch.getGameName());
                 gameComboBox.getItems().addAll(gameDAO.getAllGames());
 
+                gameComboBox.getItems().stream()
+                                .filter(game -> game.getGameName().equals(selectedMatch.getGameName()))
+                                .findFirst()
+                                .ifPresent(gameComboBox::setValue);
+
                 gameComboBox.setCellFactory(param -> new ListCell<>(){
                     @Override
                     protected void updateItem(Game game, boolean empty) {
