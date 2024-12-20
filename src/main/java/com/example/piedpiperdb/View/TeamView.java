@@ -1,27 +1,25 @@
 package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
+import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
+import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 //GEFP-21-SJ
 public class TeamView extends AbstractScene{
@@ -30,370 +28,509 @@ public class TeamView extends AbstractScene{
     private static GameDAO gameDAO = new GameDAO();
     private static TeamDAO teamDAO = new TeamDAO();
     private static MatchDAO matchDAO = new MatchDAO();
+    //private static TeamActions teamActions = new TeamActions(teamDAO);
+
+    private static VBox getIdBox;
+    private static VBox resultBox;
+
+    private static TextField teamNameField;
+
+    private static ComboBox<String> gameField;
+    private static ComboBox<String> playerField;
+
 
     public static Scene startTeamScene(Stage window){
 
         Scene baseScene = AbstractScene.getScene(window);
-
-        AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
-        HelloApplication helloApp = new HelloApplication();
-        AbstractScene.back.setOnAction(e->{
-            try {
-                helloApp.start(window);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
+        AbstractScene.back.setOnAction(e->{ ChangeSceneAction.toStartPage(window); });
 
         addCustomComponents(vBox);
-
-        AnchorPane rootPane = (AnchorPane) baseScene.getRoot();
-
         return baseScene;
-
     }
 
     private static void addCustomComponents(VBox vbox) {
 
-        List<Game> listOfGames = gameDAO.getAllGames();
-        List<CheckBox> listOfCheckboxes = new ArrayList<>();
-
-        for (Game game : listOfGames) {
-            String gameName = game.getGameName();
-            int gameId = game.getGameId();
-            CheckBox checkBox = new CheckBox(gameName + " , Game ID: " + gameId);
-            listOfCheckboxes.add(checkBox);
-        }
-
-        Button getAllTeamsButton = new Button("Show all Teams");
-        getAllTeamsButton.getStyleClass().add("standardButton");
-        getAllTeamsButton.setMinSize(160, 30);
+        Button getAllTeamsButton = createButton("Show All Teams");
         getAllTeamsButton.setOnAction(event -> {
-            List<Team> listOfAllTeams = teamDAO.getAllTeams();
-            System.out.println(listOfAllTeams.size());
-            showTable(anchorPane, listOfAllTeams);
+            clearResultBox(resultBox, getIdBox);
+            resultBox = createResultBox();
+
+            Label title = createTitleLabel("All Teams");
+            resultBox.getChildren().add(title);
+            resultBox = TeamActions.getTableViewAllTeams(resultBox);
+            anchorPane.getChildren().add(resultBox);
+        });
+/*
+        Button teamsByGameSelectionButton = createButton("Show Teams By Game");
+        teamsByGameSelectionButton.setOnAction(event -> {
+            clearResultBox(getIdBox, resultBox);
+            resultBox = createResultBox();
+
+            Label titel = createTitleLabel("Teams from selected game or games");
+            resultBox.getChildren().add(titel);
+
+            List<CheckBox> checkBoxes = TeamActions.gameCheckBoxes();
+            List<String> selections = ConfirmBox.displayCheckBoxOptions("Selected game or games", checkBoxes);
+            resultBox = TeamActions.getTableViewSelectedTeams(resultBox, selections);
+
+            anchorPane.getChildren().add(resultBox);
         });
 
+ */
 
-/*        Button selectedTeamButton = new Button("Show Teams from \nselected Game \\ Games");
-        selectedTeamButton.getStyleClass().add("standardButton");
-        selectedTeamButton.setMinSize(160, 30);
-        selectedTeamButton.setOnAction(event -> {
-            List<String> listSelection = ConfirmBox.displayCheckBoxOptions("Select Team \\ Teams", listOfCheckboxes);
-            List<Integer> ids = new ArrayList<>();
-            for (String selection : listSelection) {
-                try {
-                    String[] parts = selection.split(" ");
-                    String lastPart = parts[parts.length - 1];
-                    int SelectionId = Integer.parseInt(lastPart);
-                    ids.add(SelectionId);
-                } catch (NumberFormatException e) {
-                    System.out.println(e.getMessage());
-                    System.out.println("Error parsing selection: " + selection);
-                }
-            }
-            List<Team> teams = teamDAO.getTeamsByGame(ids);
-            showTable(anchorPane, teams);
-        });*/
-
-
-        Button addNewTeamButton = new Button("Add New Team");
-        addNewTeamButton.getStyleClass().add("standardButton");
-        addNewTeamButton.setMinSize(160, 30);
+        Button addNewTeamButton = createButton("Add New Team");
         addNewTeamButton.setOnAction(event -> {
+            clearResultBox(getIdBox, resultBox);
             showAddTeamForm(anchorPane);
         });
 
-        Button updateTeamByIdButton = new Button("Update Team by ID");
-        updateTeamByIdButton.getStyleClass().add("standardButton");
-        updateTeamByIdButton.setMinSize(160, 30);
+        Button updateTeamByIdButton = createButton("Update Team by ID");
         updateTeamByIdButton.setOnAction(event -> {
+            clearResultBox(getIdBox, resultBox);
             showUpdateTeamForm(anchorPane);
         });
 
-        Button deleteTeamByIdButton = new Button("Delete Team by ID");
-        deleteTeamByIdButton.getStyleClass().add("standardButton");
-        deleteTeamByIdButton.setMinSize(160, 30);
+        Button deleteTeamByIdButton = createButton("Delete Team by ID");
         deleteTeamByIdButton.setOnAction(event -> {
+            clearResultBox(getIdBox, resultBox);
             showDeleteTeamForm(anchorPane);
         });
 
-        vbox.getChildren().addAll(addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
+        vbox.getChildren().addAll(getAllTeamsButton/*, teamsByGameSelectionButton*/,addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
     }
 
-    public static void showTable(AnchorPane anchorPane, List<Team> players){
-        TableView<Team> table = createTeamTable(players);
-
-        AnchorPane.setTopAnchor(table, 150.0);
-        AnchorPane.setLeftAnchor(table, 220.0);
-        AnchorPane.setRightAnchor(table, 30.0);
-        AnchorPane.setBottomAnchor(table, 30.0);
-        anchorPane.getStyleClass().add("backgroundTeaGreen");
-        anchorPane.getStyleClass().add("standardLabel");
-
-        anchorPane.getStyleClass().add("columnV");
-        anchorPane.getChildren().addAll(table);
-    }
-
-    private static TableView<Team> createTeamTable(List<Team> teamMembers){
-        ObservableList<Team> teamsObservableList = FXCollections.observableArrayList(teamMembers);
-
-        TableView<Team> tableView = new TableView<>();
-
-        TableColumn<Team, String> team_id = new TableColumn<>("Team Name");
-        team_id.setCellValueFactory(new PropertyValueFactory<>("team_id"));
-
-        tableView.getColumns().add(team_id);
-        tableView.setItems(teamsObservableList);
-        return tableView;
-    }
+// CRUD TeamForms
+//----------------------------------------------------------------------------------------------------------------------
 
     private static void showAddTeamForm(AnchorPane anchorPane){
-        VBox formContainer = new VBox();
-        formContainer.setPadding(new Insets(20));
-        formContainer.setSpacing(10);
-        formContainer.getStyleClass().add("backgroundTeaGreen");
-        AnchorPane.setTopAnchor(formContainer, 150.0);
-        AnchorPane.setLeftAnchor(formContainer, 220.0);
-        AnchorPane.setRightAnchor(formContainer, 30.0);
-        AnchorPane.setBottomAnchor(formContainer, 30.0);
 
-        HBox teamNameBox = new HBox(5);
-        Label teamName = new Label("Team Name* ");
-        teamName.getStyleClass().add("standardLabel");
-        TextField teamNamefield = new TextField();
-        teamNamefield.getStyleClass().add("textFieldOne");
-        teamNamefield.setPromptText("First name");
-        teamNameBox.getChildren().addAll(teamName, teamNamefield);
+        try {
 
-        formContainer.getChildren().add(teamNameBox);
+            initializeTextFields();
 
-        Button saveTeamButton = new Button("Save Team");
-        saveTeamButton.getStyleClass().add("standardButton");
-        saveTeamButton.setMinSize(160, 30);
+            resultBox = createResultBox();
+            Label title = createTitleLabel("Add New Team");
+            resultBox.getChildren().add(title);
 
-        // Version 1:
-        /*
-        saveTeamButton.setOnAction(event -> {
+            resultBox.getChildren().add(createResultBoxContentBox("Team Name*", "Enter Team Name", teamNameField, false));
 
-            Team team = null;
+            List<Game> games = TeamActions.getAllGames();
+            resultBox.getChildren().add(createResultBoxContentBoxComboBox("Game", "Select Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName()));
 
-            if (teamNamefield.getText().isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Please fill in mandatory fields marked with \"*\".");
-                alert.show();
+            List<Player> players = TeamActions.getAllAvailablePlayers();
+            resultBox.getChildren().add(createResultBoxContentBoxComboBox("Players", "Select players", playerField, players, player -> player.getId() + ", " + player.getNickname()));
 
-            } else {
-                try {
-                    team = new Team(teamNamefield.getText());
-                    Label savedLabel = new Label("Team has successfully been saved to the database.");
-                    savedLabel.getStyleClass().add("standardLabel");
-                    formContainer.getChildren().add(savedLabel);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
+            Button saveButton = createButton("Save Team");
+            saveButton.setOnAction(event -> {
+                if (validateUpdateTeamName(teamNameField.getText())) {
+                    Team team = createTeamFromFields(teamNameField.getText(), gameField.getValue(), playerField.getValue());
+                    boolean saved = TeamActions.createTeam(team);
+                    if (saved) {
+                        Label savedLabel = createLabel("Team saved successfully.");
+                        resultBox.getChildren().add(savedLabel);
+                    } else {
+                        AlertBox.displayAlertBox("Error", "An error occurred while saving the team.");
+                    }
                 }
-            }
-            TeamDAO newTeam = new TeamDAO();
-            newTeam.createTeam(team);
-            System.out.println(team.toString());
-        });
-        */
+            });
 
-        // Version 2:
-        /*
-        saveTeamButton.setOnAction(event -> {
-            try {
-                // Lägg in kontroll för annat än isEmpty.. t.ex (contains " ". elr möjligen fula ord.)
-                if (teamNamefield.getText().isEmpty()) {
-                    throw new IllegalArgumentException("Mandatory fields are empty.");
-                }
+            resultBox.getChildren().add(saveButton);
+            anchorPane.getChildren().add(resultBox);
 
-                Team team = new Team(teamNamefield.getText());
-                Label savedLabel = new Label("Team has successfully been saved to the database.");
-                savedLabel.getStyleClass().add("standardLabel");
-                formContainer.getChildren().add(savedLabel);
+        } catch (Exception e){
+            e.printStackTrace();
+            AlertBox.displayAlertBox("Error", "Error while saving Team to database");
+        }
+    }
 
-            } catch (IllegalArgumentException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Please fill in mandatory fields marked with \"*\".");
-                alert.show();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        });
-         */
+    public static Team createTeamFromFields(String teamName, String selectedGameValue, String selectedPlayerValue) {
+        Team team = new Team(teamName);
 
-        saveTeamButton.setOnAction(event -> {
-            try {
-                // Lägg in kontroll för annat än isEmpty.. t.ex (contains " ". elr möjligen fula ord.)
-                if (teamNamefield.getText().isEmpty()) {
-                    throw new IllegalArgumentException("Mandatory fields are empty.");
-                }
+        if (selectedGameValue != null && !selectedGameValue.isEmpty()) {
+            int gameId = Integer.parseInt(selectedGameValue.split(",")[0].trim());
+            Game game = TeamActions.getGameById(gameId);
+            team.setGameId(game);
+        }
 
-                Team team = new Team(teamNamefield.getText());
-                Label savedLabel = new Label("Team has successfully been saved to the database.");
-                savedLabel.getStyleClass().add("standardLabel");
-                formContainer.getChildren().add(savedLabel);
+        if (selectedPlayerValue != null && !selectedPlayerValue.isEmpty()) {
+            List<Integer> playerIds = List.of(selectedPlayerValue.split(","))
+                    .stream()
+                    .map(idStr -> Integer.parseInt(idStr.trim()))
+                    .toList();
 
-            } catch (IllegalArgumentException e) {
-                AlertBox.displayAlertBox("Error", "Please fill in mandatory fields marked with \"*\".");
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        });
+            List<Player> players = playerIds.stream()
+                    .map(id -> TeamActions.getPlayerById(id))
+                    .toList();
 
-        formContainer.getChildren().add(saveTeamButton);
-        anchorPane.getChildren().add(formContainer);
+            team.setListOfPlayersInTeam(players);
+        }
 
+        return team;
     }
 
     private static void showUpdateTeamForm(AnchorPane anchorPane){
-        VBox getIdBox = new VBox();
-        getIdBox.setPadding(new Insets(20));
-        getIdBox.setSpacing(10);
-        getIdBox.getStyleClass().add("backgroundTeaGreen");
-        AnchorPane.setTopAnchor(getIdBox, 150.0);
-        AnchorPane.setLeftAnchor(getIdBox, 220.0);
-        AnchorPane.setRightAnchor(getIdBox, 30.0);
-        AnchorPane.setBottomAnchor(getIdBox, 30.0);
 
-        HBox teamIdBox = new HBox(5);
-        Label teamId = new Label("Enter Team ID: ");
-        teamId.getStyleClass().add("standardLabel");
-        TextField teamIdfield = new TextField();
-        teamIdfield.getStyleClass().add("textFieldOne");
-        teamIdfield.setPromptText("Team ID");
-        teamIdfield.setAlignment(Pos.BASELINE_CENTER); // Test för att se placeringen av Textfield - Önskar att det är oberoende av Label-width.
-        teamIdBox.getChildren().addAll(teamId, teamIdfield);
+        initializeTextFields();
 
-        VBox formContainer = new VBox(5);
-        formContainer.setPadding(new Insets(20));
-        formContainer.getStyleClass().add("backgroundTeaGreen");
-        AnchorPane.setTopAnchor(formContainer, 250.0);
-        AnchorPane.setLeftAnchor(formContainer, 220.0);
-        AnchorPane.setRightAnchor(formContainer, 30.0);
-        AnchorPane.setBottomAnchor(formContainer, 30.0);
+        resultBox = createResultBox(260.0);
+        TextField teamIdField = new TextField();
 
-        Button getButton = new Button("Get Team  to Update from database");
-        getButton.getStyleClass().add("standardButton");
-        //getButton.set
-
-        getButton.setOnAction(event -> {
+        Button getTeamButton = createButton("Get Team");
+        getTeamButton.setOnAction(event -> {
             try {
-                Team teamToUpdate = teamDAO.getTeamById(Integer.parseInt(teamIdfield.getText()));
+                int teamId = Integer.parseInt(teamIdField.getText());
+                Team teamToUpdate = TeamActions.getTeamById(teamId);
 
                 if (teamToUpdate == null) {
-                    AlertBox.displayAlertBox("Error", "Team ID does not exist.");
+                    AlertBox.displayAlertBox("Error", "Team does not exist");
                     return;
                 }
-                HBox teamNameBox = new HBox(5);
-                Label teamName = new Label(" Team Name* ");
-                teamName.getStyleClass().add("standardLabel");
-                TextField teamNamefield = new TextField();
-                teamNamefield.getStyleClass().add("textFieldOne");
-                teamNamefield.setText(teamToUpdate.getTeamName());
-                teamNameBox.getChildren().addAll(teamName, teamNamefield);
-
-                Button updateButton = new Button("Update Team");
-                updateButton.getStyleClass().add("standardButton");
-                updateButton.setOnAction(actionEvent -> {
-
-                    teamToUpdate.setTeamName(teamNamefield.getText());
-
-                    teamDAO.updateTeam(teamToUpdate);
-                    Label updatedLabel = new Label("Team has successfully been updated in the database.");
-                    updatedLabel.getStyleClass().add("standardLabel");
-                    formContainer.getChildren().addAll(updatedLabel);
-
-                });
-
-                formContainer.getChildren().addAll(teamNameBox, updateButton);
-
-            } catch (Exception e) {
-                AlertBox.displayAlertBox("Error", "Could not update team.");
+                populateUpdateTeamFormFields(teamToUpdate, teamId);
+            } catch (NumberFormatException e) {
+                AlertBox.displayAlertBox("Error", "Invalid Team ID");
             }
         });
 
-        getIdBox.getChildren().addAll(getButton, teamIdBox);
-        anchorPane.getChildren().addAll(getIdBox, formContainer);
+        getIdBox = createResultBox();
+        //Label title = createTitleLabel("Update Team");
+
+        getIdBox.getChildren().addAll(createResultBoxContentBox("Team ID", "Enter Team ID", teamIdField, false), getTeamButton);
+
+        anchorPane.getChildren().addAll(getIdBox, resultBox);
+    }
+
+    private static void populateUpdateTeamFormFields(Team teamToUpdate, int teamId) {
+        teamNameField.setText(teamToUpdate.getTeamName());
+
+        List<Game> games = TeamActions.getAllGames();
+        String selectedGameValue =
+                teamToUpdate.getGameId() != null
+                ? teamToUpdate.getGameId().getGameId() + ", " + teamToUpdate.getGameId().getGameName() : null;
+
+        HBox gameBox = createResultBoxContentBoxComboBoxUpdate("Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName(), selectedGameValue);
+
+
+        Button updateTeamButton = createButton("Update Team");
+        updateTeamButton.setOnAction(event -> {
+            try {
+                if (validateNewTeamName(teamNameField.getText())) {
+                    teamToUpdate.setTeamName(teamNameField.getText());
+
+                    if (gameField.getValue() != null) {
+                        int gameId = Integer.parseInt(gameField.getValue().split(",")[0].trim());
+                        teamToUpdate.setGameId(TeamActions.getGameById(gameId));
+                    }
+
+                    boolean updated = TeamActions.updateTeam(teamToUpdate);
+                    if (updated) {
+                        Label updatedLabel = createLabel("Team updated successfully.");
+                        resultBox.getChildren().add(updatedLabel);
+                    } else {
+                        AlertBox.displayAlertBox("Error", "An error occurred while updating the team.");
+                    }
+                }
+            } catch (Exception e) {
+                AlertBox.displayAlertBox("Error", "An error occurred while updating the team.");
+            }
+        });
+
+        resultBox.getChildren().clear();
+        resultBox.getChildren().addAll(createResultBoxContentBox(
+                "Team Name", teamToUpdate.getTeamName(), teamNameField, true), gameBox, updateTeamButton);
 
     }
 
-    private static void showDeleteTeamForm(AnchorPane anchorPane){
-        VBox getIdBox = new VBox();
-        getIdBox.setPadding(new Insets(20));
-        getIdBox.setSpacing(10);
-        getIdBox.getStyleClass().add("backgroundTeaGreen");
-        AnchorPane.setTopAnchor(getIdBox, 150.0);
-        AnchorPane.setLeftAnchor(getIdBox, 220.0);
-        AnchorPane.setRightAnchor(getIdBox, 30.0);
-        AnchorPane.setBottomAnchor(getIdBox, 30.0);
+    /*private static void showDeleteTeamForm(AnchorPane anchorPane){
 
-        HBox teamIdBox = new HBox(5);
-        Label teamId = new Label("Enter Team ID: ");
-        teamId.getStyleClass().add("standardLabel");
-        TextField teamIdfield = new TextField();
-        teamIdfield.getStyleClass().add("textFieldOne");
-        teamIdfield.setPromptText("Team ID");
-        teamIdfield.setAlignment(Pos.BASELINE_CENTER); // Test för att se placeringen av Textfield - Önskar att det är oberoende av Label-width.
-        teamIdBox.getChildren().addAll(teamId, teamIdfield);
+        anchorPane.getChildren().clear();
 
-        VBox formContainer = new VBox(5);
-        formContainer.setPadding(new Insets(20));
-        formContainer.getStyleClass().add("backgroundTeaGreen");
-        AnchorPane.setTopAnchor(formContainer, 250.0);
-        AnchorPane.setLeftAnchor(formContainer, 220.0);
-        AnchorPane.setRightAnchor(formContainer, 30.0);
-        AnchorPane.setBottomAnchor(formContainer, 30.0);
+        VBox formBox = new VBox(10);
+        formBox.setPadding(new Insets(10));
+        formBox.setAlignment(Pos.CENTER);
 
-        Button getButton = new Button("Get Team to Delete from database");
-        getButton.getStyleClass().add("standardButton");
+
+        getIdBox = createResultBox();
+        Label title = createTitleLabel("Delete Team");
+        getIdBox.getChildren().add(title);
+
+        TextField teamIdField = new TextField();
+        HBox teamIdBox = createResultBoxContentBox("Enter Team ID: ", "Team ID", teamIdField, false);
+
+        resultBox = createResultBox(260.0);
+
+        Button getButton = createButton("Get Team");
         getButton.setOnAction(event -> {
             try {
-                Team teamToDelete = teamDAO.getTeamById(Integer.parseInt(teamIdfield.getText()));
-
+                int teamId = Integer.parseInt(teamIdField.getText());
+                Team teamToDelete = TeamActions.getTeamById(teamId);
                 if (teamToDelete == null) {
-                    AlertBox.displayAlertBox("Error", "Team ID does not exist.");
+                    Label notFoundLabel = createLabel("No team found with the given ID.");
+                    resultBox.getChildren().add(notFoundLabel);
                     return;
                 }
-
-                Button deleteButton = new Button("Delete Team");
-                deleteButton.getStyleClass().add("standardButton");
-                deleteButton.setOnAction(actionEvent -> {
-
-                    boolean deleteTeamConfirm = ConfirmBox.display("Delete Team", "Are you sure you want to delete this team from the database?");
-                    if (deleteTeamConfirm) {
-                        boolean deleted = teamDAO.deleteTeamById(teamToDelete.getTeamId());
-                        if (deleted) {
-                            Label deletedLabel = new Label("Team has successfully been deleted in the database.");
-                            deletedLabel.getStyleClass().add("standardLabel");
-                            formContainer.getChildren().addAll(deletedLabel);
-                        }
-                    } else {
-                        Label cancDeleteLabel = new Label("Cancelled deletion of Team");
-                        cancDeleteLabel.getStyleClass().add("standardLabel");
-                        formContainer.getChildren().add(cancDeleteLabel);
-                    }
-                });
-
-                formContainer.getChildren().addAll(deleteButton);
-
+                showTeamInfoForDeletion(teamToDelete);
             } catch (Exception e) {
-                AlertBox.displayAlertBox("Error", "Could not delete team.");
-                System.out.println(e.getMessage());
-                e.printStackTrace();
+                AlertBox.displayAlertBox("Error", "An error occurred while fetching the team.");
             }
         });
 
-        getIdBox.getChildren().addAll(getButton, teamIdBox);
-        anchorPane.getChildren().addAll(getIdBox, formContainer);
+    }*/
+
+    private static void showDeleteTeamForm(AnchorPane anchorPane) {
+
+        Label title = createTitleLabel("Delete Team");
+
+        TextField teamIdField = new TextField();
+        HBox teamIdBox = createResultBoxContentBox("Enter Team ID: ", "Team ID", teamIdField, false);
+
+        resultBox = createResultBox();
+        resultBox.getChildren().addAll(title,teamIdBox);
+
+        Button getButton = createButton("Get Team");
+        getButton.setOnAction(event -> {
+            try {
+                int teamId = Integer.parseInt(teamIdField.getText());
+                Team teamToDelete = TeamActions.getTeamById(teamId);
+
+
+                if (teamToDelete == null) {
+                    AlertBox.displayAlertBox("Error", "Team does not exist");
+                    return;
+                }
+
+                showTeamInfoForDeletion(teamToDelete);
+
+            } catch (NumberFormatException e) {
+                AlertBox.displayAlertBox("Error", "Invalid Team ID format.");
+            } catch (Exception e) {
+                AlertBox.displayAlertBox("Error", "An error occurred while fetching the team.");
+            }
+        });
+        resultBox.getChildren().add(getButton);
+        anchorPane.getChildren().add(resultBox);
     }
 
 
+    private static void showTeamInfoForDeletion(Team team) {
+        clearResultBox(resultBox);
+
+        Label title = createTitleLabel("Team info:");
+        //resultBox.getChildren().add(title);
+
+        Label teamInfo = createLabel(
+                "\tTeam Name: " + team.getTeamName() + "\n" +
+                        "\tGame: " + team.getGameName() + "\n" +
+                        "\tPlayers: " + TeamActions.getPlayersInTeam(team)
+        );
+        resultBox.getChildren().addAll(title, teamInfo);
+
+        Button deleteTeamButton = createButton("Delete Team");
+        deleteTeamButton.setOnAction(event -> {
+            boolean confirmDelete = ConfirmBox.display("Delete Team", "Are you sure you want to delete " + team.getTeamName() + "?");
+
+            if (confirmDelete) {
+                boolean deleted = TeamActions.deleteTeamById(team.getTeamId());
+                clearResultBox(resultBox);
+
+                if (deleted) {
+                    Label deletedLabel = createLabel("Team successfully deleted.");
+                    resultBox.getChildren().add(deletedLabel);
+                } else {
+                    AlertBox.displayAlertBox("Error", "Error while deleting the team.");
+                }
+            }
+        });
+        resultBox.getChildren().add(deleteTeamButton);
+    }
+
+/*    private static void showTeamInfoForDeletion (Team team){
+        clearResultBox(resultBox);
+        Label title = createTitleLabel("Team: ");
+        resultBox.getChildren().add(title);
+        Label teamInfo = createLabel(
+                "\tTeam Name: " + team.getTeamName() + "\n" +
+                "\tGame: " + team.getGameName() + "\n" +
+                "\tPlayers: " + TeamActions.getPlayersInTeam(team)
+        );
+
+        resultBox.getChildren().add(teamInfo);
+
+        Button deleteTeamButton = createButton("Delete Team");
+        deleteTeamButton.setOnAction(event -> {
+            boolean deleteTeam = ConfirmBox.display("Delete Team", "Are you sure you want to delete " + team.getTeamName() + "?");
+
+            if (deleteTeam) {
+                boolean deleted = TeamActions.deleteTeamById(team.getTeamId());
+
+                if (deleted) {
+                    Label deletedLabel = createLabel("Deleted Team");
+                    resultBox.getChildren().add(deletedLabel);
+                } else {
+                    AlertBox.displayAlertBox("Error", "Error while deleting Team");
+                }
+            } else {
+                AlertBox.displayAlertBox("Error", "Error while deleting Team");
+            }
+        });
+    }*/
+
+// ResultBox
+//----------------------------------------------------------------------------------------------------------------------
+
+    private static VBox createResultBox(){
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(20));
+        vBox.setSpacing(10);
+        AnchorPane.setTopAnchor(vBox, 140.0);
+        AnchorPane.setLeftAnchor(vBox, 210.0);
+        AnchorPane.setRightAnchor(vBox, anchorPane.getWidth() - 210.0 - (HelloApplication.width - 235));
+        AnchorPane.setBottomAnchor(vBox, anchorPane.getHeight() - 140 - (HelloApplication.height - 160));
+        return vBox;
+    }
+
+    private static VBox createResultBox(Double topAnchor) {
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(20));
+        vBox.setSpacing(10);
+        //vBox.getStyleClass().add("backgroundTeaGreen");
+        AnchorPane.setTopAnchor(vBox, topAnchor);
+        AnchorPane.setLeftAnchor(vBox, 220.0);
+        AnchorPane.setRightAnchor(vBox, 30.0);
+        AnchorPane.setBottomAnchor(vBox, 30.0);
+        return vBox;
+    }
+
+    private static HBox createResultBoxContentBox(String label, String prompt, TextField field, boolean update){
+        HBox box = new HBox(5);
+        Label localLabel = new Label(label);
+        localLabel.getStyleClass().add("standardLabel");
+        field.getStyleClass().add("textFieldOne");
+        if (update) {
+            field.setText(prompt);
+        } else {
+            field.setPromptText(prompt);
+        }
+        box.getChildren().addAll(localLabel, field);
+        return box;
+    }
+
+    private static <T> HBox createResultBoxContentBoxComboBox (String label, String prompt, ComboBox<String> comboBox, List<T> items, Function<T, String> itemMapper){
+        HBox box = new HBox(5);
+        Label localLabel = new Label(label);
+        localLabel.getStyleClass().add("standardLabel");
+        comboBox.setPromptText(prompt);
+        comboBox.getStyleClass().add("textFieldOne");
+
+        for (T item : items) {
+            comboBox.getItems().add(itemMapper.apply(item));
+        }
+
+        box.getChildren().addAll(localLabel, comboBox);
+        return box;
+    }
+
+    private static <T> HBox createResultBoxContentBoxComboBoxUpdate (String label, ComboBox<String> comboBox, List<T> items, Function<T, String> itemMapper, String selectedValue){
+        HBox box = new HBox(5);
+        Label LocalLabel = new Label(label);
+
+        if (selectedValue == null || selectedValue.isEmpty()) {
+            comboBox.setPromptText("Select an option");
+        }
+
+        comboBox.getStyleClass().add("textFieldOne");
+
+        for (T item : items) {
+            String mappedValue = itemMapper.apply(item);
+            comboBox.getItems().add(mappedValue);
+            if (selectedValue != null && mappedValue.equals(selectedValue)) {
+                comboBox.setValue(mappedValue);
+            }
+        }
+
+        box.getChildren().addAll(LocalLabel, comboBox);
+        return box;
+    }
+
+    private static void clearResultBox(VBox vBoxOne){
+        if (vBoxOne != null && !vBoxOne.getChildren().isEmpty()) {
+            vBoxOne.getChildren().clear();
+        }
+    }
+
+    private static void clearResultBox(VBox vBoxOne, VBox vBoxTwo){
+        if (vBoxOne != null && !vBoxOne.getChildren().isEmpty()) {
+            vBoxOne.getChildren().clear();
+        }
+        if (vBoxTwo != null && !vBoxTwo.getChildren().isEmpty()) {
+            vBoxTwo.getChildren().clear();
+        }
+    }
+
+// Multiple usage functions
+//----------------------------------------------------------------------------------------------------------------------
+
+    private static Button createButton (String text){
+        Button button = new Button(text);
+        button.getStyleClass().add("standardButton");
+        button.setMinSize(160, 30);
+        return button;
+    }
+
+    private static Label createTitleLabel (String text){
+        Label label = new Label();
+        label.setText(text);
+        label.getStyleClass().add("titel");
+        return label;
+    }
+
+    private static Label createLabel (String text){
+        Label label = new Label(text);
+        label.getStyleClass().add("standardLabel");
+        return label;
+    }
+
+    private static void initializeTextFields (){
+        teamNameField = new TextField();
+        gameField = new ComboBox<>();
+        playerField = new ComboBox<>();
+    }
+
+    private static boolean validateNewTeamName(String teamName) {
+
+        //Usage: Creation of new Team
+
+        if (teamName == null || teamName.isEmpty()) {
+            AlertBox.displayAlertBox("Error", "Team name is required.");
+            return false;
+        }
+        if (TeamActions.isTeamNameUnique(teamName)) {
+            AlertBox.displayAlertBox("Error", "Team name already exists. Choose another.");
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean validateUpdateTeamName(String teamName) {
+
+        //Usage: Updating excisting Team without having to change name.
+
+        List<Team> allOtherTeams = TeamActions.getAllOtherTeamsExcluding(teamName);
+
+        System.out.println(allOtherTeams.size());
+
+        for (Team team : allOtherTeams) {
+            if (teamName == null || teamName.isEmpty()) {
+                AlertBox.displayAlertBox("Error", "Team name is required.");
+                return false;
+            }
+            if (team.getTeamName().equals(teamName)) {
+                AlertBox.displayAlertBox("Error", "Team name already exists. Choose another.");
+                return false;
+            }
+        }
+        return true;
+    }
 
 }
