@@ -103,7 +103,7 @@ public class GameActions {
                 } else {
                     ObservableList<Player>players = FXCollections.observableArrayList(selectedGame.getPlayers());
                     String playersCount = String.valueOf(players.size());
-                    ConfirmBox.playersOfGame(gameName,players,playersCount);
+                    ConfirmBox.displayItemsOnList(gameName,players,playersCount,"Players");//GEFP-43-SA
                 }
             }
         }
@@ -127,7 +127,7 @@ public class GameActions {
                 } else {
                     ObservableList<Match>matches = FXCollections.observableArrayList(selectedGame.getMatches());
                     String matchesCount = String.valueOf(matches.size());
-                    ConfirmBox.matchesOfGame(gameName,matches,matchesCount);
+                    ConfirmBox.displayItemsOnList(gameName,matches,matchesCount,"Matches");//GEFP-43-SA
                 }
             }
         }
