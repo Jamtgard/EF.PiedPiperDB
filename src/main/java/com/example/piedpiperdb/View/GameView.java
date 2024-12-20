@@ -252,7 +252,7 @@ public class GameView extends AbstractScene{
         showGamesBox.setPadding(new Insets(10,0,0,0));
         showGamesBox.setAlignment(Pos.CENTER);
 
-        TableView<Game> tableViewGame = new TableView();
+        TableView<Game> tableViewGame = new TableView<>();
 
         TableColumn<Game,String>gameId = new TableColumn<>("Id");
         gameId.setCellValueFactory(new PropertyValueFactory<>("gameId"));
