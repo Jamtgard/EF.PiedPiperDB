@@ -19,7 +19,6 @@ public class StartPage extends AbstractScene{
         AnchorPane anchorPane = AbstractScene.anchorPane;
         VBox vBox = AbstractScene.leftVbox;
 
-        HelloApplication helloApp = new HelloApplication();
         AbstractScene.back.setOnAction(e->{
             ChangeSceneAction.toLoginPage(window);//GEFP-22-SA
         });
@@ -28,7 +27,6 @@ public class StartPage extends AbstractScene{
         addCustomComponents(vBox,window);
 
         baseScene.getStylesheets().add("EscortFlasher.css");
-
 
 
         return baseScene;
