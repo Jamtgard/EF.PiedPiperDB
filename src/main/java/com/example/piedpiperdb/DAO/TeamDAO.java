@@ -67,17 +67,15 @@ public class TeamDAO {
     // Read - By Game
     public List<Team> getTeamsByGame (List<Integer> listOfGameIDs){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-        List<Team> listToReturn = new ArrayList<>();
-
-        transaction = entityManager.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
 
+        List<Team> listToReturn = new ArrayList<>();
         try {
 
             TypedQuery<Team> query = entityManager.createQuery(
-                    "SELECT t FROM Team t WHERE t.gameId IN :gameIDs", Team.class);
-            query.setParameter("gameIDs", listOfGameIDs);
+                    "SELECT t FROM Team t WHERE t.gameId.gameId IN :gameIds", Team.class);
+            query.setParameter("gameIds", listOfGameIDs);
             listToReturn.addAll(query.getResultList());
 
         } catch (Exception e) {

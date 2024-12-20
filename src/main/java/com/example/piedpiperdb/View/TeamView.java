@@ -2,6 +2,7 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.PlayerActions;
 import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
@@ -37,6 +38,8 @@ public class TeamView extends AbstractScene{
     private static ComboBox<String> gameField;
     private static ComboBox<String> playerField;
 
+    private static ListView<String> playerListView;
+
 
     public static Scene startTeamScene(Stage window){
 
@@ -62,18 +65,15 @@ public class TeamView extends AbstractScene{
             anchorPane.getChildren().add(resultBox);
         });
 
-        Button teamsByGameSelectionButton = createButton("Show Teams By Game");
-        teamsByGameSelectionButton.setOnAction(event -> {
+        Button teamsByGameSelectionButton = createButton("Show players by Game");
+        teamsByGameSelectionButton.setOnAction(actionEvent -> {
             clearResultBox(getIdBox, resultBox);
             resultBox = createResultBox();
-
-            Label titel = createTitleLabel("Teams from selected game or games");
-            resultBox.getChildren().add(titel);
-
+            Label title = createTitleLabel("Teams from selected game or games");
+            resultBox.getChildren().add(title);
             List<CheckBox> checkBoxes = TeamActions.gameCheckBoxes();
-            List<String> selections = ConfirmBox.displayCheckBoxOptions("Selected game or games", checkBoxes);
+            List<String> selections = ConfirmBox.displayCheckBoxOptions("Select game or games", checkBoxes);
             resultBox = TeamActions.getTableViewSelectedTeams(resultBox, selections);
-
             anchorPane.getChildren().add(resultBox);
         });
 
@@ -95,7 +95,7 @@ public class TeamView extends AbstractScene{
             showDeleteTeamForm(anchorPane);
         });
 
-        vbox.getChildren().addAll(getAllTeamsButton/*, teamsByGameSelectionButton*/,addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
+        vbox.getChildren().addAll(getAllTeamsButton, teamsByGameSelectionButton,addNewTeamButton, updateTeamByIdButton, deleteTeamByIdButton);
     }
 
 // "CRUD" TeamForms
@@ -118,6 +118,13 @@ public class TeamView extends AbstractScene{
             List<Player> players = TeamActions.getAllAvailablePlayers();
             resultBox.getChildren().add(createResultBoxContentBoxComboBox("Players", "Select players", playerField, players, player -> player.getId() + ", " + player.getNickname()));
 
+            playerListView = new ListView<>();
+
+
+
+
+            addGameFieldListener(gameField, playerField);
+
             Button saveButton = createButton("Save Team");
             saveButton.setOnAction(event -> {
                 if (validateUpdateTeamName(teamNameField.getText())) {
@@ -139,6 +146,25 @@ public class TeamView extends AbstractScene{
             e.printStackTrace();
             AlertBox.displayAlertBox("Error", "Error while saving Team to database");
         }
+    }
+
+    private static void addGameFieldListener(ComboBox<String> gameField, ComboBox<String> playerField){
+        gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.isEmpty()) {
+                try {
+                    int gameId = Integer.parseInt(newValue.split(",")[0].trim());
+                    List<Player> filteredPlayers = TeamActions.getPlayersByGame(gameId);
+
+                    filteredPlayers.addAll(TeamActions.getAllAvailablePlayers());
+
+                    playerField.getItems().clear();
+                    filteredPlayers.forEach(p ->
+                            playerField.getItems().add(p.getId() + ", " + p.getNickname()));
+                } catch (NumberFormatException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
     }
 
     public static Team createTeamFromFields(String teamName, String selectedGameValue, String selectedPlayerValue) {

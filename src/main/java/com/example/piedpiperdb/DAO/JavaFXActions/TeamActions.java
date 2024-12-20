@@ -16,6 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,10 +39,10 @@ public class TeamActions {
     public static VBox getTableViewSelectedTeams (VBox vBox, List<String> selections){
 
         List<Integer> ids = new ArrayList<>();
-
         for (String selection : selections) {
             try {
-                String[] parts = selection.split(",");
+                String[] parts = selection.split(" ");
+
                 String lastPart = parts[parts.length - 1];
                 int id = Integer.parseInt(lastPart);
                 ids.add(id);
@@ -53,7 +54,7 @@ public class TeamActions {
         }
         List<Team> teams = TEAM_DAO.getTeamsByGame(ids);
         //System.out.println(teams.size());
-        return showTable(vBox, teams);
+        return showTable(vBox, teams );
     }
 
     public static List<CheckBox> gameCheckBoxes (){
@@ -171,14 +172,21 @@ public class TeamActions {
 //----------------------------------------------------------------------------------------------------------------------
 
     public static Game getGameById(int gameId){return GAME_DAO.getGameById(gameId);}
+
     public static List<Game> getAllGames(){return GAME_DAO.getAllGames();}
 
     public static Player getPlayerById(int playerId){return PLAYER_DAO.getPlayer(playerId);}
+
     public static List<Player> getAllPlayers(){return PLAYER_DAO.getAllPlayers();}
+
     public static List<Player> getAllAvailablePlayers(){
 
         List<Player> listOfAllPlayers = getAllPlayers();
         List<Player> availablePlayers = new ArrayList<>();
+
+       /* for (Player player: listOfAllPlayers){
+            if(player.getGameId() == )
+        }*/
 
         for (Player player : listOfAllPlayers) {
             if (player.getTeamId() == null){
@@ -186,7 +194,31 @@ public class TeamActions {
             }
         }
 
+
         return availablePlayers;
+    }
+
+/*    public static ObservableList<String> getPlayerNames(){
+        ObservableList<Player> players = (ObservableList)
+
+       // players.addAll(getAllAvailablePlayers());
+
+        ObservableList<String> playerNames = FXCollections.observableArrayList();
+        for (Player player : players) {
+            playerNames.add(player.getNickname());
+        }
+        return playerNames;
+    }
+
+    public static ListView<String> playerListView(ListView<String> playerListView){
+        playerListView.getItems().addAll();
+    }*/
+
+    public static List<Player> getPlayersByGame(int gameId) {
+        if (gameId == 0) {
+            return Collections.emptyList();
+        }
+        return PLAYER_DAO.getAllPlayersFromSelectedGame(List.of(gameId));
     }
     public static List<Player> getPlayersInTeam(Team team){
         return team.getListOfPlayersInTeam();
