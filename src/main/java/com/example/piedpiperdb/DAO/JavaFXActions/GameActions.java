@@ -139,7 +139,7 @@ public class GameActions {
 
         boolean gameExists = false;
         for(String game : getGamesString()){
-            if(game.toLowerCase().contains(gameName)){
+            if(game.toLowerCase().equalsIgnoreCase(gameName)){
                 gameExists = true;
                 break;
             }
