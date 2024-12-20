@@ -22,7 +22,6 @@ public abstract class AbstractScene {
     //GEFP-20-SA
     public static VBox leftVbox;
     public static Button back;
-    //private static HBox columnNames;
     public static AnchorPane anchorPane;
 
     static Scene getScene(Stage window) {
@@ -49,36 +48,6 @@ public abstract class AbstractScene {
         scene.getStylesheets().add("EscortFlasher.css");
 
         return scene;
-
-
-        //-----------------------------------------------------------
-        /*
-        //GEFP-4-SA
-        Button button1 = new Button("Knapp 1");
-        button1.getStyleClass().add("standardButton");
-        button1.setMinSize(160, 30);
-
-        columnNames = new HBox();
-        columnNames.setSpacing(10);
-        columnNames.setPadding(new Insets(15, 10, 10, 10));
-        columnNames.setMaxSize(60,170);
-        columnNames.setLayoutY(135.0);
-        columnNames.setLayoutX(210.0);
-
-        Label LabelCulumn1H = new Label("Column 1");
-        LabelCulumn1H.getStyleClass().add("standardLabel");
-        LabelCulumn1H.setMinSize(100, 30);
-        LabelCulumn1H.setAlignment(Pos.CENTER);
-
-        columnNames.getChildren().addAll(LabelCulumn1H);
-
-        VBox column1VBox = new VBox();
-        column1VBox.setSpacing(10);
-        column1VBox.setPadding(new Insets(15, 10, 10, 10));
-        column1VBox.setMinSize(100,390);
-        column1VBox.setLayoutY(180.0);
-        column1VBox.setLayoutX(220.0);
-        column1VBox.getStyleClass().add("columnV");*/
 
     }
 

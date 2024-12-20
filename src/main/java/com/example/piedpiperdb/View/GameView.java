@@ -20,14 +20,12 @@ public class GameView extends AbstractScene{
     private static ListView<String> gameListView;
     private static ListView<String> gameListViewDelete;//GEFP-25-SA
     private static AnchorPane anchorPaneAction;
-    private static Stage stage;
     private static VBox vBoxAllGames;
     private static double middleOfStage = (HelloApplication.width/2) -110;//GEFP-25-SA, ändra storlek så den följer efter Stage storleken
 
     //GEFP-22-SA
     public static Scene startSceneGame(Stage window){//Denna metod är den som kallas när man klickar på Login button i HelloApplication
         Scene baseScene = AbstractScene.getScene(window);
-        stage = window;
 
 
         AnchorPane anchorPane = AbstractScene.anchorPane;
@@ -57,7 +55,7 @@ public class GameView extends AbstractScene{
         allGames.setText("All games");
         allGames.getStyleClass().add("titel");
 
-        gameListView = new ListView();
+        gameListView = new ListView<>();
         GameActions.gameListView(gameListView);
         gameListView.getStyleClass().add("list-cell");
 
