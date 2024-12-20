@@ -10,7 +10,6 @@ import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -125,7 +124,7 @@ public class TeamView extends AbstractScene{
 
             Button saveButton = createButton("Save Team");
             saveButton.setOnAction(event -> {
-                if (validateCreateTeamName(teamNameField.getText())) {
+                if (validateUpdateTeamName(teamNameField.getText())) {
                     Team team = createTeamFromFields(teamNameField.getText(), gameField.getValue(), playerField.getValue());
                     boolean saved = TeamActions.createTeam(team);
                     if (saved) {
@@ -216,7 +215,7 @@ public class TeamView extends AbstractScene{
         Button updateTeamButton = createButton("Update Team");
         updateTeamButton.setOnAction(event -> {
             try {
-                if (validateInputTeamName(teamNameField.getText())) {
+                if (validateNewTeamName(teamNameField.getText())) {
                     teamToUpdate.setTeamName(teamNameField.getText());
 
                     if (gameField.getValue() != null) {
@@ -499,7 +498,7 @@ public class TeamView extends AbstractScene{
         playerField = new ComboBox<>();
     }
 
-    private static boolean validateInputTeamName (String teamName) {
+    private static boolean validateNewTeamName(String teamName) {
 
         //Usage: Creation of new Team
 
@@ -514,7 +513,7 @@ public class TeamView extends AbstractScene{
         return true;
     }
 
-    private static boolean validateCreateTeamName (String teamName) {
+    private static boolean validateUpdateTeamName(String teamName) {
 
         //Usage: Updating excisting Team without having to change name.
 
