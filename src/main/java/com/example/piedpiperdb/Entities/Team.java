@@ -37,9 +37,9 @@ public class Team {
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Match>matchesInTeam = new ArrayList<>();
 
-
-    //GEFP-10-SJ
-    // Constructors
+//GEFP-10-SJ
+// Constructor
+//----------------------------------------------------------------------------------------------------------------------
 
     public Team (){}
 
@@ -47,8 +47,11 @@ public class Team {
         this.teamName = teamName;
     }
 
-    // Getters & Setters
+// Getters & Setters
+//----------------------------------------------------------------------------------------------------------------------
 
+    // Team
+    //------------------------------------------------------------------------------------------------------------------
     public int getTeamId() {return teamId;}
     public void setTeamId(int teamId) {this.teamId = teamId;}
 
@@ -66,10 +69,12 @@ public class Team {
     }
 
     // Player
+    //------------------------------------------------------------------------------------------------------------------
 
     //public Player getPlayer (int playerId) {}
 
     // Game
+    //------------------------------------------------------------------------------------------------------------------
 
     public Game getGameId() {return gameId;}
     public void setGameId(Game game) {this.gameId = game;}
@@ -77,10 +82,10 @@ public class Team {
     public String getGameName() { return gameId != null ? gameId.getGameName() : "-n-"; }
 
     // Match
+    //------------------------------------------------------------------------------------------------------------------
 
     public List<Match> getMatchesInTeam() {return matchesInTeam;}
     public void setMatchesInTeam(List<Match> matchesInTeam) {this.matchesInTeam = matchesInTeam;}
-
 
     public Match getMatchId() { return matchId; }
     public void setMatchId(Match matchId) {this.matchId = matchId;}
@@ -93,8 +98,10 @@ public class Team {
         return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + result;
     }
 
-    // Allt
-/*    @Override
+// To String
+//----------------------------------------------------------------------------------------------------------------------
+
+    @Override
     public String toString() {
         return "Team{" +
                 "teamId=" + teamId +
@@ -104,44 +111,6 @@ public class Team {
                 ", matchId=" + matchId +
                 ", matchesInTeam=" + matchesInTeam +
                 '}';
-    }*/
-
-
-/*    @Override
-    public String toString() {
-        return "Team{" +
-                "teamId=" + teamId +
-                ", teamName='" + teamName + '\'' +
-                ", listOfPlayersInTeam=" + nickNames(listOfPlayersInTeam) +
-                ", gameId=" + gameId +
-                ", matchId=" + matchId +
-                ", matchesInTeam=" + matchesInTeam +
-                '}';
-
-    }*/
-
-    @Override
-    public String toString() {
-        return "Team{" +
-                "teamId=" + teamId +
-                ", teamName='" + teamName + '\'' +
-                ", listOfPlayersInTeam=" + nickNames(listOfPlayersInTeam) +
-                ", gameId=" + gameId +
-                ", matchId=" + matchId +
-                ", matchesInTeam=" + matchesInTeam +
-                '}';
-
     }
-
-
-    // Fungerar inte pga Player List
-/*    @Override
-    public String toString() {
-        return "Team{" +
-                "listOfPlayersInTeam=" + listOfPlayersInTeam +
-                ", teamName='" + teamName + '\'' +
-                ", teamId=" + teamId +
-                '}';
-    }*/
 }
 
