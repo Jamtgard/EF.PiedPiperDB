@@ -7,6 +7,7 @@ import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
 import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.*;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -47,10 +48,8 @@ public class MatchView extends AbstractScene {
             ChangeSceneAction.toStartPage(window);
         });
 
-
         return baseScene;
     }
-
 
     private static void addCustomComponents(VBox vBox){
         matchListView = new ListView<>();
@@ -58,16 +57,21 @@ public class MatchView extends AbstractScene {
 
         updateMatchList();
 
-        Button getAllMatchesButton = createGetAllMatches();
-        Button addMatchButton = createAddMatch();
+        Button getAllMatchesButton = createAllMatches();
+        Button decidedMatchesButton = createDecidedMatches();
+        Button upcomingMatchesButton = createUpcomingMatches();
 
+        Button addMatchButton = createAddMatch();
         Button uppdateMatchButton = createUppdateMatch();
         Button deleteMatch = createDeleteMatch();
 
-        vBox.getChildren().addAll(getAllMatchesButton, addMatchButton, uppdateMatchButton , deleteMatch);
+
+
+        vBox.getChildren().addAll(getAllMatchesButton, decidedMatchesButton,
+                upcomingMatchesButton, addMatchButton, uppdateMatchButton , deleteMatch);
     }
 
-    private static Button createGetAllMatches(){
+    private static Button createAllMatches(){
         Button getAllMatches = new Button("Show Matches");
         getAllMatches.getStyleClass().add("standardButton");
         getAllMatches.setMinSize(160,30);
@@ -79,6 +83,30 @@ public class MatchView extends AbstractScene {
             updateMatchList();
                 });
         return getAllMatches;
+    }
+
+    private static Button createDecidedMatches(){
+        Button decidedMatches = new Button("Decided Matches");
+        decidedMatches.getStyleClass().add("standardButton");
+        decidedMatches.setMinSize(160,30);
+        decidedMatches.setOnAction(actionEvent -> {
+            List<Match> matches = MatchActions.getDecidedMatches();
+            showMatchTable(AbstractScene.anchorPane, matches);
+            updateMatchList();
+        });
+        return decidedMatches;
+    }
+
+    private static Button createUpcomingMatches(){
+        Button upcomingMatches = new Button("Upcoming Matches");
+        upcomingMatches.getStyleClass().add("standardButton");
+        upcomingMatches.setMinSize(160,30);
+        upcomingMatches.setOnAction(actionEvent -> {
+            List<Match> matches = MatchActions.getUpcomingMatches();
+            showMatchTable(AbstractScene.anchorPane, matches);
+            updateMatchList();
+        });
+        return upcomingMatches;
     }
 
     private static Button createAddMatch(){
@@ -248,13 +276,6 @@ public class MatchView extends AbstractScene {
             VBox resultBox = createResultBox();
             resultBox.getChildren().add(addMatchBox);
             AbstractScene.anchorPane.getChildren().add(resultBox);
-
-            /*//skapar scene och visar formulär
-            Scene addMatchScene = new Scene(addMatchBox, 400, 300);
-            Stage addMatchStage = new Stage();
-            addMatchStage.setTitle("Add Match");
-            addMatchStage.setScene(addMatchScene);
-            addMatchStage.show();*/
 
             // lägger till matchen
             submitButton.setOnAction(event -> {
@@ -443,6 +464,11 @@ public class MatchView extends AbstractScene {
                 gameComboBox.setPromptText(selectedMatch.getGameName());
                 gameComboBox.getItems().addAll(gameDAO.getAllGames());
 
+                gameComboBox.getItems().stream()
+                                .filter(game -> game.getGameName().equals(selectedMatch.getGameName()))
+                                .findFirst()
+                                .ifPresent(gameComboBox::setValue);
+
                 gameComboBox.setCellFactory(param -> new ListCell<>(){
                     @Override
                     protected void updateItem(Game game, boolean empty) {
@@ -461,16 +487,22 @@ public class MatchView extends AbstractScene {
 
                 DatePicker matchDatePicker = new DatePicker(selectedMatch.getMatchDate());
 
-                TextField resultField = new TextField(selectedMatch.getMatchResult());
-                resultField. setPromptText("Match Result");
-                resultField.setMaxWidth(200);
-                resultField.setAlignment(Pos.CENTER);
+                ComboBox<String> winnerComboBox = new ComboBox<>();
+                winnerComboBox.setPromptText("Select Winner");
+
+                String matchName = selectedMatch.getMatchName();
+                String[]participants = matchName.split(" vs ");
+                if(participants.length == 2){
+                    winnerComboBox.getItems().addAll(participants[0].trim(), participants[1].trim());
+                } else {
+                    System.out.println("Match could not be fonds from database.");
+                }
 
                 Button updateButton = new Button("Update Match");
                 updateButton.getStyleClass().add("standardButton");
                 updateButton.setMinSize(160,30);
 
-                updateForm.getChildren().addAll(updateLabel, matchNameField, matchTypeComboBox, gameComboBox, matchDatePicker, resultField, updateButton);
+                updateForm.getChildren().addAll(updateLabel, matchNameField, matchTypeComboBox, gameComboBox, matchDatePicker, winnerComboBox, updateButton);
 
                 resultBox.getChildren().clear();
                 resultBox.getChildren().add(updateForm);
@@ -481,7 +513,7 @@ public class MatchView extends AbstractScene {
                     MatchType updateMatchType = matchTypeComboBox.getValue();
                     Game updateGame = gameComboBox.getValue();
                     LocalDate updateMatchDate = matchDatePicker.getValue();
-                    String updateResult = resultField.getText();
+                    String selectedWinner = winnerComboBox.getValue();
 
                     if(updateName == null || updateName.isEmpty()){
                         System.out.println("Match Name is required.");
@@ -497,20 +529,16 @@ public class MatchView extends AbstractScene {
                     }
                     if (updateMatchDate == null){
                         System.out.println("Match Date is required.");
+                        return;
                     }
 
-                    /*selectedMatch.setMatchName(updateName);
-                    selectedMatch.setMatchType(updateMatchType);
-                    selectedMatch.setGameId(updateGame);
-                    selectedMatch.setMatchDate(updateMatchDate);
-                    selectedMatch.setMatchResult(updateResult);*/
+                    MatchActions.updateMatch(selectedMatch, updateName, updateMatchType,
+                            updateMatchDate, updateGame, selectedWinner);
 
-                    MatchActions.updateMatch(selectedMatch, updateName, updateMatchType, updateMatchDate, updateGame, updateResult);
                     updateMatchList();
 
                     resultBox.getChildren().clear();
-                    showMatchTable(AbstractScene.anchorPane, MatchActions.getAllMatches());
-
+                    showMatchTable(AbstractScene.anchorPane, MatchActions.getDecidedMatches());
 
                 });
             });
@@ -556,10 +584,20 @@ public class MatchView extends AbstractScene {
         TableColumn<Match, String> matchDateColumn = new TableColumn<>("Match Date");
         matchDateColumn.setCellValueFactory(new PropertyValueFactory<>("MatchDate"));
 
-        TableColumn<Match, String> matchResultColumn = new TableColumn<>("Result");
-        matchResultColumn.setCellValueFactory(new PropertyValueFactory<>("MatchResult"));
+        TableColumn<Match, String> statusColumn = new TableColumn<>("Status");
+        statusColumn.setCellValueFactory(data ->{
+            Match match = data.getValue();
+            String status = match.isMatchDecided() ? "Decided" : "Upcoming";
+            return new SimpleStringProperty(status);
+        });
 
-        table.getColumns().addAll(matchIdColumn, matchNameColumn, matchTypeColumn, gameColumn, matchDateColumn, matchResultColumn);
+        TableColumn<Match, String> winnerColumn = new TableColumn<>("Winner");
+        winnerColumn.setCellValueFactory(data ->{
+            Match match = data.getValue();
+            return new SimpleStringProperty(match.isMatchDecided() ? match.getMatchResult() : "N/A");
+        });
+
+        table.getColumns().addAll(matchIdColumn, matchNameColumn, matchTypeColumn, gameColumn, matchDateColumn, /*matchResultColumn,*/ statusColumn, winnerColumn);
         table.setItems(observableList);
 
         return table;
@@ -577,7 +615,5 @@ public class MatchView extends AbstractScene {
         AnchorPane.setBottomAnchor(vBox,30.0);
         return vBox;
     }
-
-
 
 }

@@ -1,19 +1,12 @@
 package com.example.piedpiperdb.DAO.JavaFXActions;
 
 import com.example.piedpiperdb.DAO.MatchDAO;
-import com.example.piedpiperdb.DAO.PlayerDAO;
-import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.Entities.*;
-import com.example.piedpiperdb.View.AbstractScene;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+
 
 import java.time.LocalDate;
 import java.util.List;
-
 
 //GEFP-32-AWS
 public class MatchActions {
@@ -26,12 +19,14 @@ public class MatchActions {
         matchDAO.saveMatch(newMatch);
     }
 
-    public static boolean updateMatch(Match matchToUpdate, String newName, MatchType newType, LocalDate newDate, Game newGame, String result) {
+    public static boolean updateMatch(Match matchToUpdate, String newName, MatchType newType, LocalDate newDate, Game newGame, String selectedWinner) {
         matchToUpdate.setMatchName(newName);
         matchToUpdate.setMatchType(newType);
         matchToUpdate.setMatchDate(newDate);
         matchToUpdate.setGameId(newGame);
-        matchToUpdate.setMatchResult(result);
+
+        matchToUpdate.setMatchResult(selectedWinner);
+
         matchDAO.updateMatch(matchToUpdate);
         return true;
     }
@@ -44,4 +39,15 @@ public class MatchActions {
         return matchDAO.getAllMatches();
     }
 
+    public static List<Match> getDecidedMatches() {
+        return matchDAO.getAllMatches().stream()
+                .filter(Match::isMatchDecided)
+                .toList();
+    }
+
+    public static List<Match> getUpcomingMatches() {
+        return matchDAO.getAllMatches().stream()
+                .filter(match -> !match.isMatchDecided())
+                .toList();
+    }
 }
