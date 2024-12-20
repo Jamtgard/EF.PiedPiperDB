@@ -294,7 +294,6 @@ public class TeamView extends AbstractScene{
                 int teamId = Integer.parseInt(teamIdField.getText());
                 Team teamToDelete = TeamActions.getTeamById(teamId);
 
-                //clearResultBox(resultBox);
 
                 if (teamToDelete == null) {
                     AlertBox.displayAlertBox("Error", "Team does not exist");
