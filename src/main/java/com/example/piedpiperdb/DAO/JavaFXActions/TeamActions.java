@@ -114,6 +114,15 @@ public class TeamActions {
         return tableView;
     }
 
+// ListViews
+//----------------------------------------------------------------------------------------------------------------------
+
+ /*   public static ListView<String> createPlayerListView(List<Player> players){
+        ListView<String> playerListView = (ListView<String>) players;
+
+    }*/
+
+
 // CRUDs (Team Actions for FX)
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -213,6 +222,18 @@ public class TeamActions {
         return nicknames;
     }
 
+    public static List<Player> getPlayersWithNullGameId(){
+        List<Player> listOfPlayers = getAllPlayers();
+        List<Player> playersWithNullGameId = new ArrayList<>();
+
+        for (Player player : listOfPlayers) {
+            if (player.getGameId() == null) {
+                playersWithNullGameId.add(player);
+            }
+        }
+        return playersWithNullGameId;
+    }
+
     // WIPS
     public static List<Player> getAllAvailablePlayersByGameId(int gameId){
 
@@ -226,5 +247,46 @@ public class TeamActions {
         }
 
         return availablePlayers;
+    }
+
+    public static ObservableList<Player> getPlayersObservableList(){
+        ObservableList<Player> players = FXCollections.observableArrayList(getPlayersWithNullGameId());
+        return players;
+    }
+
+    public static ObservableList<String> getPlayersString(){
+        ObservableList<Player> players = getPlayersObservableList();
+
+        ObservableList<String> playerNicknames = FXCollections.observableArrayList();
+        for(Player player : players){
+            playerNicknames.add(player.getNickname());
+        }
+
+        return playerNicknames;
+    }
+
+    public static ListView<String> playerListView(ListView<String> playerListView){//GEFP-39-SA, la in <String>
+        playerListView.getItems().addAll(getPlayersString());
+        playerListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+
+        return playerListView;
+    }
+
+    public static ListView<String> createAvailablePlayersListView() {
+        ListView<String> playerListView = new ListView<>();
+        List<Player> availablePlayers = getAllAvailablePlayers(); // Fetch players with gameId == null
+
+        ObservableList<String> playerNicknames = FXCollections.observableArrayList();
+        for (Player player : availablePlayers) {
+            playerNicknames.add(player.getNickname()); // Use the nickname as the list item
+        }
+
+        playerListView.setItems(playerNicknames);
+        playerListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Allow multi-selection
+        playerListView.getStyleClass().add("list-cell"); // Add CSS styling if needed
+        playerListView.setPrefWidth(300); // Set preferred width to 300 pixels
+
+        return playerListView;
     }
 }

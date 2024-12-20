@@ -2,6 +2,7 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
+import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
@@ -10,6 +11,7 @@ import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -119,6 +121,24 @@ public class TeamView extends AbstractScene{
             resultBox.getChildren().add(createResultBoxContentBoxComboBox("Players", "Select players", playerField, players, player -> player.getId() + ", " + player.getNickname()));
              */
 
+           /* Button showAvailablePlayersButton = new Button("Show Available Players");
+            showAvailablePlayersButton.getStyleClass().add("standardButton");
+            showAvailablePlayersButton.setMinSize(160, 30);
+
+            showAvailablePlayersButton.setOnAction(event -> {
+                showAvailablePlayers(anchorPane);
+            });
+
+            resultBox.getChildren().add(showAvailablePlayersButton);*/
+
+            showAvailablePlayers();
+
+            /*playerListView = new ListView<>();
+            TeamActions.playerListView(playerListView);
+            playerListView.getStyleClass().add("list-cell");
+
+            resultBox.getChildren().add(playerListView);*/
+
             addGameFieldListener(gameField, playerField);
 
             Button saveButton = createButton("Save Team");
@@ -142,6 +162,28 @@ public class TeamView extends AbstractScene{
             e.printStackTrace();
             AlertBox.displayAlertBox("Error", "Error while saving Team to database");
         }
+    }
+
+    private static void showAvailablePlayers() {
+        //clearResultBox(resultBox);
+
+        // Create a VBox to hold the content
+        VBox playerBox = new VBox();
+        playerBox.setSpacing(10);
+        playerBox.setAlignment(Pos.CENTER);
+
+        // Add title label
+        Label title = new Label("Available Players");
+        title.getStyleClass().add("titel");
+
+        // Create the ListView using TeamActions
+        ListView<String> playerListView = TeamActions.createAvailablePlayersListView();
+
+        // Add components to the playerBox
+        playerBox.getChildren().addAll(title, playerListView);
+
+        // Add the playerBox to the resultBox
+        resultBox.getChildren().add(playerBox);
     }
 
     private static void addGameFieldListener(ComboBox<String> gameField, ComboBox<String> playerField){
@@ -292,7 +334,6 @@ public class TeamView extends AbstractScene{
         resultBox.getChildren().add(getButton);
         anchorPane.getChildren().add(resultBox);
     }
-
 
     private static void showTeamInfoForDeletion(Team team) {
         clearResultBox(resultBox);
