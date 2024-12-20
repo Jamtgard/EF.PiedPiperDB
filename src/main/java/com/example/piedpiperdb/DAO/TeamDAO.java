@@ -72,12 +72,10 @@ public class TeamDAO {
 
         List<Team> listToReturn = new ArrayList<>();
         try {
-
             TypedQuery<Team> query = entityManager.createQuery(
                     "SELECT t FROM Team t WHERE t.gameId.gameId IN :gameIds", Team.class);
             query.setParameter("gameIds", listOfGameIDs);
             listToReturn.addAll(query.getResultList());
-
         } catch (Exception e) {
 
             System.out.println(e.getMessage());
