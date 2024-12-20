@@ -26,25 +26,14 @@ public class GameActions {
         if(textField.getText().isEmpty() || textField.getText().replaceAll("\\s+", "").isEmpty()){
             AlertBox.displayAlertBox("Add game","You can't add an empty game name");
         } else {
-            String gameNameLowerCase = textField.getText().toLowerCase();
+            if(GameActions.gameExits(textField,"Add")){//GEFP-39-SA
 
-            boolean gameExists = false;
-            for(String game : getGamesString()){
-                if(game.toLowerCase().contains(gameNameLowerCase)){
-                    gameExists = true;
-                    break;
-                }
+            }else {
+                //GEFP-22-SA
+                String gameName = textField.getText();
+                Game newGame = new Game(firstLetterCap(gameName));
+                gameDAO.saveGame(newGame);
             }
-
-            if(gameExists){
-                AlertBox.displayAlertBox("Add game","This game name is already in use");
-                return;
-            }
-
-            //GEFP-22-SA
-            String gameName = textField.getText();
-            Game newGame = new Game(firstLetterCap(gameName));
-            gameDAO.saveGame(newGame);
         }
 
     }
@@ -70,7 +59,7 @@ public class GameActions {
 
 
     //GEFP-22-SA
-    public static ListView gameListView(ListView gameListView){
+    public static ListView<String> gameListView(ListView<String> gameListView){//GEFP-39-SA, la in <String>
         gameListView.getItems().addAll(getGamesString());
         gameListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -78,7 +67,7 @@ public class GameActions {
     }
 
     //GEFP-22-SA
-    public static Set<Integer> stringToId(ListView gameListView){
+    public static Set<Integer> stringToId(ListView<String> gameListView){//GEFP-39-SA, la in <String>
         ObservableList<Game> games = getGames();
         ObservableList<String> gameNames;
         gameNames = gameListView.getSelectionModel().getSelectedItems();
@@ -96,7 +85,7 @@ public class GameActions {
     }
 
     //GEFP-26-SA
-    public static void getPlayerForGame(ListView gameListView) {
+    public static void getPlayerForGame(ListView<String> gameListView) {
         Set<Integer> gameById = stringToId(gameListView);//Får in alla id på valda spel
 
         if(gameById.isEmpty()){
@@ -120,7 +109,7 @@ public class GameActions {
         }
     }
     //GEFP-26-SA
-    public static void getMatchesForGame(ListView gameListView) {
+    public static void getMatchesForGame(ListView<String> gameListView) {
         Set<Integer> gameById = stringToId(gameListView);//Får in alla id på valda spel
 
         if(gameById.isEmpty()){
@@ -144,9 +133,8 @@ public class GameActions {
         }
     }
 
-    //Update
     //GEFP-34-SA
-    public static boolean gameExits(TextField textField) {
+    public static boolean gameExits(TextField textField,String string) {//GEFP-39-SA, la in String
         String gameName = textField.getText().toLowerCase();
 
         boolean gameExists = false;
@@ -157,12 +145,14 @@ public class GameActions {
             }
         }
         if(gameExists){
-            AlertBox.displayAlertBox("Update game","This game name is already in use");
+            AlertBox.displayAlertBox(string+" game","This game name is already in use");
             return true;
         }
         return false;
     }
 
+
+    //Update
     //GEFP-39-SA
     public static String firstLetterCap(String gameName){
         String caps = gameName.toUpperCase();
@@ -174,11 +164,13 @@ public class GameActions {
     //GEFP-22-SA
     public static void updateGame(TextField textField,ChoiceBox<String> choiceBox) {
         //GEFP-26-SA, la till if-sats för om textfield är tomt
-        if(textField.getText().isEmpty() || textField.getText().replaceAll("\\s+","").equals("")){
+        if(textField.getText().isEmpty() || textField.getText().replaceAll("\\s+", "").isEmpty()){
             AlertBox.displayAlertBox("Update game","You can't update \""+choiceBox.getValue()+"\" to an empty game name");
             return;
+        } else if (textField.getText().equalsIgnoreCase(choiceBox.getValue())) {//GEFP-39-SA
+            
         } else {//GEFP-34-SA, la till om man försöker uppdatera till ett spelnamn som redan finns
-            if(GameActions.gameExits(textField)){
+            if(GameActions.gameExits(textField,"Update")){
                 return;
             }
         }
@@ -203,7 +195,7 @@ public class GameActions {
     }
     //GEFP-34-SA
     public static void updateGame(TextField input,TextField newName) {
-        if(input.getText().isEmpty() || input.getText().replaceAll("\\s+","").equals("") ||newName.getText().isEmpty() || newName.getText().replaceAll("\\s+","").equals("")){
+        if(input.getText().isEmpty() || input.getText().replaceAll("\\s+", "").isEmpty() ||newName.getText().isEmpty() || newName.getText().replaceAll("\\s+", "").isEmpty()){
             AlertBox.displayAlertBox("Update game","No id or name in text field");
 
         }else {
@@ -213,11 +205,13 @@ public class GameActions {
                 if(gameDAO.getGameById(gameId) != null){
                     System.out.println("Updating game with id " + gameId);
 
-                    if(GameActions.gameExits(newName)){
+                    if(gameDAO.getGameById(gameId).getGameName().equalsIgnoreCase(newName.getText())){//GEFP-39-SA
+
+                    } else if (GameActions.gameExits(newName,"Update")) {
                         return;
                     }
 
-                    gameDAO.updateGame(gameDAO.getGameById(gameId), newName.getText());
+                    gameDAO.updateGame(gameDAO.getGameById(gameId), firstLetterCap(newName.getText()));
 
                 }else {
                     AlertBox.displayAlertBox("Update game","No game with that id");
