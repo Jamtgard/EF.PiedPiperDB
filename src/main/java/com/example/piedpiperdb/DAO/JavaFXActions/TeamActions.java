@@ -7,13 +7,11 @@ import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
-import com.example.piedpiperdb.View.AlertBox;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -24,19 +22,16 @@ import java.util.stream.Collectors;
 //GEFP-27-SJ
 public class TeamActions {
 
-    private static TeamDAO teamDAO = new TeamDAO();
-    private static PlayerDAO playerDAO = new PlayerDAO();
-    private static GameDAO gameDAO = new GameDAO();
-    private static MatchDAO matchDAO = new MatchDAO();
-
-    //public TeamActions(TeamDAO teamDAO) {this.teamDAO = teamDAO;}
-
+    private static final TeamDAO TEAM_DAO = new TeamDAO();
+    private static final PlayerDAO PLAYER_DAO = new PlayerDAO();
+    private static final GameDAO GAME_DAO = new GameDAO();
+    private static final MatchDAO MATCH_DAO = new MatchDAO();
 
 //TableView
 //----------------------------------------------------------------------------------------------------------------------
 
     public static VBox getTableViewAllTeams(VBox vBox) {
-        List<Team> teams = teamDAO.getAllTeams();
+        List<Team> teams = TEAM_DAO.getAllTeams();
         return showTable(vBox, teams);
     }
 
@@ -56,13 +51,13 @@ public class TeamActions {
             }
             System.out.println("IDs to query: " + ids);
         }
-        List<Team> teams = teamDAO.getTeamsByGame(ids);
+        List<Team> teams = TEAM_DAO.getTeamsByGame(ids);
         //System.out.println(teams.size());
         return showTable(vBox, teams);
     }
 
     public static List<CheckBox> gameCheckBoxes (){
-        List<Game> games = gameDAO.getAllGames();
+        List<Game> games = GAME_DAO.getAllGames();
         List<CheckBox> checkBoxes = new ArrayList<>();
 
         for (Game game : games) {
@@ -122,14 +117,14 @@ public class TeamActions {
 //----------------------------------------------------------------------------------------------------------------------
 
     //Create
-    public static boolean createTeam(Team team){return teamDAO.createTeam(team);}
+    public static boolean createTeam(Team team){return TEAM_DAO.createTeam(team);}
     public static Team createTeamFromFieldsInput (String teamName, String selectedGameValue, String selectedPlayerValue){
 
         Team team = new Team(teamName);
 
         if (selectedGameValue != null && !selectedGameValue.isEmpty()) {
             int gameId = Integer.parseInt(selectedGameValue.split(",")[0].trim());
-            Game selectedGame = gameDAO.getGameById(gameId);
+            Game selectedGame = GAME_DAO.getGameById(gameId);
             team.setGameId(selectedGame);
         }
 
@@ -143,30 +138,43 @@ public class TeamActions {
     }
 
     //Read
-    public static Team getTeamById(int teamId){return teamDAO.getTeamById(teamId);}
+    public static Team getTeamById(int teamId){return TEAM_DAO.getTeamById(teamId);}
     public static List<Team> getTeamsByGame (int gameId){
-        return teamDAO.getTeamsByGame(List.of(gameId));
+        return TEAM_DAO.getTeamsByGame(List.of(gameId));
+    }
+    public static List<Team> getAllTeams(){return TEAM_DAO.getAllTeams();}
+    public static List<Team> getAllOtherTeamsExcluding (String teamName) {
+        List<Team> allTeams = TEAM_DAO.getAllTeams();
+        //System.out.println(allTeams.size());
+
+        List<Team> allOtherTeams = allTeams.stream()
+                .filter(team -> !team.getTeamName().equalsIgnoreCase(teamName))
+                .toList();
+
+        return allOtherTeams;
+
     }
 
     //Update
-    public static boolean updateTeam(Team team){ return teamDAO.updateTeam(team);}
+    public static boolean updateTeam(Team team){ return TEAM_DAO.updateTeam(team);}
 
     //Delete
-    public static void deleteTeam(Team team){teamDAO.deleteTeam(team);}
-    public static boolean deleteTeamById(int teamId){return teamDAO.deleteTeamById(teamId);}
+    public static void deleteTeam(Team team){
+        TEAM_DAO.deleteTeam(team);}
+    public static boolean deleteTeamById(int teamId){return TEAM_DAO.deleteTeamById(teamId);}
 
     // Checkers - Booleans
-    public static boolean isTeamNameUnique(String teamName){return teamDAO.isTeamNameUnique(teamName);}
+    public static boolean isTeamNameUnique(String teamName){return TEAM_DAO.isTeamNameUnique(teamName);}
     public static boolean isFieldEmpty(String teamName){return teamName.isEmpty();}
 
 // Get Actions
 //----------------------------------------------------------------------------------------------------------------------
 
-    public static Game getGameById(int gameId){return gameDAO.getGameById(gameId);}
-    public static List<Game> getAllGames(){return gameDAO.getAllGames();}
+    public static Game getGameById(int gameId){return GAME_DAO.getGameById(gameId);}
+    public static List<Game> getAllGames(){return GAME_DAO.getAllGames();}
 
-    public static Player getPlayerById(int playerId){return playerDAO.getPlayer(playerId);}
-    public static List<Player> getAllPlayers(){return playerDAO.getAllPlayers();}
+    public static Player getPlayerById(int playerId){return PLAYER_DAO.getPlayer(playerId);}
+    public static List<Player> getAllPlayers(){return PLAYER_DAO.getAllPlayers();}
     public static List<Player> getAllAvailablePlayers(){
 
         List<Player> listOfAllPlayers = getAllPlayers();
@@ -182,21 +190,6 @@ public class TeamActions {
     }
     public static List<Player> getPlayersInTeam(Team team){
         return team.getListOfPlayersInTeam();
-    }
-
-    public static List<Team> getAllTeams(){return teamDAO.getAllTeams();}
-    //public static Team getTeamByName(String teamName){}
-
-    public static List<Team> getAllOtherTeamsExcluding (String teamName) {
-        List<Team> allTeams = teamDAO.getAllTeams();
-        //System.out.println(allTeams.size());
-
-        List<Team> allOtherTeams = allTeams.stream()
-                .filter(team -> !team.getTeamName().equalsIgnoreCase(teamName))
-                .toList();
-
-        return allOtherTeams;
-
     }
 
 }

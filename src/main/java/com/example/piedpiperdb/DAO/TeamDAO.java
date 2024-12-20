@@ -161,6 +161,7 @@ public class TeamDAO {
 
             entityManager.remove(entityManager.contains(teamToDelete) ? teamToDelete : entityManager.merge(teamToDelete));
             transaction.commit();
+            System.out.println("Team " + teamToDelete.getTeamName() + " deleted successfully");
             return true;
 
         } catch (Exception e) {
@@ -288,6 +289,7 @@ public class TeamDAO {
 
     private static List<Team> allOtherTeams(String teamName){
         List<Team> allTeams = TeamActions.getAllTeams();
+
 
         List<Team> allOtherTeams = allTeams.stream()
                 .filter(team -> !team.getTeamName().equalsIgnoreCase(teamName))
