@@ -57,6 +57,13 @@ public class Team {
 
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
+    private String nickNames (List<Player> listOfPlayersInTeam){
+        String nickNames = null;
+        for (Player player : listOfPlayersInTeam) {
+            nickNames += (player.getNickname() + ", ");
+        }
+        return nickNames;
+    }
 
     // Player
 
@@ -76,6 +83,7 @@ public class Team {
 
 
     public Match getMatchId() { return matchId; }
+    public void setMatchId(Match matchId) {this.matchId = matchId;}
 
     public String getMatchInfo (){
         if (matchId != null) {
@@ -85,8 +93,8 @@ public class Team {
         return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + result;
     }
 
-    // ToString
-    @Override
+    // Allt
+/*    @Override
     public String toString() {
         return "Team{" +
                 "teamId=" + teamId +
@@ -96,6 +104,44 @@ public class Team {
                 ", matchId=" + matchId +
                 ", matchesInTeam=" + matchesInTeam +
                 '}';
+    }*/
+
+
+/*    @Override
+    public String toString() {
+        return "Team{" +
+                "teamId=" + teamId +
+                ", teamName='" + teamName + '\'' +
+                ", listOfPlayersInTeam=" + nickNames(listOfPlayersInTeam) +
+                ", gameId=" + gameId +
+                ", matchId=" + matchId +
+                ", matchesInTeam=" + matchesInTeam +
+                '}';
+
+    }*/
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "teamId=" + teamId +
+                ", teamName='" + teamName + '\'' +
+                ", listOfPlayersInTeam=" + nickNames(listOfPlayersInTeam) +
+                ", gameId=" + gameId +
+                ", matchId=" + matchId +
+                ", matchesInTeam=" + matchesInTeam +
+                '}';
+
     }
+
+
+    // Fungerar inte pga Player List
+/*    @Override
+    public String toString() {
+        return "Team{" +
+                "listOfPlayersInTeam=" + listOfPlayersInTeam +
+                ", teamName='" + teamName + '\'' +
+                ", teamId=" + teamId +
+                '}';
+    }*/
 }
 
