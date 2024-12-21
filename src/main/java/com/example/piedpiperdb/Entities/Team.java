@@ -47,31 +47,40 @@ public class Team {
         this.teamName = teamName;
     }
 
+    public Team (String teamName, Game gameId){
+        this.teamName = teamName;
+        this.gameId = gameId;
+    }
+
+    public Team (String teamName, List<Player> listOfPlayersInTeam){
+        this.teamName = teamName;
+        this.listOfPlayersInTeam = listOfPlayersInTeam;
+    }
+
+    public Team (String teamName, Game gameId, List<Player> listOfPlayersInTeam){
+        this.teamName = teamName;
+        this.gameId = gameId;
+        this.listOfPlayersInTeam = listOfPlayersInTeam;
+    }
+
 // Getters & Setters
 //----------------------------------------------------------------------------------------------------------------------
 
     // Team
     //------------------------------------------------------------------------------------------------------------------
     public int getTeamId() {return teamId;}
-    public void setTeamId(int teamId) {this.teamId = teamId;}
+    //public void setTeamId(int teamId) {this.teamId = teamId;}
 
     public String getTeamName() {return teamName;}
     public void setTeamName(String teamName) {this.teamName = teamName;}
 
     public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
     public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
-    private String nickNames (List<Player> listOfPlayersInTeam){
-        String nickNames = null;
-        for (Player player : listOfPlayersInTeam) {
-            nickNames += (player.getNickname() + ", ");
-        }
-        return nickNames;
-    }
 
     // Player
     //------------------------------------------------------------------------------------------------------------------
 
-    //public Player getPlayer (int playerId) {}
+    //Non needed
 
     // Game
     //------------------------------------------------------------------------------------------------------------------
@@ -90,13 +99,6 @@ public class Team {
     public Match getMatchId() { return matchId; }
     public void setMatchId(Match matchId) {this.matchId = matchId;}
 
-    public String getMatchInfo (){
-        if (matchId != null) {
-            return "-n-";
-        }
-        String result = (matchId.getMatchResult() != null ? matchId.getMatchResult() : "Upcoming Match");
-        return matchId.getMatchName() + "\n" + matchId.getMatchDate() + "\nResult: " + result;
-    }
 
 // To String
 //----------------------------------------------------------------------------------------------------------------------

@@ -7,6 +7,7 @@ import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
+import com.example.piedpiperdb.View.AlertBox;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,9 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //GEFP-27-SJ
@@ -114,11 +113,34 @@ public class TeamActions {
         return tableView;
     }
 
+// ListViews
+//----------------------------------------------------------------------------------------------------------------------
+
+ /*   public static ListView<String> createPlayerListView(List<Player> players){
+        ListView<String> playerListView = (ListView<String>) players;
+
+    }*/
+
+
 // CRUDs (Team Actions for FX)
 //----------------------------------------------------------------------------------------------------------------------
 
     //Create
-    public static boolean createTeam(Team team){return TEAM_DAO.createTeam(team);}
+    public static boolean createTeam(Team team) {
+        return TEAM_DAO.createTeam(team);
+    }
+/*    // public static boolean createTeam(Team team){return TEAM_DAO.createTeam(team);} //SJ:  Lät denna vara kvar trotts No Usage - Känns rimligt
+
+    public static boolean createTeamWithList(Team team) {
+        if (TEAM_DAO.createTeam(team)) {
+            // Update each player's teamId in the database
+            for (Player player : team.getListOfPlayersInTeam()) {
+                PLAYER_DAO.updatePlayer(player);
+            }
+            return true;
+        }
+        return false;
+    }
     public static Team createTeamFromFieldsInput (String teamName, String selectedGameValue, String selectedPlayerValue){
 
         Team team = new Team(teamName);
@@ -136,7 +158,7 @@ public class TeamActions {
 
 
         return team;
-    }
+    }*/
 
     //Read
     public static Team getTeamById(int teamId){return TEAM_DAO.getTeamById(teamId);}
@@ -160,49 +182,39 @@ public class TeamActions {
     public static boolean updateTeam(Team team){ return TEAM_DAO.updateTeam(team);}
 
     //Delete
-    public static void deleteTeam(Team team){
-        TEAM_DAO.deleteTeam(team);}
+    public static void deleteTeam(Team team){TEAM_DAO.deleteTeam(team);} //SJ:  Lät denna vara kvar trotts No Usage - Känns rimligt
     public static boolean deleteTeamById(int teamId){return TEAM_DAO.deleteTeamById(teamId);}
 
     // Checkers - Booleans
     public static boolean isTeamNameUnique(String teamName){return TEAM_DAO.isTeamNameUnique(teamName);}
-    public static boolean isFieldEmpty(String teamName){return teamName.isEmpty();}
+    public static boolean validateNewTeamName(String teamName){
+        if (teamName == null || teamName.isEmpty()) {
+            AlertBox.displayAlertBox("Error", "Team name is required.");
+            return false;
+        }
+        if (TeamActions.isTeamNameUnique(teamName)) {
+            AlertBox.displayAlertBox("Error", "Team name already exists. Choose another.");
+            return false;
+        }
+        return true;
+    }
 
 // Get Actions
 //----------------------------------------------------------------------------------------------------------------------
 
     public static Game getGameById(int gameId){return GAME_DAO.getGameById(gameId);}
-
     public static List<Game> getAllGames(){return GAME_DAO.getAllGames();}
 
     public static Player getPlayerById(int playerId){return PLAYER_DAO.getPlayer(playerId);}
-
     public static List<Player> getAllPlayers(){return PLAYER_DAO.getAllPlayers();}
-
     public static List<Player> getAllAvailablePlayers(){
-
-        List<Player> listOfAllPlayers = getAllPlayers();
-        List<Player> availablePlayers = new ArrayList<>();
-
-        for (Player player : listOfAllPlayers) {
-            if (player.getTeamId() == null){
-                availablePlayers.add(player);
-            }
-        }
-
-        return availablePlayers;
-    }
-
-    public static List<Player> getPlayersByGame(int gameId) {
-        if (gameId == 0) {
-            return Collections.emptyList();
-        }
-        return PLAYER_DAO.getAllPlayersFromSelectedGame(List.of(gameId));
+        return PLAYER_DAO.getAllPlayers().stream()
+                .filter(player -> player.getTeamId() == null) // Only players without a team
+                .toList();
     }
     public static List<Player> getPlayersInTeam(Team team){
         return team.getListOfPlayersInTeam();
     }
-
     public static String getPlayerNicknames (List<Player> listOfPlayers ){
         String nicknames = "";
 
@@ -212,19 +224,53 @@ public class TeamActions {
 
         return nicknames;
     }
+    public static List<Player> getPlayersByGame(int gameId) {
+        if (gameId == 0) {
+            return Collections.emptyList();
+        }
+        return PLAYER_DAO.getAllPlayersFromSelectedGame(List.of(gameId));
+    }
+
+    public static void updatePlayerTeamId(Player player, Team team) {
+        player.setTeamId(team);
+        PLAYER_DAO.updatePlayer(player);
+    }
 
     // WIPS
-    public static List<Player> getAllAvailablePlayersByGameId(int gameId){
+/*    public static ListView<String> createAvailablePlayersListView() {
+        ListView<String> playerListView = new ListView<>();
+        List<Player> availablePlayers = getAllAvailablePlayers(); // Fetch players with gameId == null
 
-        List<Player> listOfAllPlayers = getAllPlayers();
-        List<Player> availablePlayers = new ArrayList<>();
-
-        for (Player player : listOfAllPlayers) {
-            if (player.getTeamId() == null && player.getGameId().equals(gameId)) {
-                availablePlayers.add(player);
-            }
+        ObservableList<String> playerNicknames = FXCollections.observableArrayList();
+        for (Player player : availablePlayers) {
+            playerNicknames.add(player.getId() + ", " + player.getNickname());
         }
 
-        return availablePlayers;
+        playerListView.setItems(playerNicknames);
+        playerListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        playerListView.getStyleClass().add("list-cell");
+        // playerListView.setPrefWidth(100);
+
+        return playerListView;
+    }*/
+
+    public static ListView<String> createPlayerListView(List<Player> players) {
+
+        ListView<String> playerListView = new ListView<>();
+        ObservableList<String> playerNicknames = FXCollections.observableArrayList();
+
+        for (Player player : players) {
+            playerNicknames.add(player.getId() + ", " + player.getNickname()); // Use the nickname and ID as the list item
+        }
+
+        playerListView.setItems(playerNicknames);
+
+        playerListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        playerListView.getStyleClass().add("list-cell");
+        playerListView.setPrefWidth(100);
+
+        return playerListView;
     }
+
+
 }

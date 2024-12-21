@@ -9,6 +9,8 @@ import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,16 +20,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 //GEFP-21-SJ
 public class TeamView extends AbstractScene{
-
-    private static final PlayerDAO PLAYER_DAO = new PlayerDAO();
-    private static final GameDAO GAME_DAO = new GameDAO();
-    private static final TeamDAO TEAM_DAO = new TeamDAO();
-    private static final MatchDAO MATCH_DAO = new MatchDAO();
 
     private static VBox getIdBox;
     private static VBox resultBox;
@@ -37,8 +35,9 @@ public class TeamView extends AbstractScene{
     private static ComboBox<String> gameField;
     private static ComboBox<String> playerField;
 
-    private static ListView<String> playerListView;
 
+// Start TeamScene & CustomComponents
+//----------------------------------------------------------------------------------------------------------------------
 
     public static Scene startTeamScene(Stage window){
 
@@ -57,7 +56,6 @@ public class TeamView extends AbstractScene{
         getAllTeamsButton.setOnAction(event -> {
             clearResultBox(resultBox, getIdBox);
             resultBox = createResultBox();
-
             Label title = createTitleLabel("All Teams");
             resultBox.getChildren().add(title);
             resultBox = TeamActions.getTableViewAllTeams(resultBox);
@@ -114,23 +112,47 @@ public class TeamView extends AbstractScene{
             List<Game> games = TeamActions.getAllGames();
             resultBox.getChildren().add(createResultBoxContentBoxComboBox("Game", "Select Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName()));
 
-            /*
-            List<Player> players = TeamActions.getAllAvailablePlayers();
-            resultBox.getChildren().add(createResultBoxContentBoxComboBox("Players", "Select players", playerField, players, player -> player.getId() + ", " + player.getNickname()));
-             */
+            Label addPlayerLabel = createLabelWithoutBorder("Optional: Choose a Player to join the Team. (Shift/Ctrl to select multiple Players)");
+            resultBox.getChildren().add(addPlayerLabel);
 
-            addGameFieldListener(gameField, playerField);
+            ListView<String> availablePlayers = TeamActions.createPlayerListView(TeamActions.getAllAvailablePlayers());
+            resultBox.getChildren().add(availablePlayers);
 
             Button saveButton = createButton("Save Team");
             saveButton.setOnAction(event -> {
-                if (validateUpdateTeamName(teamNameField.getText())) {
-                    Team team = createTeamFromFields(teamNameField.getText(), gameField.getValue(), playerField.getValue());
-                    boolean saved = TeamActions.createTeam(team);
-                    if (saved) {
-                        Label savedLabel = createLabel("Team saved successfully.");
-                        resultBox.getChildren().add(savedLabel);
-                    } else {
+                if (TeamActions.validateNewTeamName(teamNameField.getText())) {
+
+                    try {
+                        Team team = new Team(teamNameField.getText());
+
+                        if (gameField.getValue() != null && !gameField.getValue().isEmpty()) {
+                            int gameID = Integer.parseInt(gameField.getValue().split(",")[0].trim());
+                            Game selectedGame = TeamActions.getGameById(gameID);
+                            team.setGameId(selectedGame);
+                        }
+
+                        ObservableList<String> selectedPlayers = availablePlayers.getSelectionModel().getSelectedItems();
+                        for (String player : selectedPlayers) {
+                            String[] parts = player.split(", ");
+                            int playerId = Integer.parseInt(parts[0].trim());
+                            Player selectedPlayer = TeamActions.getPlayerById(playerId);
+
+                            if (selectedPlayer != null) {
+                                team.getListOfPlayersInTeam().add(selectedPlayer);
+                            }
+                        }
+
+                        boolean saved = TeamActions.createTeam(team);
+
+                        if (saved) {
+                            Label savedLabel = createLabel("Team saved successfully.");
+                            resultBox.getChildren().add(savedLabel);
+                        } else {
+                            AlertBox.displayAlertBox("Error", "An error occurred while saving the team.");
+                        }
+                    } catch (Exception e) {
                         AlertBox.displayAlertBox("Error", "An error occurred while saving the team.");
+                        System.out.println(e.getMessage());
                     }
                 }
             });
@@ -144,52 +166,8 @@ public class TeamView extends AbstractScene{
         }
     }
 
-    private static void addGameFieldListener(ComboBox<String> gameField, ComboBox<String> playerField){
-        gameField.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null && !newValue.isEmpty()) {
-                try {
-                    int gameId = Integer.parseInt(newValue.split(",")[0].trim());
-                    List<Player> filteredPlayers = TeamActions.getPlayersByGame(gameId);
 
-                    filteredPlayers.addAll(TeamActions.getAllAvailablePlayers());
-
-                    playerField.getItems().clear();
-                    filteredPlayers.forEach(p ->
-                            playerField.getItems().add(p.getId() + ", " + p.getNickname()));
-                } catch (NumberFormatException e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        });
-    }
-
-    public static Team createTeamFromFields(String teamName, String selectedGameValue, String selectedPlayerValue) {
-        Team team = new Team(teamName);
-
-        if (selectedGameValue != null && !selectedGameValue.isEmpty()) {
-            int gameId = Integer.parseInt(selectedGameValue.split(",")[0].trim());
-            Game game = TeamActions.getGameById(gameId);
-            team.setGameId(game);
-        }
-
-        if (selectedPlayerValue != null && !selectedPlayerValue.isEmpty()) {
-            List<Integer> playerIds = List.of(selectedPlayerValue.split(","))
-                    .stream()
-                    .map(idStr -> Integer.parseInt(idStr.trim()))
-                    .toList();
-
-            List<Player> players = playerIds.stream()
-                    .map(id -> TeamActions.getPlayerById(id))
-                    .toList();
-
-            team.setListOfPlayersInTeam(players);
-        }
-
-        return team;
-    }
-
-    private static void showUpdateTeamForm(AnchorPane anchorPane){
-
+    private static void showUpdateTeamForm(AnchorPane anchorPane) {
         initializeTextFields();
 
         resultBox = createResultBox(260.0);
@@ -205,6 +183,7 @@ public class TeamView extends AbstractScene{
                     AlertBox.displayAlertBox("Error", "Team does not exist");
                     return;
                 }
+
                 populateUpdateTeamFormFields(teamToUpdate, teamId);
             } catch (NumberFormatException e) {
                 AlertBox.displayAlertBox("Error", "Invalid Team ID");
@@ -212,7 +191,6 @@ public class TeamView extends AbstractScene{
         });
 
         getIdBox = createResultBox();
-
         getIdBox.getChildren().addAll(createResultBoxContentBox("Team ID", "Enter Team ID", teamIdField, false), getTeamButton);
 
         anchorPane.getChildren().addAll(getIdBox, resultBox);
@@ -224,21 +202,90 @@ public class TeamView extends AbstractScene{
         List<Game> games = TeamActions.getAllGames();
         String selectedGameValue =
                 teamToUpdate.getGameId() != null
-                ? teamToUpdate.getGameId().getGameId() + ", " + teamToUpdate.getGameId().getGameName() : null;
+                        ? teamToUpdate.getGameId().getGameId() + ", " + teamToUpdate.getGameId().getGameName() : null;
 
         HBox gameBox = createResultBoxContentBoxComboBoxUpdate("Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName(), selectedGameValue);
 
 
+        ObservableList<String> teamPlayersObservableList = FXCollections.observableArrayList(
+                teamToUpdate.getListOfPlayersInTeam().stream()
+                        .map(player -> player.getId() + ", " + player.getNickname())
+                        .toList()
+        );
+
+        ObservableList<String> availablePlayersObservableList = FXCollections.observableArrayList(
+                TeamActions.getAllAvailablePlayers().stream()
+                        .filter(player -> !teamToUpdate.getListOfPlayersInTeam().contains(player))
+                        .map(player -> player.getId() + ", " + player.getNickname())
+                        .toList()
+        );
+
+        ListView<String> teamPlayersListView = new ListView<>(teamPlayersObservableList);
+        teamPlayersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        ListView<String> availablePlayersListView = new ListView<>(availablePlayersObservableList);
+        availablePlayersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        Button removeButton = createButton("Remove Player");
+        removeButton.setOnAction(event -> {
+
+            ObservableList<String> selectedPlayers = teamPlayersListView.getSelectionModel().getSelectedItems();
+
+            List<String> playersToRemove = new ArrayList<>(selectedPlayers);
+
+            teamPlayersObservableList.removeAll(playersToRemove);
+            availablePlayersObservableList.addAll(playersToRemove);
+
+            for (String playerInfo : playersToRemove) {
+                int playerId = Integer.parseInt(playerInfo.split(", ")[0].trim());
+                Player player = TeamActions.getPlayerById(playerId);
+                if (player != null) {
+                    player.setTeamId(null);
+                    teamToUpdate.getListOfPlayersInTeam().remove(player);
+                    TeamActions.updatePlayerTeamId(player, null);
+                }
+            }
+        });
+
+        Button addButton = createButton("Add Player");
+        addButton.setOnAction(event -> {
+
+            ObservableList<String> selectedPlayers = availablePlayersListView.getSelectionModel().getSelectedItems();
+
+            List<String> playersToAdd = new ArrayList<>(selectedPlayers);
+
+            availablePlayersObservableList.removeAll(playersToAdd);
+            teamPlayersObservableList.addAll(playersToAdd);
+
+            for (String playerInfo : playersToAdd) {
+                int playerId = Integer.parseInt(playerInfo.split(", ")[0].trim());
+                Player player = TeamActions.getPlayerById(playerId);
+                if (player != null) {
+                    player.setTeamId(teamToUpdate);
+                    teamToUpdate.getListOfPlayersInTeam().add(player);
+                    TeamActions.updatePlayerTeamId(player, teamToUpdate);
+                }
+            }
+        });
+
         Button updateTeamButton = createButton("Update Team");
         updateTeamButton.setOnAction(event -> {
             try {
-                if (validateNewTeamName(teamNameField.getText())) {
+                if (TeamActions.validateNewTeamName(teamNameField.getText())) {
                     teamToUpdate.setTeamName(teamNameField.getText());
 
                     if (gameField.getValue() != null) {
                         int gameId = Integer.parseInt(gameField.getValue().split(",")[0].trim());
                         teamToUpdate.setGameId(TeamActions.getGameById(gameId));
                     }
+
+                    List<Player> updatedPlayers = teamPlayersObservableList.stream()
+                            .map(item -> {
+                                int playerId = Integer.parseInt(item.split(", ")[0].trim());
+                                return TeamActions.getPlayerById(playerId);
+                            })
+                            .toList();
+                    teamToUpdate.setListOfPlayersInTeam(updatedPlayers);
 
                     boolean updated = TeamActions.updateTeam(teamToUpdate);
                     if (updated) {
@@ -250,14 +297,24 @@ public class TeamView extends AbstractScene{
                 }
             } catch (Exception e) {
                 AlertBox.displayAlertBox("Error", "An error occurred while updating the team.");
+                System.out.println(e.getMessage());
             }
         });
 
-        resultBox.getChildren().clear();
-        resultBox.getChildren().addAll(createResultBoxContentBox(
-                "Team Name", teamToUpdate.getTeamName(), teamNameField, true), gameBox, updateTeamButton);
+        VBox playersVBox = new VBox(10, createLabel("Team Players"), teamPlayersListView, removeButton);
+        VBox availablePlayersVBox = new VBox(10, createLabel("Available Players"), availablePlayersListView, addButton);
 
+        HBox playersBox = new HBox(20, playersVBox, availablePlayersVBox);
+
+        resultBox.getChildren().clear();
+        resultBox.getChildren().addAll(
+                createResultBoxContentBox("Team Name", teamToUpdate.getTeamName(), teamNameField, true),
+                gameBox,
+                playersBox,
+                updateTeamButton
+        );
     }
+
 
     private static void showDeleteTeamForm(AnchorPane anchorPane) {
 
@@ -293,19 +350,18 @@ public class TeamView extends AbstractScene{
         anchorPane.getChildren().add(resultBox);
     }
 
-
     private static void showTeamInfoForDeletion(Team team) {
         clearResultBox(resultBox);
 
         Label title = createTitleLabel("Team info:");
-        //resultBox.getChildren().add(title);
+        resultBox.getChildren().add(title);
 
         Label teamInfo = createLabel(
                 "\tTeam Name: " + team.getTeamName() + "\n" +
                         "\tGame: " + team.getGameName() + "\n" +
                         "\tPlayers: " + TeamActions.getPlayerNicknames(TeamActions.getPlayersInTeam(team))
         );
-        resultBox.getChildren().addAll(title, teamInfo);
+        resultBox.getChildren().add(teamInfo);
 
         Button deleteTeamButton = createButton("Delete Team");
         deleteTeamButton.setOnAction(event -> {
@@ -344,7 +400,7 @@ public class TeamView extends AbstractScene{
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(20));
         vBox.setSpacing(10);
-        //vBox.getStyleClass().add("backgroundTeaGreen");
+
         AnchorPane.setTopAnchor(vBox, topAnchor);
         AnchorPane.setLeftAnchor(vBox, 220.0);
         AnchorPane.setRightAnchor(vBox, 30.0);
@@ -418,7 +474,7 @@ public class TeamView extends AbstractScene{
         }
     }
 
-// Multiple usage functions
+// Multiple usage methods
 //----------------------------------------------------------------------------------------------------------------------
 
     private static Button createButton (String text){
@@ -429,8 +485,7 @@ public class TeamView extends AbstractScene{
     }
 
     private static Label createTitleLabel (String text){
-        Label label = new Label();
-        label.setText(text);
+        Label label = new Label(text);
         label.getStyleClass().add("titel");
         return label;
     }
@@ -441,46 +496,16 @@ public class TeamView extends AbstractScene{
         return label;
     }
 
+    private static Label createLabelWithoutBorder (String text){
+        Label label = new Label(text);
+        label.getStyleClass().add("standardLabelWithoutBorder");
+        return label;
+    }
+
     private static void initializeTextFields (){
         teamNameField = new TextField();
         gameField = new ComboBox<>();
         playerField = new ComboBox<>();
-    }
-
-    private static boolean validateNewTeamName(String teamName) {
-
-        //Usage: Creation of new Team
-
-        if (teamName == null || teamName.isEmpty()) {
-            AlertBox.displayAlertBox("Error", "Team name is required.");
-            return false;
-        }
-        if (TeamActions.isTeamNameUnique(teamName)) {
-            AlertBox.displayAlertBox("Error", "Team name already exists. Choose another.");
-            return false;
-        }
-        return true;
-    }
-
-    private static boolean validateUpdateTeamName(String teamName) {
-
-        //Usage: Updating excisting Team without having to change name.
-
-        List<Team> allOtherTeams = TeamActions.getAllOtherTeamsExcluding(teamName);
-
-        System.out.println(allOtherTeams.size());
-
-        for (Team team : allOtherTeams) {
-            if (teamName == null || teamName.isEmpty()) {
-                AlertBox.displayAlertBox("Error", "Team name is required.");
-                return false;
-            }
-            if (team.getTeamName().equals(teamName)) {
-                AlertBox.displayAlertBox("Error", "Team name already exists. Choose another.");
-                return false;
-            }
-        }
-        return true;
     }
 
 }
