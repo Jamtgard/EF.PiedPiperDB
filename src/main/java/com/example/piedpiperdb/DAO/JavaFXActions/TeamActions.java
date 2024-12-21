@@ -130,7 +130,7 @@ public class TeamActions {
     public static boolean createTeam(Team team) {
         return TEAM_DAO.createTeam(team);
     }
-    // public static boolean createTeam(Team team){return TEAM_DAO.createTeam(team);} //SJ:  Lät denna vara kvar trotts No Usage - Känns rimligt
+/*    // public static boolean createTeam(Team team){return TEAM_DAO.createTeam(team);} //SJ:  Lät denna vara kvar trotts No Usage - Känns rimligt
 
     public static boolean createTeamWithList(Team team) {
         if (TEAM_DAO.createTeam(team)) {
@@ -159,7 +159,7 @@ public class TeamActions {
 
 
         return team;
-    }
+    }*/
 
     //Read
     public static Team getTeamById(int teamId){return TEAM_DAO.getTeamById(teamId);}

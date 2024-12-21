@@ -161,7 +161,34 @@ public class TeamDAO {
     }
 
     // Delete - By Team
-/*    public boolean deleteTeam (Team team){
+    public boolean deleteTeam(Team teamToDelete) {
+        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
+        EntityTransaction transaction = null;
+
+        try {
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            deleteTeamRelations(entityManager, teamToDelete);
+
+            entityManager.remove(entityManager.contains(teamToDelete) ? teamToDelete : entityManager.merge(teamToDelete));
+            transaction.commit();
+
+            System.out.println("Team " + teamToDelete.getTeamName() + " deleted successfully");
+            return true;
+
+        } catch (Exception e) {
+            System.out.println("Error deleting team by ID. Message: " + e.getMessage());
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
+            }
+            return false;
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    /*    public boolean deleteTeam (Team team){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
         EntityTransaction transaction = null;
 
@@ -183,33 +210,6 @@ public class TeamDAO {
         } finally {
             entityManager.close();
         }*/
-
-        public boolean deleteTeam(Team teamToDelete) {
-            EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-            EntityTransaction transaction = null;
-
-            try {
-                transaction = entityManager.getTransaction();
-                transaction.begin();
-
-                deleteTeamRelations(entityManager, teamToDelete);
-
-                entityManager.remove(entityManager.contains(teamToDelete) ? teamToDelete : entityManager.merge(teamToDelete));
-                transaction.commit();
-
-                System.out.println("Team " + teamToDelete.getTeamName() + " deleted successfully");
-                return true;
-
-            } catch (Exception e) {
-                System.out.println("Error deleting team by ID. Message: " + e.getMessage());
-                if (transaction != null && transaction.isActive()) {
-                    transaction.rollback();
-                }
-                return false;
-            } finally {
-                entityManager.close();
-            }
-        }
 
 
     // Delete - By ID

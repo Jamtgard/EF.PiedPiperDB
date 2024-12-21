@@ -44,6 +44,8 @@ public class TeamView extends AbstractScene{
 
     private static ListView<String> playerListView;
 
+// Start TeamScene & CustomComponents
+//----------------------------------------------------------------------------------------------------------------------
 
     public static Scene startTeamScene(Stage window){
 
@@ -62,7 +64,6 @@ public class TeamView extends AbstractScene{
         getAllTeamsButton.setOnAction(event -> {
             clearResultBox(resultBox, getIdBox);
             resultBox = createResultBox();
-
             Label title = createTitleLabel("All Teams");
             resultBox.getChildren().add(title);
             resultBox = TeamActions.getTableViewAllTeams(resultBox);
@@ -173,30 +174,6 @@ public class TeamView extends AbstractScene{
         }
     }
 
-    /*public static Team createTeamFromFields(String teamName, String selectedGameValue, String selectedPlayerValue) {
-        Team team = new Team(teamName);
-
-        if (selectedGameValue != null && !selectedGameValue.isEmpty()) {
-            int gameId = Integer.parseInt(selectedGameValue.split(",")[0].trim());
-            Game game = TeamActions.getGameById(gameId);
-            team.setGameId(game);
-        }
-
-        if (selectedPlayerValue != null && !selectedPlayerValue.isEmpty()) {
-            List<Integer> playerIds = List.of(selectedPlayerValue.split(","))
-                    .stream()
-                    .map(idStr -> Integer.parseInt(idStr.trim()))
-                    .toList();
-
-            List<Player> players = playerIds.stream()
-                    .map(id -> TeamActions.getPlayerById(id))
-                    .toList();
-
-            team.setListOfPlayersInTeam(players);
-        }
-
-        return team;
-    }*/
 
     private static void showUpdateTeamForm(AnchorPane anchorPane) {
         initializeTextFields();
@@ -226,47 +203,6 @@ public class TeamView extends AbstractScene{
 
         anchorPane.getChildren().addAll(getIdBox, resultBox);
     }
-
-/*    private static void populateUpdateTeamFormFields(Team teamToUpdate, int teamId) {
-        teamNameField.setText(teamToUpdate.getTeamName());
-
-        List<Game> games = TeamActions.getAllGames();
-        String selectedGameValue =
-                teamToUpdate.getGameId() != null
-                ? teamToUpdate.getGameId().getGameId() + ", " + teamToUpdate.getGameId().getGameName() : null;
-
-        HBox gameBox = createResultBoxContentBoxComboBoxUpdate("Game", gameField, games, game -> game.getGameId() + ", " + game.getGameName(), selectedGameValue);
-
-
-        Button updateTeamButton = createButton("Update Team");
-        updateTeamButton.setOnAction(event -> {
-            try {
-                if (validateNewTeamName(teamNameField.getText())) {
-                    teamToUpdate.setTeamName(teamNameField.getText());
-
-                    if (gameField.getValue() != null) {
-                        int gameId = Integer.parseInt(gameField.getValue().split(",")[0].trim());
-                        teamToUpdate.setGameId(TeamActions.getGameById(gameId));
-                    }
-
-                    boolean updated = TeamActions.updateTeam(teamToUpdate);
-                    if (updated) {
-                        Label updatedLabel = createLabel("Team updated successfully.");
-                        resultBox.getChildren().add(updatedLabel);
-                    } else {
-                        AlertBox.displayAlertBox("Error", "An error occurred while updating the team.");
-                    }
-                }
-            } catch (Exception e) {
-                AlertBox.displayAlertBox("Error", "An error occurred while updating the team.");
-            }
-        });
-
-        resultBox.getChildren().clear();
-        resultBox.getChildren().addAll(createResultBoxContentBox(
-                "Team Name", teamToUpdate.getTeamName(), teamNameField, true), gameBox, updateTeamButton);
-
-    }*/
 
     private static void populateUpdateTeamFormFields(Team teamToUpdate, int teamId) {
         teamNameField.setText(teamToUpdate.getTeamName());
@@ -386,6 +322,7 @@ public class TeamView extends AbstractScene{
                 updateTeamButton
         );
     }
+
 
     private static void showDeleteTeamForm(AnchorPane anchorPane) {
 
@@ -545,7 +482,7 @@ public class TeamView extends AbstractScene{
         }
     }
 
-// Multiple usage functions
+// Multiple usage methods
 //----------------------------------------------------------------------------------------------------------------------
 
     private static Button createButton (String text){
@@ -578,26 +515,5 @@ public class TeamView extends AbstractScene{
         gameField = new ComboBox<>();
         playerField = new ComboBox<>();
     }
-
-/*    private static boolean validateUpdateTeamName(String teamName) {
-
-        //Usage: Updating excisting Team without having to change name.
-
-        List<Team> allOtherTeams = TeamActions.getAllOtherTeamsExcluding(teamName);
-
-        System.out.println(allOtherTeams.size());
-
-        for (Team team : allOtherTeams) {
-            if (teamName == null || teamName.isEmpty()) {
-                AlertBox.displayAlertBox("Error", "Team name is required.");
-                return false;
-            }
-            if (team.getTeamName().equals(teamName)) {
-                AlertBox.displayAlertBox("Error", "Team name already exists. Choose another.");
-                return false;
-            }
-        }
-        return true;
-    }*/
 
 }
