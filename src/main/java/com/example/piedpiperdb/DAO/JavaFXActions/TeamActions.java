@@ -8,7 +8,6 @@ import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
 import com.example.piedpiperdb.View.AlertBox;
-import com.example.piedpiperdb.View.ConfirmBox;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

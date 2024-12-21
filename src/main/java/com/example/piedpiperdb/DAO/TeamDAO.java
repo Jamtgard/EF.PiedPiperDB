@@ -1,16 +1,14 @@
 
 package com.example.piedpiperdb.DAO;
 
-import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
+
 import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Match;
 import com.example.piedpiperdb.Entities.Player;
-import com.example.piedpiperdb.View.AlertBox;
 import jakarta.persistence.*;
 import com.example.piedpiperdb.Entities.Team;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 // GEFP-11-SJ
@@ -210,7 +208,6 @@ public class TeamDAO {
         } finally {
             entityManager.close();
         }*/
-
 
     // Delete - By ID
     public boolean deleteTeamById(int id) {

@@ -2,7 +2,6 @@ package com.example.piedpiperdb.View;
 
 import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
-import com.example.piedpiperdb.DAO.JavaFXActions.GameActions;
 import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
 import com.example.piedpiperdb.DAO.MatchDAO;
 import com.example.piedpiperdb.DAO.PlayerDAO;
@@ -13,7 +12,6 @@ import com.example.piedpiperdb.Entities.Team;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -29,11 +27,6 @@ import java.util.function.Function;
 //GEFP-21-SJ
 public class TeamView extends AbstractScene{
 
-    private static final PlayerDAO PLAYER_DAO = new PlayerDAO();
-    private static final GameDAO GAME_DAO = new GameDAO();
-    private static final TeamDAO TEAM_DAO = new TeamDAO();
-    private static final MatchDAO MATCH_DAO = new MatchDAO();
-
     private static VBox getIdBox;
     private static VBox resultBox;
 
@@ -42,7 +35,6 @@ public class TeamView extends AbstractScene{
     private static ComboBox<String> gameField;
     private static ComboBox<String> playerField;
 
-    private static ListView<String> playerListView;
 
 // Start TeamScene & CustomComponents
 //----------------------------------------------------------------------------------------------------------------------
