@@ -1,3 +1,5 @@
+package com.example.piedpiperdb.Entities;
+
 import jakarta.persistence.*;
 
 //Anna R
