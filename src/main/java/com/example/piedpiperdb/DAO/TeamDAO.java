@@ -28,12 +28,6 @@ public class TeamDAO {
             List<Player> managedPlayers = new ArrayList<>();
             for (Player player : team.getListOfPlayersInTeam()) {
                 Player managedPlayer = entityManager.find(Player.class, player.getId());
-                /*
-                if (managedPlayer == null) {
-                    throw new IllegalArgumentException("Player with ID " + player.getId() + " not found in database.");
-                }
-
-                 */
 
                 managedPlayer.setTeamId(team);
                 entityManager.merge(managedPlayer);
@@ -70,9 +64,7 @@ public class TeamDAO {
     // Read - Get All
     public List<Team> getAllTeams(){
         EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-
-        transaction = entityManager.getTransaction();
+        EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         List<Team> listToReturn = new ArrayList<>();
         TypedQuery<Team> result = entityManager.createQuery("FROM Team", Team.class);
@@ -119,18 +111,16 @@ public class TeamDAO {
                 throw new IllegalArgumentException("Team with ID " + team.getTeamId() + " not found in database.");
             }
 
-            // Update team details
             managedTeam.setTeamName(team.getTeamName());
             managedTeam.setGameId(team.getGameId());
 
-            // Synchronize players
             List<Player> newPlayers = team.getListOfPlayersInTeam();
             List<Player> existingPlayers = new ArrayList<>(managedTeam.getListOfPlayersInTeam());
 
             for (Player existingPlayer : existingPlayers) {
                 if (!newPlayers.contains(existingPlayer)) {
                     existingPlayer.setTeamId(null);
-                    entityManager.merge(existingPlayer); // Update player in database
+                    entityManager.merge(existingPlayer);
                 }
             }
 
@@ -139,7 +129,7 @@ public class TeamDAO {
                     Player managedPlayer = entityManager.find(Player.class, newPlayer.getId());
                     managedPlayer.setTeamId(managedTeam);
                     managedTeam.getListOfPlayersInTeam().add(managedPlayer);
-                    entityManager.merge(managedPlayer); // Update player in database
+                    entityManager.merge(managedPlayer);
                 }
             }
 
@@ -185,29 +175,6 @@ public class TeamDAO {
             entityManager.close();
         }
     }
-
-    /*    public boolean deleteTeam (Team team){
-        EntityManager entityManager = ENTITY_MANAGER_FACTORY.createEntityManager();
-        EntityTransaction transaction = null;
-
-        transaction = entityManager.getTransaction();
-        transaction.begin();
-
-        try {
-            deleteTeamRelations(team.getTeamId());
-            entityManager.remove(entityManager.contains(team) ? team : entityManager.merge(team));
-            transaction.commit();
-            System.out.println("Team " + team.getTeamName() + " deleted successfully");
-            return true;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            if (entityManager != null && transaction != null && transaction.isActive()){
-                transaction.rollback();
-            }
-            return false;
-        } finally {
-            entityManager.close();
-        }*/
 
     // Delete - By ID
     public boolean deleteTeamById(int id) {

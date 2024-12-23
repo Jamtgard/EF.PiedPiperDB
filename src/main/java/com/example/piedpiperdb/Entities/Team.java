@@ -69,18 +69,15 @@ public class Team {
     // Team
     //------------------------------------------------------------------------------------------------------------------
     public int getTeamId() {return teamId;}
-    //public void setTeamId(int teamId) {this.teamId = teamId;}
 
     public String getTeamName() {return teamName;}
     public void setTeamName(String teamName) {this.teamName = teamName;}
 
-    public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
-    public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
-
-    // Player
+    // Team / Player
     //------------------------------------------------------------------------------------------------------------------
 
-    //Non needed
+    public List<Player> getListOfPlayersInTeam() {return listOfPlayersInTeam;}
+    public void setListOfPlayersInTeam(List<Player> listOfPlayersInTeam) {this.listOfPlayersInTeam = listOfPlayersInTeam;}
 
     // Game
     //------------------------------------------------------------------------------------------------------------------
@@ -90,11 +87,14 @@ public class Team {
 
     public String getGameName() { return gameId != null ? gameId.getGameName() : "-n-"; }
 
-    // Match
+    // Team / Match
     //------------------------------------------------------------------------------------------------------------------
 
     public List<Match> getMatchesInTeam() {return matchesInTeam;}
     public void setMatchesInTeam(List<Match> matchesInTeam) {this.matchesInTeam = matchesInTeam;}
+
+    // Match
+    //------------------------------------------------------------------------------------------------------------------
 
     public Match getMatchId() { return matchId; }
     public void setMatchId(Match matchId) {this.matchId = matchId;}
