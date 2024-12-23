@@ -1,11 +1,7 @@
 package com.example.piedpiperdb.View;
 
-import com.example.piedpiperdb.DAO.GameDAO;
 import com.example.piedpiperdb.DAO.JavaFXActions.ChangeSceneAction;
 import com.example.piedpiperdb.DAO.JavaFXActions.TeamActions;
-import com.example.piedpiperdb.DAO.MatchDAO;
-import com.example.piedpiperdb.DAO.PlayerDAO;
-import com.example.piedpiperdb.DAO.TeamDAO;
 import com.example.piedpiperdb.Entities.Game;
 import com.example.piedpiperdb.Entities.Player;
 import com.example.piedpiperdb.Entities.Team;
@@ -33,7 +29,6 @@ public class TeamView extends AbstractScene{
     private static TextField teamNameField;
 
     private static ComboBox<String> gameField;
-    private static ComboBox<String> playerField;
 
 
 // Start TeamScene & CustomComponents
@@ -166,7 +161,6 @@ public class TeamView extends AbstractScene{
         }
     }
 
-
     private static void showUpdateTeamForm(AnchorPane anchorPane) {
         initializeTextFields();
 
@@ -271,7 +265,7 @@ public class TeamView extends AbstractScene{
         Button updateTeamButton = createButton("Update Team");
         updateTeamButton.setOnAction(event -> {
             try {
-                if (TeamActions.validateNewTeamName(teamNameField.getText())) {
+                if (!TeamActions.isTeamNameUnique(teamNameField.getText())) {
                     teamToUpdate.setTeamName(teamNameField.getText());
 
                     if (gameField.getValue() != null) {
@@ -314,7 +308,6 @@ public class TeamView extends AbstractScene{
                 updateTeamButton
         );
     }
-
 
     private static void showDeleteTeamForm(AnchorPane anchorPane) {
 
@@ -505,7 +498,6 @@ public class TeamView extends AbstractScene{
     private static void initializeTextFields (){
         teamNameField = new TextField();
         gameField = new ComboBox<>();
-        playerField = new ComboBox<>();
     }
 
 }
